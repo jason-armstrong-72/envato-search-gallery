@@ -98,12 +98,33 @@ Ask for what you want:
 
 > Search Envato for 10 landscape photos of a compounding pharmacy.
 
-The agent mentions the relevant filters, searches, builds the gallery and opens it. Pick an
-image, and it hands you the Envato link.
+The agent mentions the relevant filters, searches, builds the gallery and gives you a link to
+it (it also opens in your browser). Pick an image, and it hands you the Envato link. The
+gallery is a temporary file in the system temp folder, which the operating system clears out;
+ask for `--out` if you want to keep one.
+
+### If the skill does not start on its own
+
+Whether an agent picks a skill up from a plain request depends on what its skill list shows, and
+some setups drop the descriptions from that list when there are many skills installed. An agent
+may then call the Envato search tool directly and give you a text list instead of the gallery.
+Two ways to make it certain:
+
+- Run the command, which always uses the skill:
+
+  ```text
+  /envato-search-gallery:envato-search 10 landscape photos of a compounding pharmacy
+  ```
+
+- Or name the skill in your request: "Use the envato-search-gallery skill to find ...".
+
+The plugin's commands are namespaced by plugin name, so the command above is the form that has
+been tested. Some setups also accept the short `/envato-search`; try it and see.
 
 ## Layout
 
 ```text
+commands/envato-search.md      the /envato-search-gallery:envato-search command
 skills/envato-search-gallery/
   SKILL.md                     what the agent does, step by step
   scripts/build_gallery.py     results JSON in, self-contained HTML out (stdlib only)
