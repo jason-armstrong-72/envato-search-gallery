@@ -1,6 +1,6 @@
 ---
 name: envato-search-gallery
-description: Search Envato Elements through the Envato MCP server and show the results as a quick visual gallery, so the user can scan images and pick one instead of opening links one at a time. Use when the user asks to find, source, browse or preview stock photos, graphics, illustrations, video thumbnails or other visual assets from Envato Elements, or says "search Envato for ...". Needs the Envato MCP server (https://mcp.envato.com/mcp) connected. Search only, it never downloads or licenses anything.
+description: Search Envato Elements and show stock photos, images and graphics as a gallery to pick from. Use for "search Envato", "find me a photo", "stock image", "I need an image for ...", or when a task needs stock imagery. Needs the Envato MCP server.
 ---
 
 # Envato search gallery
@@ -36,9 +36,12 @@ previews in one page, let the user pick, hand back the Envato link.
    The path is relative to this skill's folder. The script downloads the previews,
    embeds them in one self-contained HTML file, and opens it in the default browser
    (add `--no-open` to only write it, `--out PATH` to choose where). Standard library
-   only, no install step.
-6. **Report** the file path and the count. Skipped previews are listed by the script;
-   mention them.
+   only, no install step. It prints an `open:` line holding a `file://` link.
+6. **Report** the count and give the gallery as a clickable markdown link built from the
+   `open:` line, for example `[Open the gallery](file:///tmp/envato-gallery/x.html)`.
+   The file is in the system temp folder, which the OS clears out on its own, so it is
+   throwaway; pass `--out` if the user wants to keep a copy. Skipped previews are listed
+   by the script; mention them.
 7. **When the user picks**, give the Envato item link(s) as clickable URLs. Licensing and
    download happen on elements.envato.com, and that needs an active Elements subscription.
    Do not try to fetch the full-size image.
