@@ -1,0 +1,115 @@
+{
+  "_note": "Filters accepted by each Envato MCP search tool. Tool name = 'search_' + asset type with '-' replaced by '_'. A list is an enum; a string describes a boolean or number. Common to all tools: searchTerms (1-60 chars, required), sortBy (relevance|popular|latest), page, perPage (1-20), languageCode (en|es|fr|de|pt-BR).",
+  "photos": {
+    "orientation": ["landscape", "portrait", "square"],
+    "number_of_people": ["No people", "1 person", "2 people", "3+ people"],
+    "colors": ["pink", "red", "orange", "yellow", "green", "teal", "blue", "purple", "brown", "black", "grey", "white"]
+  },
+  "stock-video": {
+    "categories": ["Stock Footage", "Motion Graphics"],
+    "subcategories": ["Stock Footage: Buildings", "Business, Corporate", "Cartoons", "City", "Construction", "Education", "Food", "Holidays", "Industrial", "Kids", "Lifestyle", "Medical", "Military", "Nature", "Overhead", "People", "Religious", "Science", "Slow Motion", "Special Events", "Sports", "Stop Motion", "Technology", "Time Lapse", "Vehicles", "Weather", "Motion Graphics: Backgrounds", "Bugs", "Distortions", "Elements", "Infographics", "Interface Effects", "Lower Thirds", "Miscellaneous", "Overlays", "Particles", "Revealer", "Transitions", "Water & Fluid"],
+    "orientation": ["horizontal", "vertical"],
+    "resolution": ["720p (HD)", "1080p (Full HD)", "2K", "4K (UHD)"],
+    "frame_rate": ["23.98 fps", "24 fps", "25 fps", "29.97 fps", "30 fps", "50 fps", "60 fps", "More than 60 fps"],
+    "has_alpha_channel": "boolean",
+    "is_looped": "boolean",
+    "min_media_length": "seconds, 0-3600",
+    "max_media_length": "seconds, 0-3600"
+  },
+  "music": {
+    "categories": ["Music Tracks", "Logos & Idents"],
+    "genre": ["pop", "rock", "electronic", "classical", "jazz", "hip hop", "country", "ambient", "blues", "children", "chiptune", "cinematic", "corporate", "dance", "dubstep", "folk", "funk", "future bass", "house", "indie", "latin", "lofi", "lounge", "metal", "orchestral hybrid", "percussive", "rnb soul", "reggae", "techno", "trap", "world"],
+    "mood": ["happy", "sad", "inspiring", "dramatic", "dark", "upbeat", "chill", "funny", "angry", "relaxing", "romantic", "epic"],
+    "theme": ["action", "corporate", "celebration", "comedy", "documentary", "drama", "family", "lifestyle", "nature", "romance", "sci-fi", "showbiz", "sports", "technology", "travel"],
+    "tempo": ["Very Slow (Below 60 BPM)", "Slow (60-90 BPM)", "Medium (90-110 BPM)", "Upbeat (110-140 BPM)", "Fast (140-160 BPM)", "Very Fast (160+ BPM)"],
+    "instrument": ["piano", "acoustic guitar", "drums", "strings", "brass", "synth", "violin", "electric guitar", "accordion", "flute", "banjo", "bass", "bells", "cello", "clarinet", "double bass", "harmonica", "harp", "keyboard", "mallets", "organ", "percussion", "plucked", "saxophone", "sound effects", "trumpet", "ukulele", "woodwinds"],
+    "decade": ["2000s", "80s & 90s", "60s & 70s", "50s and earlier"],
+    "vocals_in_audio": ["No Vocals", "Background Vocals", "Vocal Samples", "Instrumental Included", "Lead Vocals", "Male Vocals", "Female Vocals"],
+    "claim_clear": "boolean (YouTube Content ID claim-free)",
+    "exclude_pro_affiliated": "boolean",
+    "has_music_stems": "boolean",
+    "is_looped": "boolean",
+    "min_media_length": "seconds, 0-3600",
+    "max_media_length": "seconds, 0-3600"
+  },
+  "sound-effects": {
+    "categories": ["Game Sounds", "Transitions & Movement", "Domestic Sounds", "Human Sounds", "Urban Sounds", "Nature Sounds", "Futuristic Sounds", "Interface Sounds", "Cartoon Sounds", "Industrial Sounds", "Sound Packs"],
+    "is_looped": "boolean",
+    "min_media_length": "seconds, 0-540",
+    "max_media_length": "seconds, 0-540"
+  },
+  "graphics": {
+    "categories": ["Backgrounds", "Textures", "Patterns", "Icons", "Objects", "Illustrations"],
+    "graphics_applications_supported": ["Adobe Photoshop", "Adobe Illustrator", "Figma", "Sketch", "Affinity"],
+    "graphics_file_types": ["JPG", "PNG", "JSON"],
+    "is_animated": "boolean",
+    "is_layered": "boolean",
+    "is_looped": "boolean",
+    "is_tileable": "boolean",
+    "is_vector": "boolean",
+    "part_of_pack": "boolean"
+  },
+  "graphic-templates": {
+    "categories": ["Print Templates", "Product Mockups", "Websites", "UX and UI Kits", "Infographics", "Logos", "Scene Generators", "Social Media"],
+    "graphic_templates_applications_supported": ["Adobe Photoshop", "Adobe Illustrator", "Adobe InDesign", "Adobe XD", "Figma", "Sketch", "Canva", "Microsoft Word"],
+    "color_space": ["RGB", "CMYK"],
+    "colors": ["pink", "red", "orange", "yellow", "green", "teal", "blue", "purple", "brown", "black", "grey", "white", "gold", "silver"],
+    "orientation": ["landscape", "portrait", "square"],
+    "is_layered": "boolean",
+    "is_vector": "boolean"
+  },
+  "fonts": {
+    "categories": ["serif", "sans_serif", "script", "decorative_display", "monospace", "handwritten_brush", "blackletter", "symbols", "duo"],
+    "optimum_size": ["Large (Display / Poster)", "Small (Book / Magazine)", "Condensed", "Any Size"],
+    "spacing": ["Normal", "Monospace", "Condensed", "Expanded"],
+    "is_webfont": "boolean"
+  },
+  "presentation-templates": {
+    "presentation_templates_applications_supported": ["Keynote", "PowerPoint", "Google Slides"]
+  },
+  "video-templates": {
+    "categories": ["Broadcast Packages", "Elements", "Infographics", "Logo Stings", "LUTs", "Openers", "Product Promo", "Titles", "Video Displays"],
+    "applications_supported": ["After Effects", "Premiere Pro", "Apple Motion", "Final Cut Pro", "DaVinci Resolve"],
+    "resolution": ["720p (HD)", "1080p (Full HD)", "2K", "4K (UHD)"],
+    "required_plugins": ["No Plugins required"]
+  },
+  "web-templates": {
+    "categories": ["Admin Templates", "Email Templates", "Site Templates", "Landing Page Templates"],
+    "email_platforms": ["Campaign Monitor", "MailChimp", "SendGrid", "ExactTarget", "FreshMail", "ActiveCampaign", "MyMail", "StampReady", "iContact", "Generic"],
+    "psd_files_included": "boolean",
+    "responsive": "boolean",
+    "retina_ready": "boolean",
+    "sketch_files_included": "boolean"
+  },
+  "3d": {
+    "categories": ["Models", "Pixelsquid", "Templates"],
+    "three_d_themes": ["Technology", "Characters", "Architecture", "Animals", "Design", "Seasons", "Nature", "Furniture", "Abstract", "Adventure", "Agriculture", "Arts", "Business", "Celebrations", "Construction", "Education", "Fashion", "Finance", "Food", "Gaming", "Health", "Kids", "Marketing", "Medical", "Military", "Places", "Retail", "Science", "Sports", "Tools and Appliances", "Transportation"],
+    "three_d_file_types": ["OBJ", "BLEND", "GLB", "FBX", "GLTF", "SPLINE"],
+    "min_polycount": "integer, 0-50,000,000+",
+    "max_polycount": "integer, 0-50,000,000+",
+    "three_d_has_animation": "boolean",
+    "three_d_has_interaction": "boolean",
+    "three_d_has_textures": "boolean",
+    "three_d_rigging": "boolean",
+    "part_of_pack": "boolean"
+  },
+  "add-ons": {
+    "categories": ["Actions and Presets", "Brushes", "Layer Styles", "Palettes"],
+    "add_ons_applications_supported": ["Adobe Photoshop", "Adobe Lightroom", "Adobe Illustrator", "Procreate", "Figma", "Sketch"]
+  },
+  "wordpress": {
+    "categories": ["Themes", "Plugins", "Template Kits"],
+    "compatible_with": ["Block Editor", "Bootstrap", "Buddypress", "Cart 66", "Easy Digital Downloads", "Elementor", "Elementor Pro", "Events Calendar Pro", "Facebook", "Gravity Forms", "Gutenberg", "Jigoshop", "Layers WP", "Visual Composer", "WPBakery Page Builder", "WPML", "WooCommerce", "bbPress"],
+    "industries": ["Automotive & Transportation", "Blogs & Podcasts", "Business & Services", "Creative & Design", "Education", "Events & Entertainment", "Fashion & Beauty", "Film & TV", "Finance & Law", "Food & Drink", "Health & Medical", "Kids & Babies", "Miscellaneous", "Music & Bands", "News & Magazines", "Non-Profit & Religion", "Personal & CV", "Photography", "Real Estate & Construction", "Shopping & eCommerce", "Sport & Fitness", "Technology & Apps", "Travel & Accommodation", "Weddings"],
+    "responsive": "boolean",
+    "retina_ready": "boolean"
+  },
+  "cms-templates": {
+    "categories": ["Drupal", "Joomla", "Magento", "OpenCart", "PrestaShop", "Shopify", "Unbounce", "Ghost", "Tumblr"],
+    "ecommerce_ready": "boolean",
+    "psd_files_included": "boolean",
+    "responsive": "boolean",
+    "retina_ready": "boolean",
+    "sketch_files_included": "boolean"
+  }
+}
