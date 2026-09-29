@@ -311,6 +311,7 @@ def main():
     out.write_text(page, encoding="utf-8")
 
     print(f"wrote {out} ({out.stat().st_size // 1024} KB, {len(items)} images)")
+    print(f"open: {out.resolve().as_uri()}")
     if failures:
         print(f"{len(failures)} preview(s) skipped:\n" + "\n".join(failures))
     if not args.no_open:
