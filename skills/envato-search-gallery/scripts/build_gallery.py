@@ -220,7 +220,35 @@ def theme_vars(theme):
     lines.append(f':root[data-theme="dark"]{{{dark}}}')
     # without JavaScript the page still follows the display setting
     lines.append(f"@media (prefers-color-scheme:dark){{:root:not([data-theme]){{{dark}}}}}")
+    small = small_screen_sizes(theme)
+    if small:
+        rules = "".join(f"--t-{role}-s:{px}px;" for role, px in small.items())
+        lines.append(f"@media (max-width:{theme['small_screen']['max_width_px']}px){{:root{{{rules}}}}}")
     return "\n".join(lines)
+
+
+def small_screen_sizes(theme):
+    """Type sizes that change on a narrow screen: small ones grow, the largest come down to a cap.
+
+    The same two rules as the design-system-creator (its spec, section 3.8). A role listed under
+    small_screen.roles is set outright. Returns {role: px} for the roles that change.
+    """
+    ss = theme.get("small_screen")
+    if not ss:
+        return {}
+    out = {}
+    for role, spec in theme["type"].items():
+        size = spec["size_px"]
+        if size < ss["grow_below_px"]:
+            new = size + ss["grow_by_px"]
+        elif size > ss["cap_px"]:
+            new = ss["cap_px"]
+        else:
+            new = size
+        new = ss.get("roles", {}).get(role, {}).get("size_px", new)
+        if new != size:
+            out[role] = new
+    return out
 
 
 def expand_roles(css, theme):
