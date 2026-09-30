@@ -37,9 +37,16 @@ stand-ins. The site has no dark mode, so the dark theme is derived.
 
 ### Components
 
-Input, select, table, callouts, code, modal, and the empty, loading and error states are specified
-in `components` and shown at the bottom of the tuner page. Tabs, tooltips, toasts, pagination,
-navigation and a date picker are not covered yet.
+Input, select, table, callouts, code, modal, the empty, loading and error states, tabs, tooltip,
+toast, pagination, navigation and a date picker are specified in `components` and shown at the
+bottom of the tuner page.
+
+### Accessibility
+
+Measured in a browser on 2026-09-30 and recorded under `accessibility` in
+[archetype.json](archetype.json), with proposed fixes that are **not applied**. The main gaps are
+coral small text on the light page (accepted), subtle grey just under 4.5:1, a coral focus ring
+under 3:1 on light, and a few controls under 24px.
 
 ### Known trade-offs
 

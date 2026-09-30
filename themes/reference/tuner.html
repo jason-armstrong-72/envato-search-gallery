@@ -176,7 +176,48 @@
   .sk i:nth-child(1){width:38%;height:18px}.sk i:nth-child(2){width:92%}.sk i:nth-child(3){width:76%}
   @media (prefers-reduced-motion:no-preference){.sk i{animation:skp 1.4s ease-in-out infinite}@keyframes skp{50%{opacity:.45}}}
 </style>
-<style>.spec .row>*{min-width:0}.spec .row>.tag{overflow-wrap:anywhere}</style><style>:root[data-theme="dark"] .md-wrap{background:rgba(241,241,240,.14)}</style></head>
+<style>.spec .row>*{min-width:0}.spec .row>.tag{overflow-wrap:anywhere}</style><style>:root[data-theme="dark"] .md-wrap{background:rgba(241,241,240,.14)}</style><style>
+  .tabs{display:flex;gap:26px;border-bottom:1px solid var(--border);max-width:640px;overflow-x:auto}
+  .tab{font-family:var(--mono);font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:11px 0;cursor:pointer;white-space:nowrap;transition:color .14s ease}
+  .tab:hover,.tab.force-hover{color:var(--ink)}
+  .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--coral)}
+  .tab:focus-visible,.tab.force-focus{outline:2px solid var(--coral);outline-offset:2px;color:var(--ink)}
+  .tab[disabled]{opacity:.4;cursor:not-allowed}
+  .tt-wrap{position:relative;display:inline-block;padding-top:44px}
+  .tt{position:absolute;top:0;left:0;background:var(--btn-bg);color:var(--btn-ink);font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.04em;text-transform:uppercase;padding:7px 10px;border-radius:1px;white-space:nowrap}
+  .tt::after{content:"";position:absolute;left:16px;bottom:-5px;width:9px;height:9px;background:var(--btn-bg);transform:rotate(45deg)}
+  .toast{display:flex;align-items:center;gap:16px;max-width:460px;padding:12px 16px;background:var(--btn-bg);color:var(--btn-ink);border-radius:1px;margin-bottom:10px;font-size:15px;font-weight:300}
+  .toast.err{box-shadow:inset 3px 0 0 var(--coral)}
+  .toast .ta{margin-left:auto;font-family:var(--mono);font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.04em;color:var(--btn-ink);background:none;border:0;padding:6px 4px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .toast .ta:hover{color:var(--coral)}
+  .toast .tx{font-family:var(--mono);font-size:16px;color:var(--btn-ink);background:none;border:0;cursor:pointer;padding:4px 6px}
+  .pg{display:flex;gap:6px;flex-wrap:wrap}
+  .pg a,.pg span{min-width:32px;height:32px;padding:0 10px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:400;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);box-shadow:inset 0 0 0 1px var(--border);text-decoration:none;cursor:pointer;transition:box-shadow .14s ease,color .14s ease}
+  .pg a:hover,.pg a.force-hover{box-shadow:inset 0 0 0 1px var(--coral);color:var(--coral-text);background:var(--coral-tint)}
+  .pg [aria-current="page"]{background:var(--btn-bg);color:var(--btn-ink);box-shadow:none}
+  .pg [aria-disabled="true"]{opacity:.4;cursor:not-allowed;pointer-events:none}
+  .pg a:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+  nav.nv{display:flex;gap:28px;flex-wrap:wrap}
+  nav.nv a{font-family:var(--mono);font-size:11px;font-weight:400;text-transform:uppercase;letter-spacing:.04em;color:var(--ink);text-decoration:none;padding:6px 0;transition:color .14s ease}
+  nav.nv a .n{color:var(--grey);margin-right:6px}
+  nav.nv a:hover,nav.nv a.force-hover{color:var(--coral-text)}
+  nav.nv a[aria-current="page"]{text-decoration:underline;text-decoration-color:var(--coral);text-decoration-thickness:2px;text-underline-offset:6px}
+  nav.nv a:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
+  .dp{border:1px solid var(--border);background:var(--surface);padding:14px;width:max-content;max-width:100%}
+  .dp .dh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-family:var(--mono);font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.04em}
+  .dp .dh button{font-family:var(--mono);font-size:14px;color:var(--ink);background:none;border:0;cursor:pointer;padding:4px 10px}
+  .dp .dh button:hover{color:var(--coral-text)}
+  .dp .g{display:grid;grid-template-columns:repeat(7,36px);gap:2px}
+  .dp .g b{font-family:var(--mono);font-size:11px;font-weight:300;text-transform:uppercase;color:var(--ink-soft);text-align:center;padding:4px 0}
+  .dp .g a{height:36px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:300;color:var(--ink);text-decoration:none;cursor:pointer;box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .14s ease}
+  .dp .g a.o{color:var(--ink-soft);opacity:.55}
+  .dp .g a:hover,.dp .g a.force-hover{box-shadow:inset 0 0 0 1px var(--coral);background:var(--coral-tint);color:var(--coral-text)}
+  .dp .g a.today{box-shadow:inset 0 0 0 1px var(--ink)}
+  .dp .g a[aria-selected="true"]{background:var(--btn-bg);color:var(--btn-ink);box-shadow:none}
+  .dp .g a[aria-disabled="true"]{opacity:.35;cursor:not-allowed;pointer-events:none}
+  .dp .g a:focus-visible{outline:2px solid var(--coral);outline-offset:1px}
+</style>
+</head>
 <body>
 <div class="themebar" role="group" aria-label="Theme"><button data-t="light" aria-pressed="false">Light</button><button data-t="dark" aria-pressed="false">Dark</button></div>
 <script>
@@ -257,6 +298,12 @@ set(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');})();
   <div class="row"><span class="tag">Empty state</span><div class="es"><span class="ey">_00 No results</span><h3 class="spec-h3" style="margin:0">Nothing matched that search</h3><p class="spec-body">Try fewer words, or remove a filter.</p><a class="card-link" href="#" onclick="return false">Clear filters</a></div></div>
   <div class="row"><span class="tag">Loading state</span><div class="sk" role="status" aria-label="Loading"><i></i><i></i><i></i></div></div>
   <div class="row"><span class="tag">Error state</span><div class="es bad"><span class="ey">Error</span><h3 class="spec-h3" style="margin:0">The search failed</h3><p class="spec-body">The Envato server did not respond.</p><a class="card-link" href="#" onclick="return false">Try again</a></div></div>
+  <div class="row"><span class="tag">Tabs</span><div><div class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true">Photos</button><button class="tab" role="tab" aria-selected="false">Graphics</button><button class="tab force-hover" role="tab" aria-selected="false">Video</button><button class="tab force-focus" role="tab" aria-selected="false">Fonts</button><button class="tab" role="tab" aria-selected="false" disabled>Music</button></div><p class="spec-caption" style="margin:8px 0 0">Selected, rest, hover, focus, disabled.</p></div></div>
+  <div class="row"><span class="tag">Tooltip</span><div><div class="tt-wrap"><span class="tt" role="tooltip">Opens on elements.envato.com</span><a class="card-link" href="#" onclick="return false" style="min-width:190px;margin:0">View on Envato</a></div></div></div>
+  <div class="row"><span class="tag">Toast</span><div><div class="toast" role="status"><span>Gallery built, 10 images.</span><button class="ta">Open</button><button class="tx" aria-label="Dismiss">&times;</button></div><div class="toast err" role="alert"><span>Search failed. Try again.</span><button class="ta">Retry</button><button class="tx" aria-label="Dismiss">&times;</button></div></div></div>
+  <div class="row"><span class="tag">Pagination</span><nav class="pg" aria-label="Pages"><span aria-disabled="true">Prev</span><a aria-current="page">1</a><a href="#" onclick="return false">2</a><a href="#" onclick="return false" class="force-hover">3</a><a href="#" onclick="return false">4</a><a href="#" onclick="return false">Next</a></nav></div>
+  <div class="row"><span class="tag">Navigation</span><nav class="nv" aria-label="Main"><a href="#" onclick="return false" aria-current="page"><span class="n">_01</span>New to</a><a href="#" onclick="return false" class="force-hover"><span class="n">_02</span>Solution</a><a href="#" onclick="return false"><span class="n">_03</span>Partnership</a><a href="#" onclick="return false"><span class="n">_04</span>Resources</a></nav></div>
+  <div class="row"><span class="tag">Date picker</span><div class="dp" role="application" aria-label="Choose a date"><div class="dh"><button aria-label="Previous month">&lsaquo;</button><span>September 2026</span><button aria-label="Next month">&rsaquo;</button></div><div class="g"><b>Mo</b><b>Tu</b><b>We</b><b>Th</b><b>Fr</b><b>Sa</b><b>Su</b><a class="o" aria-disabled="true">31</a><a aria-disabled="true">1</a><a aria-disabled="true">2</a><a aria-disabled="true">3</a><a>4</a><a>5</a><a>6</a><a>7</a><a>8</a><a>9</a><a>10</a><a>11</a><a>12</a><a>13</a><a>14</a><a aria-selected="true">15</a><a>16</a><a>17</a><a>18</a><a>19</a><a>20</a><a>21</a><a class="force-hover">22</a><a>23</a><a>24</a><a>25</a><a>26</a><a>27</a><a>28</a><a>29</a><a class="today">30</a><a class="o" aria-disabled="true">1</a><a class="o" aria-disabled="true">2</a><a class="o" aria-disabled="true">3</a><a class="o" aria-disabled="true">4</a></div></div></div>
   <div class="row"><span class="tag">Code</span><p class="spec-code">python3 scripts/build_gallery.py results.json --theme archetype.json</p></div>
 </section>
 <footer>

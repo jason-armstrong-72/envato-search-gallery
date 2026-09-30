@@ -1,6 +1,6 @@
 {
   "name": "archetype",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "status": "reference, not yet read by build_gallery.py",
   "locked": "2026-09-30",
   "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json.",
@@ -370,9 +370,8 @@
     "Hairline border is 1.2:1 on light. Decorative, accepted."
   ],
   "open": [
-    "Accessibility pass not done: contrast per role and state, disabled states, touch target height.",
+    "Accessibility findings are measured but no fix is applied; see accessibility.proposals_not_applied.",
     "Selected = solid look for chips and pills: not yet confirmed by the owner.",
-    "Disabled-state contrast is not measured.",
     "Button pressed fill (82% mix) and the doubled pressed tint are the assistant's choices.",
     "Spacing values are tuned per element, not snapped to a scale."
   ],
@@ -432,12 +431,115 @@
       "dark": "left as #2a2a2a on black (owner decision)"
     },
     "not_covered": [
-      "tabs",
-      "tooltip",
-      "toast",
-      "pagination",
-      "navigation",
-      "date picker"
+      "combobox",
+      "accordion",
+      "breadcrumb",
+      "progress bar",
+      "file upload"
+    ],
+    "tabs": {
+      "tab": "mono 12px weight 400, uppercase, muted text; hover ink; selected ink with a 2px coral underline; focus 2px coral ring; disabled 40%",
+      "list": "1px hairline under the row, scrolls sideways on narrow screens"
+    },
+    "tooltip": {
+      "panel": "button-fill background, button-text colour, mono 11px weight 400 uppercase, 7px 10px padding, 1px radius, 9px arrow"
+    },
+    "toast": {
+      "panel": "button-fill background, button-text colour, sans 15px weight 300, 12px 16px padding",
+      "error": "3px coral bar on the left",
+      "action": "mono 12px uppercase, underlined, coral on hover",
+      "dismiss": "cross at the right"
+    },
+    "pagination": {
+      "item": "32px minimum square, mono 12px weight 400 uppercase, hairline box",
+      "hover": "coral box and text with tint fill",
+      "current": "solid button fill",
+      "disabled": "40%"
+    },
+    "navigation": {
+      "link": "mono 11px weight 400 uppercase, ink; numbered prefix in subtle grey (_01)",
+      "hover": "coral text",
+      "current": "2px coral underline"
+    },
+    "date_picker": {
+      "panel": "surface fill, hairline border, 14px padding",
+      "grid": "7 columns of 36px cells, Monday first, weekday row mono 11px weight 300",
+      "today": "1px ink ring",
+      "selected": "solid button fill",
+      "hover": "coral box with tint fill",
+      "disabled_and_outside_month": "reduced opacity"
+    }
+  },
+  "accessibility": {
+    "measured": "2026-09-30",
+    "method": "Browser audit of computed styles in both themes: text contrast for every text style on the tuner page (including forced hover, pressed and disabled samples), boundary contrast for form fields, chips, pagination and buttons, focus ring contrast, and control sizes.",
+    "text": {
+      "light": {
+        "text_styles_checked": 86,
+        "active_failures": 16,
+        "inactive_failures_exempt": 9
+      },
+      "dark": {
+        "text_styles_checked": 86,
+        "active_failures": 7,
+        "inactive_failures_exempt": 9
+      }
+    },
+    "text_findings": {
+      "coral_on_light": "Coral small text on the light page is 2.7:1 (toggle rest, eyebrow, hover and pressed states of chips, pagination, navigation, calendar). Accepted by the owner; not changed.",
+      "subtle_grey": "Subtle text #707070 is 4.38:1 on light and 4.24:1 on dark (labels, numbered nav prefix, empty-state eyebrow, specimen captions). Just under 4.5:1.",
+      "dark_pressed_chip": "Coral text on the doubled 32% tint in dark is 4.42:1.",
+      "inactive_controls": "Disabled controls at 40% opacity measure 1.7 to 3.4:1. Inactive controls are exempt from WCAG contrast rules; recorded for information."
+    },
+    "non_text": {
+      "form_fields": "Outline is 5.56:1 light, 8.03:1 dark. Pass.",
+      "buttons_callouts_rules": "15.4:1 light, 18.6:1 dark. Pass.",
+      "interactive_chip_and_pagination_edges": "Hairline edge is 1.17:1 light, 1.46:1 dark, below the 3:1 wanted for the boundary of an interactive control. Gallery chips are static and unaffected.",
+      "focus_ring": "Coral ring is 2.70:1 on the light page (needs 3:1) and 6.88:1 on dark."
+    },
+    "control_sizes_px": {
+      "card_button": "210x34",
+      "input": "191x38",
+      "select": "190x38",
+      "tab": "46x39",
+      "pagination": "32x32",
+      "nav_link": "69x26",
+      "calendar_day": "36x36",
+      "interactive_chip": "83x23",
+      "filter_toggle": "89x23",
+      "theme_bar_button": "55x28",
+      "ghost_button": "54x33",
+      "toast_action": "39x27",
+      "toast_dismiss": "22x28",
+      "modal_close": "27x31",
+      "calendar_nav": "28x26",
+      "note": "Under the 24x24 minimum (WCAG 2.2 AA): interactive chip (23 high), filter toggle (23 high), toast dismiss (22 wide). Under 44px for touch: most controls."
+    },
+    "proposals_not_applied": [
+      {
+        "id": "subtle-text",
+        "change": "Darken subtle text to #6a6a6a on light (4.79:1) and lighten to #7a7a7a on dark (4.89:1)."
+      },
+      {
+        "id": "coral-text-light",
+        "change": "Optional light-mode-only coral for small text and focus ring: #c73826 (4.62:1 on the page, 5.04:1 on surface). The owner declined a deeper coral on 2026-09-30, so this stays a proposal."
+      },
+      {
+        "id": "pressed-tint-dark",
+        "change": "Cap the pressed chip tint in dark at 24% (5.2:1) instead of 32% (4.42:1)."
+      },
+      {
+        "id": "interactive-edges",
+        "change": "Use the muted outline (#606060 light 5.56:1, #767676 dark 4.62:1) for the rest edge of interactive chips and pagination, as fields already do."
+      },
+      {
+        "id": "focus-ring",
+        "change": "Use ink for the focus ring on light (15.4:1) and coral on dark, or a two-tone ring."
+      },
+      {
+        "id": "targets",
+        "change": "Under a coarse pointer, give buttons, tabs, pagination and toggles a 44px minimum height; make the toast dismiss at least 24px wide."
+      }
     ]
   }
 }
