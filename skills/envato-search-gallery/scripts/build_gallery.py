@@ -27,9 +27,12 @@ Each `img` must be the FULL signed URL from the search result, including the tra
 downloaded here and embedded as base64, so the output file opens offline and needs no
 network, account or server.
 
-The look comes from a theme file (default: themes/archetype.json next to this script's folder).
-Colours, type, spacing, shape and fonts are all read from it, and the fonts are embedded as
-base64, so a theme needs no network either. Pass --theme NAME for another file in themes/, or
+The look comes from a theme file (default: themes/jason-armstrong.json next to this script's
+folder, a bundled copy of Jason Armstrong's master theme, schema version 2). Colours, type,
+spacing, shape and fonts are all read from it, and the fonts are embedded as base64, so a theme
+needs no network either. When the default theme is used and the master theme is found on this
+machine, a one-line warning is printed if the bundled copy is behind it
+(see check_theme_sync.py). Pass --theme NAME for another file in themes/, or
 --theme PATH for a theme file anywhere. The page follows the display's light or dark setting and
 has a Light, Dark and System switch.
 
@@ -54,7 +57,8 @@ KEEP_DAYS = 7
 SKILL_DIR = Path(__file__).resolve().parent.parent
 FILTERS_PATH = SKILL_DIR / "references" / "filters.json"
 THEMES_DIR = SKILL_DIR / "themes"
-DEFAULT_THEME = "archetype"
+DEFAULT_THEME = "jason-armstrong"
+SCHEMA_VERSION = 2
 USER_AGENT = "Mozilla/5.0 (envato-search-gallery)"
 
 
@@ -121,8 +125,8 @@ def filters_panel(asset_type, applied):
 # ---- theme ------------------------------------------------------------------------------------
 
 REQUIRED_ROLES = ["display", "title", "eyebrow", "meta", "author", "label", "option", "button"]
-REQUIRED_COLOURS = ["bg", "surface", "border", "ink", "muted", "accent", "accenttext", "error", "warning",
-                    "btnbg", "btnink", "btnarrow", "focus"]
+REQUIRED_COLOURS = ["bg", "surface", "border", "ink", "muted", "accent", "accent-text", "error", "warning",
+                    "btn-bg", "btn-ink", "btn-arrow", "focus"]
 REQUIRED_SPACING = ["pagex", "pagetop", "pagebot", "maxw", "hgap", "hmb", "fpadx", "fpady", "fgapy",
                     "fgapx", "fmb", "chipgap", "chipx", "chipy", "gridgap", "cardmin", "cpadt", "cpadx",
                     "cpadb", "cgap", "btnx", "btny", "btngap", "footmt", "footpt", "rcard", "rchip", "rbtn"]
@@ -143,6 +147,11 @@ def load_theme(name):
         sys.exit(f"error: theme not found: {path}\navailable themes: {', '.join(available_themes()) or 'none'}")
     except ValueError as exc:
         sys.exit(f"error: theme {path} is not valid JSON: {exc}")
+    if theme.get("schema_version") != SCHEMA_VERSION:
+        sys.exit(
+            f"error: theme {path.name} has schema_version {theme.get('schema_version')!r}; "
+            f"this builder reads schema_version {SCHEMA_VERSION}"
+        )
     missing = (
         [f"type.{r}" for r in REQUIRED_ROLES if r not in theme.get("type", {})]
         + [f"colour.{c}" for c in REQUIRED_COLOURS if c not in theme.get("colour", {})]
@@ -189,17 +198,21 @@ def theme_vars(theme):
         lines.append(f"--sp-{key}:{v['px']}px;")
     # the lightbox is dark in both modes, so its link uses the accent as it is in dark mode
     lines.append(f"--accent-on-dark:{theme['colour']['accent']['dark']};")
+    lines.append(f"--ink-on-dark:{theme['colour']['ink']['dark']};--muted-on-dark:{theme['colour']['muted']['dark']};")
     lines.append("}")
 
     def colours(mode):
         c = theme["colour"]
         g = lambda k: c[k][mode]
+        # the lightbox has no panel and shows captions straight on the backdrop, so it uses the theme's
+        # dark (light-mode) backdrop in both modes: the light-tinted dark-mode one leaves the page readable behind
+        backdrop = theme.get("components", {}).get("modal", {}).get("backdrop", {}).get("light", "rgba(0,0,0,.92)")
         return (
             f"--bg:{g('bg')};--surface:{g('surface')};--border:{g('border')};--ink:{g('ink')};"
-            f"--muted:{g('muted')};--accent:{g('accent')};--accent-text:{g('accenttext')};"
+            f"--muted:{g('muted')};--accent:{g('accent')};--accent-text:{g('accent-text')};"
             f"--error:{g('error')};--warning:{g('warning')};"
-            f"--btn-bg:{g('btnbg')};--btn-ink:{g('btnink')};--btn-arrow:{g('btnarrow')};"
-            f"--focus:{g('focus')};color-scheme:{mode};"
+            f"--btn-bg:{g('btn-bg')};--btn-ink:{g('btn-ink')};--btn-arrow:{g('btn-arrow')};"
+            f"--focus:{g('focus')};--lb-bg:{backdrop};color-scheme:{mode};"
         )
 
     light, dark = colours("light"), colours("dark")
@@ -319,19 +332,19 @@ __THEME_VARS__
   .card-link:hover,.card-link:focus-visible{background:var(--btn-bg);color:var(--btn-ink)}
   .card-link:active{background:color-mix(in srgb,var(--btn-bg) 82%,var(--bg));color:var(--btn-ink)}
   .card-link:focus-visible,.lb-link:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-  .lb{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;
+  .lb{position:fixed;inset:0;background:var(--lb-bg);display:none;align-items:center;justify-content:center;
       flex-direction:column;gap:14px;padding:24px 16px;z-index:10}
   .lb[data-open="true"]{display:flex}
   .lb img{max-width:min(96vw,1200px);max-height:74vh;border-radius:var(--sp-rcard);background:var(--border)}
-  .lb-cap{color:#f1f1f0;text-align:center;max-width:720px;display:flex;flex-direction:column;gap:6px;align-items:center}
-  .lb-title{@role title;color:#f1f1f0}
-  .lb-author{@role author;color:#a0a0a0}
+  .lb-cap{color:var(--ink-on-dark);text-align:center;max-width:720px;display:flex;flex-direction:column;gap:6px;align-items:center}
+  .lb-title{@role title;color:var(--ink-on-dark)}
+  .lb-author{@role author;color:var(--muted-on-dark)}
   .lb-link{color:var(--accent-on-dark);margin:0;gap:8px}
-  .lb button{all:unset;cursor:pointer;color:#f1f1f0;font-size:28px;line-height:1;padding:10px 14px;
+  .lb button{all:unset;cursor:pointer;color:var(--ink-on-dark);font-size:28px;line-height:1;padding:10px 14px;
              border-radius:var(--sp-rbtn);background:rgba(255,255,255,.1);position:absolute;min-width:44px;min-height:44px;
              display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}
   .lb button:hover{background:rgba(255,255,255,.22)}
-  .lb button:focus-visible{outline:2px solid #f1f1f0;outline-offset:2px}
+  .lb button:focus-visible{outline:2px solid var(--ink-on-dark);outline-offset:2px}
   .lb .lb-close{top:14px;right:14px}
   .lb .lb-prev{left:12px;top:50%;transform:translateY(-50%)}
   .lb .lb-next{right:12px;top:50%;transform:translateY(-50%)}
@@ -489,6 +502,11 @@ def main():
     args = ap.parse_args()
 
     theme = load_theme(args.theme)
+    if args.theme == DEFAULT_THEME:
+        import check_theme_sync  # quick local file compare; silent when there is no master
+        note = check_theme_sync.behind_note(THEMES_DIR / f"{DEFAULT_THEME}.json")
+        if note:
+            print(note, file=sys.stderr)
     raw = sys.stdin.read() if args.input == "-" else Path(args.input).read_text()
     spec = json.loads(raw)
     results = spec.get("results") or []

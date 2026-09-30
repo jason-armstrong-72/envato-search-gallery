@@ -1,9 +1,10 @@
 {
-  "name": "archetype",
-  "version": "1.1.2",
-  "status": "in use: read by skills/envato-search-gallery/scripts/build_gallery.py",
-  "locked": "2026-09-30",
-  "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. The accent is Forest green (chosen 2026-09-30 from six options). The house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json is kept for error and warning only.",
+  "schema_version": 2,
+  "name": "jason-armstrong",
+  "display_name": "JA",
+  "version": "1.2.0",
+  "owner": "Jason Armstrong",
+  "derived_from": "Started from measurements of https://www.archetypeai.io/ (off-white page, near-black ink, light headings, small uppercase mono labels, near-square corners), then changed: Forest green accent, a derived dark theme, house coral kept for error and warning only.",
   "fonts": {
     "sans": {
       "family": "Hanken Grotesk",
@@ -13,10 +14,11 @@
         400,
         500
       ],
-      "source": "Google Fonts, SIL OFL",
-      "note": "Free stand-in for PP Neue Montreal (paid), which the reference site uses.",
       "fallback": "\"Helvetica Neue\", Arial, sans-serif",
-      "google_fonts_url": "https://fonts.google.com/specimen/Hanken+Grotesk"
+      "css_url": "https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@200..500&display=swap",
+      "install_url": "https://fonts.google.com/specimen/Hanken+Grotesk",
+      "office_fallback": "Arial",
+      "licence": "SIL OFL"
     },
     "mono": {
       "family": "IBM Plex Mono",
@@ -26,10 +28,11 @@
         400,
         500
       ],
-      "source": "Google Fonts, SIL OFL",
-      "note": "Stand-in for PP Neue Montreal Mono.",
       "fallback": "ui-monospace, Menlo, Consolas, monospace",
-      "google_fonts_url": "https://fonts.google.com/specimen/IBM+Plex+Mono"
+      "css_url": "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@200;300;400;500&display=swap",
+      "install_url": "https://fonts.google.com/specimen/IBM+Plex+Mono",
+      "office_fallback": "Consolas",
+      "licence": "SIL OFL"
     },
     "embed": [
       {
@@ -94,8 +97,7 @@
         "file": "fonts/ibm-plex-mono-latin-500.woff2",
         "unicode_range": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
       }
-    ],
-    "embed_note": "Latin and latin-extended subsets (Western and Central European). Files are paths relative to the skill folder, embedded into each page as base64 with their unicode ranges, so a page needs no network for fonts and the browser uses the right file per character. Characters outside these (for example Thai in an Envato title) fall back to the system font."
+    ]
   },
   "type": {
     "display": {
@@ -112,7 +114,7 @@
       "weight": 200,
       "tracking_em": -0.03,
       "line_height": 1.08,
-      "usage": "Heading 2 (specimen)"
+      "usage": "Heading 2"
     },
     "h3": {
       "family": "sans",
@@ -120,7 +122,7 @@
       "weight": 200,
       "tracking_em": -0.02,
       "line_height": 1.2,
-      "usage": "Heading 3 (specimen)"
+      "usage": "Heading 3"
     },
     "lead": {
       "family": "sans",
@@ -128,7 +130,7 @@
       "weight": 200,
       "tracking_em": -0.01,
       "line_height": 1.45,
-      "usage": "Lead paragraph (specimen)"
+      "usage": "Lead paragraph"
     },
     "title": {
       "family": "sans",
@@ -144,7 +146,7 @@
       "weight": 200,
       "tracking_em": 0,
       "line_height": 1.5,
-      "usage": "Body copy (specimen)"
+      "usage": "Body copy"
     },
     "caption": {
       "family": "sans",
@@ -152,7 +154,7 @@
       "weight": 200,
       "tracking_em": 0,
       "line_height": 1.4,
-      "usage": "Caption (specimen)"
+      "usage": "Caption"
     },
     "eyebrow": {
       "family": "mono",
@@ -208,7 +210,23 @@
       "weight": 300,
       "tracking_em": 0,
       "line_height": 1.5,
-      "usage": "Code (specimen)"
+      "usage": "Code"
+    },
+    "data": {
+      "family": "sans",
+      "size_px": 15,
+      "weight": 300,
+      "tracking_em": 0,
+      "line_height": 1.5,
+      "usage": "Text in inputs, selects, table cells and toasts"
+    },
+    "colhead": {
+      "family": "mono",
+      "size_px": 11,
+      "weight": 400,
+      "tracking_em": 0.04,
+      "line_height": 1.4,
+      "usage": "Table column headings"
     }
   },
   "colour": {
@@ -239,15 +257,15 @@
     },
     "subtle": {
       "light": "#6a6a6a",
-      "dark": "#7a7a7a",
-      "usage": "Subtle labels (was #707070 in 0.1.0; darkened for contrast)"
+      "dark": "#808080",
+      "usage": "Subtle labels"
     },
     "accent": {
       "light": "#0d8a4b",
       "dark": "#34d399",
       "usage": "Accent for shapes, bars, borders, arrows (Forest green)"
     },
-    "accenttext": {
+    "accent-text": {
       "light": "#066f33",
       "dark": "#34d399",
       "usage": "Accent for small text (deeper in light: 5.6:1 on the page, 5.1:1 on the hover tint, 4.6:1 on the pressed tint)"
@@ -258,26 +276,26 @@
       "usage": "Accent tint used for the dark-mode hover fill"
     },
     "error": {
-      "light": "#ff5c48",
+      "light": "#f4503b",
       "dark": "#ff5c48",
-      "usage": "Error shapes and bars (house coral)"
+      "usage": "Error shapes and bars"
     },
     "warning": {
-      "light": "#ff5c48",
+      "light": "#f4503b",
       "dark": "#ff5c48",
-      "usage": "Warning shapes and bars (house coral; a separate token so it can differ later)"
+      "usage": "Warning shapes and bars (a separate token so it can differ later)"
     },
-    "btnbg": {
+    "btn-bg": {
       "light": "#1a1a1a",
       "dark": "#f1f1f0",
       "usage": "Button fill"
     },
-    "btnink": {
+    "btn-ink": {
       "light": "#ffffff",
       "dark": "#000000",
       "usage": "Button text"
     },
-    "btnarrow": {
+    "btn-arrow": {
       "light": "#0d8a4b",
       "dark": "#087f3f",
       "usage": "Button arrow, readable on both the outlined and the solid button"
@@ -287,6 +305,33 @@
       "dark": "#34d399",
       "usage": "Keyboard focus ring, 2px, 2px offset"
     }
+  },
+  "tint_percent": {
+    "light": 8,
+    "dark": 16
+  },
+  "spacing_scale": {
+    "steps_px": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      32,
+      40,
+      48,
+      56,
+      64
+    ],
+    "off_scale": [
+      "maxw",
+      "cardmin",
+      "spectag",
+      "rcard",
+      "rchip",
+      "rbtn"
+    ]
   },
   "spacing_and_shape": {
     "pagex": {
@@ -414,6 +459,23 @@
       "usage": "Button radius"
     }
   },
+  "motion": {
+    "duration_s": 0.14,
+    "easing": "ease"
+  },
+  "touch_targets": {
+    "min_px": 24,
+    "coarse_px": 44
+  },
+  "brand": {
+    "logo": "themes/assets/mark.svg",
+    "logo_dark": "themes/assets/mark-dark.svg",
+    "alt": "Jason Armstrong",
+    "height_px": 28,
+    "placement": "above",
+    "invert_in_dark": false,
+    "placeholder": true
+  },
   "states": {
     "button": {
       "rest": "transparent fill, 1px inside outline and text in button colour",
@@ -443,12 +505,6 @@
     },
     "motion": "0.14s ease on colour, background and border. None when the visitor prefers reduced motion."
   },
-  "accepted_debt": [
-    "Hairline border is 1.2:1 on light. Decorative, accepted."
-  ],
-  "open": [
-    "Brand logo: support is built, no logo file has been supplied yet (see brand)."
-  ],
   "components": {
     "note": "Built from the locked tokens on 2026-09-30. Component states reuse the interaction rules under \"states\".",
     "text_input": {
@@ -567,223 +623,94 @@
       "shipped_gallery": "The shipped gallery page gets this switch; the tuner keeps its Tune and Touch buttons beside it."
     }
   },
-  "accessibility": {
-    "measured": "2026-09-30",
-    "method": "Browser audit of computed styles in both themes: text contrast for every text style on the tuner page (including forced hover, pressed and disabled samples), boundary contrast for form fields, chips, pagination and buttons, focus ring contrast, and control sizes.",
-    "text": {
-      "light": {
-        "text_styles_checked": 86,
-        "active_failures": 16,
-        "inactive_failures_exempt": 9
-      },
-      "dark": {
-        "text_styles_checked": 86,
-        "active_failures": 7,
-        "inactive_failures_exempt": 9
-      }
-    },
-    "text_findings": {
-      "coral_on_light": "Coral-era finding, superseded by the Forest accent (see accent_audit); coral is no longer used for text. Coral small text on the light page is 2.7:1 (toggle rest, eyebrow, hover and pressed states of chips, pagination, navigation, calendar). Accepted by the owner; not changed.",
-      "subtle_grey": "Resolved in 0.4.0: subtle text is now #6a6a6a light and #7a7a7a dark.",
-      "dark_pressed_chip": "Coral-era finding, superseded by the Forest accent (see accent_audit); coral is no longer used for text. Coral text on the doubled 32% tint in dark is 4.42:1.",
-      "inactive_controls": "Disabled controls at 40% opacity measure 1.7 to 3.4:1. Inactive controls are exempt from WCAG contrast rules; recorded for information."
-    },
-    "non_text": {
-      "form_fields": "Outline is 5.56:1 light, 8.03:1 dark. Pass.",
-      "buttons_callouts_rules": "15.4:1 light, 18.6:1 dark. Pass.",
-      "interactive_chip_and_pagination_edges": "Resolved in 0.4.0: muted outline at rest.",
-      "focus_ring": "Resolved in 0.4.0: ink ring on light, accent on dark. Under the Forest accent this is ink 15.4:1 on light and accent 10.9:1 on dark (it was coral on dark in the coral era)."
-    },
-    "control_sizes_px": {
-      "card_button": "210x34",
-      "input": "191x38",
-      "select": "190x38",
-      "tab": "46x39",
-      "pagination": "32x32",
-      "nav_link": "69x26",
-      "calendar_day": "36x36",
-      "interactive_chip": "83x23",
-      "filter_toggle": "89x23",
-      "theme_bar_button": "55x28",
-      "ghost_button": "54x33",
-      "toast_action": "39x27",
-      "toast_dismiss": "22x28",
-      "modal_close": "27x31",
-      "calendar_nav": "28x26",
-      "note": "After 0.4.0: 24px minimum everywhere, 44px under a coarse pointer. Sizes above are the desktop pointer measurements before the 24px fix."
-    },
-    "proposals_not_applied": [
-      {
-        "id": "coral-text-light",
-        "change": "Closed: no longer relevant, because coral is not used as text since the Forest accent (2026-09-30). Historical proposal: optional light-mode-only coral for small text and focus ring: #c73826 (4.62:1 on the page, 5.04:1 on surface). The owner declined a deeper coral on 2026-09-30."
-      }
+  "voice": {
+    "summary": "Short, plain and to the point. Explain it the way a patient teacher would, in one line, then stop.",
+    "rules": [
+      "Get to the point in the first sentence.",
+      "Keep sentences short. One idea each.",
+      "Explain the why in one plain line when it helps, then stop.",
+      "Use plain words. If a tool has its own label for something, put the label in quotes.",
+      "State facts without hedging. Say 'needs', not 'may need', when the need is real.",
+      "Report finished work in the past tense: 'Saved', not 'Saving your changes'.",
+      "Say what an action gives the reader, not what happens if they skip it.",
+      "Use contractions.",
+      "End on the next step, not on reassurance."
     ],
-    "applied_2026-09-30": [
-      {
-        "id": "subtle-text",
-        "result": "#6a6a6a on light 4.79:1, #7a7a7a on dark 4.89:1. Text failures fell from 16 to 11 (light) and 7 to 2 (dark)."
-      },
-      {
-        "id": "interactive-edges",
-        "result": "Interactive chip and pagination edges 5.56:1 light, 8.03:1 dark."
-      },
-      {
-        "id": "focus-ring",
-        "result": "Focus ring is ink on light (15.4:1) and accent on dark (10.9:1 under Forest). Coral-era figure for dark was 6.88:1 (history)."
-      },
-      {
-        "id": "targets",
-        "result": "24px minimum everywhere; 44px under a coarse pointer, verified with the Touch preview."
-      },
-      {
-        "id": "pressed-tint-dark",
-        "result": "Pressed tint capped at 24%. Coral-era figure (history): coral text on it was 5.2:1 in dark; coral is no longer used for text."
-      }
+    "spelling": "Australian",
+    "capitalisation": "sentence case",
+    "avoid": [
+      "em dashes and en dashes",
+      "emoji",
+      "filler openers such as 'Welcome to' or 'Here you can'",
+      "intensifiers: just, simply, actually, really",
+      "jargon the reader has to look up",
+      "exclamation marks",
+      "title case headings"
     ],
-    "remaining_after_fixes": {
-      "light": "none in a real state under the Forest accent (coral-era history: 11 text styles, all coral small text on the light page, accepted 2026-09-30)",
-      "dark": "none in a real state under the Forest accent"
-    },
-    "note": "The measurements and fixes in this section were made with the coral accent (themes 0.1 to 0.6). See accent_audit for the Forest accent that replaced it."
+    "examples": [
+      {
+        "instead_of": "Oops! Something went wrong while attempting to process your request.",
+        "write": "That didn't save. Try again."
+      },
+      {
+        "instead_of": "Simply leverage the filter functionality to refine your results",
+        "write": "Filter the results."
+      },
+      {
+        "instead_of": "You may need to grant access before continuing",
+        "write": "Grant access to continue."
+      },
+      {
+        "instead_of": "No Results Found",
+        "write": "Nothing matched. Try a broader search."
+      }
+    ]
   },
-  "spacing_scale": {
-    "note": "Spacing values sit on this scale. Named size-N, N in px (the reference site names its own sizes the same way). Locked 2026-09-30.",
-    "steps_px": [
-      4,
-      8,
-      12,
-      16,
-      20,
-      24,
-      32,
-      40,
-      48,
-      56,
-      64
+  "scope": {
+    "default": true,
+    "names": [
+      "JA",
+      "Jason Armstrong",
+      "my brand",
+      "my design system"
     ],
-    "not_on_the_scale_on_purpose": [
-      "maxw",
-      "cardmin",
-      "spectag",
-      "rcard",
-      "rchip",
-      "rbtn"
+    "not_when": [
+      "Brandunity, Vaultia or any other brand or client is named",
+      "the work is inside a repo or project that has its own design system or brand",
+      "a skill with its own built-in look is running and this brand is not named"
     ],
-    "snapped_from_tuned_values": {
-      "pagetop": {
-        "was": 30,
-        "now": 32
+    "outputs": {
+      "html": {
+        "applies": "default",
+        "how": "recipes/html.md"
       },
-      "hgap": {
-        "was": 6,
-        "now": 8
+      "artifact": {
+        "applies": "default",
+        "how": "recipes/html.md"
       },
-      "chipx": {
-        "was": 9,
-        "now": 8
+      "word": {
+        "applies": "default",
+        "how": "recipes/office.md"
       },
-      "chipy": {
-        "was": 3,
-        "now": 4
+      "powerpoint": {
+        "applies": "default",
+        "how": "recipes/office.md"
       },
-      "cgap": {
-        "was": 10,
-        "now": 12
-      },
-      "btny": {
-        "was": 9,
-        "now": 8
-      },
-      "specpad": {
-        "was": 14,
-        "now": 16
-      },
-      "footpt": {
-        "was": 14,
-        "now": 16
-      },
-      "footmt": {
-        "was": 28,
-        "now": 32
+      "image": {
+        "applies": "when_named",
+        "how": "recipes/images.md"
       }
-    },
-    "tie_break": "Where a value sat exactly between two steps (6, 10, 14, 28) it was rounded up, because the tuning had moved towards airier spacing.",
-    "role_to_step": {
-      "pagex": "size-20",
-      "pagetop": "size-32",
-      "pagebot": "size-40",
-      "hgap": "size-8",
-      "hmb": "size-24",
-      "fpadx": "size-16",
-      "fpady": "size-12",
-      "fgapy": "size-4",
-      "fgapx": "size-20",
-      "fmb": "size-24",
-      "chipgap": "size-8",
-      "chipx": "size-8",
-      "chipy": "size-4",
-      "gridgap": "size-16",
-      "cpadt": "size-16",
-      "cpadx": "size-16",
-      "cpadb": "size-16",
-      "cgap": "size-12",
-      "btnx": "size-12",
-      "btny": "size-8",
-      "btngap": "size-12",
-      "specmt": "size-56",
-      "specpad": "size-16",
-      "footmt": "size-32",
-      "footpt": "size-16"
     }
   },
-  "decisions_confirmed": [
-    "Selected chips and pills use the solid look (confirmed 2026-09-30).",
-    "Button pressed fill is an 82% mix of the button fill and the page (confirmed 2026-09-30)."
-  ],
-  "tint_percent": {
-    "light": 8,
-    "dark": 16,
-    "note": "Hover fill for chips, pills, pagination and the calendar (accent), and the fill of the error and warning callouts. Pressed doubles it, capped at 24%."
-  },
-  "accent_audit": {
-    "measured": "2026-09-30",
-    "accent": "Forest green",
-    "method": "The same browser audit as above, on the tuner page with the Forest accent, in both modes.",
-    "light": {
-      "text_styles_checked": 87,
-      "active_failures": 0,
-      "detail": "After deepening the light accent text from #087f3f to #066f33, the hover and pressed states on the accent tint all reach 4.5:1. The tuner's \"hover tint options\" row shows deliberately strong tints (12, 16 and 20%) for comparison; its 20% sample is 4.4:1 and is not a real state."
-    },
-    "dark": {
-      "text_styles_checked": 87,
-      "active_failures": 0
-    },
-    "focus_ring": {
-      "light": "ink 15.4:1",
-      "dark": "accent 10.9:1"
-    },
-    "compared_with_coral": "Coral had 11 light failures (all small coral text); Forest has none in a real state.",
-    "presets_audited": [
-      "emerald",
-      "forest",
-      "cobalt",
-      "electric blue",
-      "royal blue"
+  "sync": {
+    "source": "jason-armstrong-design-system",
+    "source_version": "1.2.0",
+    "local_keys": [
+      "sync",
+      "fonts.embed",
+      "brand.logo",
+      "brand.logo_dark"
     ],
-    "fix_applied": "Light accent text deepened to #066f33 (5.58:1 on the page)."
-  },
-  "brand": {
-    "note": "The owner's personal-brand mark. Support is in the builder; no file yet, so pages show none.",
-    "logo": null,
-    "logo_dark": null,
-    "alt": "",
-    "height_px": 28,
-    "placement": "above",
-    "placement_options": {
-      "above": "above the eyebrow, in the header",
-      "topleft": "fixed at the top left, level with the colour-mode switch"
-    },
-    "invert_in_dark": false,
-    "file_rules": "A path relative to the skill folder (or absolute). SVG preferred, PNG, JPEG and WebP also work. logo_dark is optional; without it, invert_in_dark inverts a black logo."
+    "note": "A bundled copy so the plugin works when installed alone. The master is the theme.json in the jason-armstrong-design-system skill. Do not edit values here: run scripts/check_theme_sync.py --update."
   }
 }
