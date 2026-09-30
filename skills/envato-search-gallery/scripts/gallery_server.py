@@ -8,8 +8,12 @@ Usage:
     gallery_server.py run    [--dir DIR] [--idle SECONDS]   run in the foreground (used by ensure)
 
 One server is shared by every session on the machine. It serves DIR (default
-~/.cache/envato-gallery) on 127.0.0.1 only, on a port the OS picks, and shuts itself down after
---idle seconds (default 3600) with no request. The pid and port live in DIR/.server.json.
+~/.cache/envato-gallery) on 127.0.0.1 only, and shuts itself down after --idle seconds
+(default 3600) with no request. The pid and port live in DIR/.server.json.
+
+The port is 47615 unless ENVATO_GALLERY_PORT says otherwise, so a link and the browser's saved
+settings for a page (such as the light or dark choice) survive the server restarting. If that port
+is taken by something else, the OS picks a free one instead.
 
 Standard library only.
 """
@@ -28,6 +32,16 @@ from pathlib import Path
 DEFAULT_DIR = Path.home() / ".cache" / "envato-gallery"
 DEFAULT_IDLE = 3600
 STATE_NAME = ".server.json"
+DEFAULT_PORT = 47615
+
+
+def preferred_port():
+    """The port to try first: ENVATO_GALLERY_PORT if it is a valid number, else DEFAULT_PORT."""
+    try:
+        port = int(os.environ.get("ENVATO_GALLERY_PORT", DEFAULT_PORT))
+    except ValueError:
+        return DEFAULT_PORT
+    return port if 1 <= port <= 65535 else DEFAULT_PORT
 
 
 def running_port(directory):
@@ -85,7 +99,10 @@ def run(directory, idle):
         def log_message(self, *args):
             pass
 
-    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    try:
+        server = ThreadingHTTPServer(("127.0.0.1", preferred_port()), Handler)
+    except OSError:  # the port is taken by another program: let the OS pick a free one
+        server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     state = {"pid": os.getpid(), "port": server.server_address[1]}
     (directory / STATE_NAME).write_text(json.dumps(state))
 
