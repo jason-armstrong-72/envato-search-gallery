@@ -223,7 +223,11 @@ def theme_vars(theme):
     small = small_screen_sizes(theme)
     if small:
         rules = "".join(f"--t-{role}-s:{px}px;" for role, px in small.items())
-        lines.append(f"@media (max-width:{theme['small_screen']['max_width_px']}px){{:root{{{rules}}}}}")
+        # a phone held sideways is wider than max_width_px, so a short touch screen counts as small too
+        width = theme["small_screen"]["max_width_px"]
+        lines.append(
+            f"@media (max-width:{width}px),(pointer:coarse) and (max-height:{width}px){{:root{{{rules}}}}}"
+        )
     return "\n".join(lines)
 
 
