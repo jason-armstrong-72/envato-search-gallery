@@ -53,6 +53,15 @@ claude plugin update envato-search-gallery@envato-search-gallery
 claude plugin uninstall envato-search-gallery@envato-search-gallery
 ```
 
+- `claude plugin update` prints "Restart to apply changes". Start a new session, or run
+  `/reload-plugins` in the current one to switch hooks, MCP servers and LSP servers to the new
+  version without stopping. Anything that runs as a monitor needs a full restart (this plugin
+  has none).
+- An update is only offered when the version in `.claude-plugin/plugin.json` changes. A change
+  that does not bump the version does not reach installed copies.
+- To see what is installed, run `claude plugin list` in a terminal. In the VS Code extension's
+  chat panel, `/plugins` (plural) opens the Manage plugins dialog.
+
 ### Other environments
 
 | Where you work | What to do |
@@ -84,7 +93,8 @@ cp -R skills/envato-search-gallery ~/.claude/skills/
 ### Using the script on its own
 
 The gallery builder has no dependency on Claude Code. Give it a results file in the format of
-[references/example-input.json](skills/envato-search-gallery/references/example-input.json):
+[references/example-input.json](skills/envato-search-gallery/references/example-input.json),
+an object whose list of items is under the key `results`:
 
 ```bash
 python3 skills/envato-search-gallery/scripts/build_gallery.py results.json
@@ -108,23 +118,64 @@ it hands you the Envato link. Galleries live in `~/.cache/envato-gallery` and ar
 
 ### The local server
 
-The link is `http://localhost`, served by `scripts/gallery_server.py`, a small standard-library
-server. What that means in practice:
+The link is `http://localhost`, served by `scripts/gallery_server.py`, a small
+standard-library Python server. It is the only thing this plugin leaves running, so here is
+exactly what it does.
 
-- **Nothing to install or approve** beyond Python. Claude Code may ask once to run the command;
-  allowlist `python3 *gallery_server.py*` and `python3 *build_gallery.py*` to stop that.
-- **One server, shared.** Every session and every project reuses it; it is not started twice.
-- **Local only.** It listens on `127.0.0.1` and serves one folder, so nothing on your network
-  can reach it.
-- **It cleans itself up.** It exits after an hour with no request, and a page you already have
-  open keeps working because the images are embedded. Stop it now with
-  `python3 skills/envato-search-gallery/scripts/gallery_server.py stop`.
-- **Reach.** The link works where the browser runs on the same machine as the agent. Over SSH,
-  in a dev container or in the Claude web app it will not, and you get a `file://` link or the
-  plain list.
+#### What it is
+
+- **One server, shared.** Every session and every project reuses it. A new search checks for a
+  live server first and only starts one if there is none.
+- **Local only.** It listens on `127.0.0.1` and serves one folder, `~/.cache/envato-gallery`,
+  so nothing else on your machine or your network can reach it.
+- **Nothing to install or approve** beyond Python. Claude Code may ask once to run the
+  command; allowlist `python3 *gallery_server.py*` and `python3 *build_gallery.py*` to stop
+  that.
+
+#### It cleans up after itself, so there is nothing to manage
+
+- **It does not run forever.** It exits on its own after an hour with no requests (the
+  default; `--idle SECONDS` changes it). It checks every 30 seconds or less, then shuts down
+  and removes its state file (`.server.json` in the gallery folder).
+- **It does not start at login or survive a restart.** It is not a service. It starts when a
+  search needs it, and a reboot or a crash simply ends it.
+- **A dead server is not a problem.** The next search checks that the recorded process really
+  is the gallery server (not a leftover file, and not another program that reused the port)
+  and starts a fresh one if not.
+- **An open page keeps working.** Each page has its images embedded, so a tab you already have
+  open does not need the server. Only opening a page afresh does, and the port can change each
+  time the server starts, so an old link may stop working; ask the agent to search again.
+- **Old pages are deleted.** Galleries older than 7 days are removed the next time one is
+  built. A three-image gallery is about 100 to 150 KB, so a machine that stops using the plugin keeps only a few small
+  files.
+
+The shutdown was tested on 2026-09-30 by starting the server with `--idle 60` and confirming
+it had exited after about a minute and a half with no requests.
+
+#### If you want it gone sooner
+
+```bash
+python3 skills/envato-search-gallery/scripts/gallery_server.py status   # prints the port, or "not running"
+python3 skills/envato-search-gallery/scripts/gallery_server.py stop
+```
+
+The path is relative to the plugin folder. For a plugin install, that folder is under
+`~/.claude/plugins/cache/envato-search-gallery/`.
+
+#### Where it works
+
+- The link works where the browser runs on the same machine as the agent. Over SSH, in a dev
+  container or in the Claude web app it will not, and you get a `file://` link or the plain
+  list.
 - **No Python 3?** Then there is no gallery. The agent checks first and gives a plain list of
   links instead. On macOS the system `python3` is a stub until the developer tools are
   installed, which the agent also checks.
+
+#### What leaves your machine
+
+Only two things: the search itself, which goes to Envato's MCP server, and the download of each
+preview image from Envato's image CDN so it can be embedded in the page. The gallery server
+sends nothing anywhere.
 
 ### If the skill does not start on its own
 
