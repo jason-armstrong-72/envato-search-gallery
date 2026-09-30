@@ -2,8 +2,13 @@
 """Build a self-contained HTML gallery from Envato MCP search results.
 
 Usage:
-    build_gallery.py results.json [--out PATH] [--no-open]
+    build_gallery.py results.json [--out PATH] [--open] [--no-serve]
     build_gallery.py - < results.json
+
+By default the page is written to ~/.cache/envato-gallery and served by a small local server
+(gallery_server.py), and the `open:` line holds an http://localhost link. If the server cannot
+start, or --no-serve or --out is used, the `open:` line holds a file:// link instead. Nothing
+opens in a browser unless --open is given.
 
 Input JSON:
     {
@@ -30,13 +35,16 @@ import html
 import json
 import re
 import sys
-import tempfile
+import time
 import urllib.error
 import urllib.request
 import webbrowser
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import gallery_server
+
+KEEP_DAYS = 7
 FILTERS_PATH = Path(__file__).resolve().parent.parent / "references" / "filters.json"
 USER_AGENT = "Mozilla/5.0 (envato-search-gallery)"
 
@@ -254,8 +262,10 @@ def slug(text):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("input", help="results JSON file, or - for stdin")
-    ap.add_argument("--out", help="output HTML path (default: temp dir)")
-    ap.add_argument("--no-open", action="store_true", help="write the file but do not open it")
+    ap.add_argument("--out", help="output HTML path (default: the gallery cache folder, served locally)")
+    ap.add_argument("--open", action="store_true", help="also open the page in the default browser")
+    ap.add_argument("--no-serve", action="store_true", help="do not start the local server; print a file:// link")
+    ap.add_argument("--no-open", action="store_true", help=argparse.SUPPRESS)  # old flag, now the default
     args = ap.parse_args()
 
     raw = sys.stdin.read() if args.input == "-" else Path(args.input).read_text()
@@ -306,17 +316,41 @@ def main():
         .replace("__DATA__", data_json)
     )
 
-    out = Path(args.out) if args.out else Path(tempfile.gettempdir()) / "envato-gallery" / f"{slug(spec.get('query', 'results'))}.html"
+    cache = gallery_server.DEFAULT_DIR
+    out = Path(args.out) if args.out else cache / f"{slug(spec.get('query', 'results'))}.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(page, encoding="utf-8")
+    if not args.out:
+        prune(cache)
 
     print(f"wrote {out} ({out.stat().st_size // 1024} KB, {len(items)} images)")
-    print(f"open: {out.resolve().as_uri()}")
+    link = out.resolve().as_uri()
+    if not args.no_serve and out.resolve().parent == cache.resolve():
+        try:
+            port = gallery_server.ensure(cache, gallery_server.DEFAULT_IDLE)
+        except Exception as exc:
+            port = None
+            print(f"note: local server failed ({exc})")
+        if port:
+            link = f"http://localhost:{port}/{out.name}"
+        else:
+            print("note: local server unavailable; using a file:// link, which may need copying into a browser")
+    print(f"open: {link}")
     if failures:
         print(f"{len(failures)} preview(s) skipped:\n" + "\n".join(failures))
-    if not args.no_open:
-        webbrowser.open(out.as_uri())
+    if args.open:
+        webbrowser.open(link)
 
+
+def prune(folder):
+    """Delete gallery pages older than KEEP_DAYS so the cache folder does not grow."""
+    cutoff = time.time() - KEEP_DAYS * 86400
+    for page in folder.glob("*.html"):
+        try:
+            if page.stat().st_mtime < cutoff:
+                page.unlink()
+        except OSError:
+            pass
 
 if __name__ == "__main__":
     main()

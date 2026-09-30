@@ -12,7 +12,8 @@ Unofficial. Not affiliated with or endorsed by Envato.
 
 ## What you get
 
-- A single self-contained HTML file (previews embedded, works offline, no server or account).
+- A single self-contained HTML file (previews embedded, no account), served on a local
+  `http://localhost` link so the chat can hand you a clickable link.
 - Click a thumbnail to enlarge it; arrow keys move between images, Escape closes.
 - The filters available for that asset type, and any that were applied, shown as chips.
 - A "View on Envato" link on every card.
@@ -89,8 +90,10 @@ The gallery builder has no dependency on Claude Code. Give it a results file in 
 python3 skills/envato-search-gallery/scripts/build_gallery.py results.json
 ```
 
-Add `--no-open` to write the file without opening a browser (headless machines, CI) and
-`--out PATH` to choose where it goes.
+It writes to `~/.cache/envato-gallery`, starts a local server if one is not already running and
+prints `open: http://localhost:PORT/...`. Nothing opens in a browser unless you add `--open`.
+`--no-serve` prints a `file://` link instead, and `--out PATH` writes to a path of your choice
+(also a `file://` link).
 
 ## Use
 
@@ -99,9 +102,29 @@ Ask for what you want:
 > Search Envato for 10 landscape photos of a compounding pharmacy.
 
 The agent mentions the relevant filters, searches, builds the gallery and gives you a link to
-it (it also opens in your browser). Pick an image, and it hands you the Envato link. The
-gallery is a temporary file in the system temp folder, which the operating system clears out;
-ask for `--out` if you want to keep one.
+it. Click it: in VS Code it opens in a side panel, elsewhere in your browser. Pick an image, and
+it hands you the Envato link. Galleries live in `~/.cache/envato-gallery` and are deleted after
+7 days; use `--out` to keep one.
+
+### The local server
+
+The link is `http://localhost`, served by `scripts/gallery_server.py`, a small standard-library
+server. What that means in practice:
+
+- **Nothing to install or approve** beyond Python. Claude Code may ask once to run the command;
+  allowlist `python3 *gallery_server.py*` and `python3 *build_gallery.py*` to stop that.
+- **One server, shared.** Every session and every project reuses it; it is not started twice.
+- **Local only.** It listens on `127.0.0.1` and serves one folder, so nothing on your network
+  can reach it.
+- **It cleans itself up.** It exits after an hour with no request, and a page you already have
+  open keeps working because the images are embedded. Stop it now with
+  `python3 skills/envato-search-gallery/scripts/gallery_server.py stop`.
+- **Reach.** The link works where the browser runs on the same machine as the agent. Over SSH,
+  in a dev container or in the Claude web app it will not, and you get a `file://` link or the
+  plain list.
+- **No Python 3?** Then there is no gallery. The agent checks first and gives a plain list of
+  links instead. On macOS the system `python3` is a stub until the developer tools are
+  installed, which the agent also checks.
 
 ### If the skill does not start on its own
 
@@ -128,6 +151,7 @@ commands/envato-search.md      the /envato-search-gallery:envato-search command
 skills/envato-search-gallery/
   SKILL.md                     what the agent does, step by step
   scripts/build_gallery.py     results JSON in, self-contained HTML out (stdlib only)
+  scripts/gallery_server.py    shared local server for the pages, exits when idle
   references/filters.json      filters per asset type, from the MCP tool schemas
   references/example-input.json
 ```

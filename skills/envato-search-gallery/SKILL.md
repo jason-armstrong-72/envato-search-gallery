@@ -27,24 +27,44 @@ previews in one page, let the user pick, hand back the Envato link.
    `title`, the "by ..." text as `author`, and the link button's `url` as `link`.
    **Copy every `img` URL whole, including the trailing `&s=<signature>`.** The CDN
    rejects a truncated URL with "Wrong signature", and the script will say so.
-5. **Build the gallery:**
+5. **Build the gallery** (only if Python is available; see "No Python" below):
 
    ```bash
    python3 scripts/build_gallery.py /tmp/envato-results.json
    ```
 
-   The path is relative to this skill's folder. The script downloads the previews,
-   embeds them in one self-contained HTML file, and opens it in the default browser
-   (add `--no-open` to only write it, `--out PATH` to choose where). Standard library
-   only, no install step. It prints an `open:` line holding a `file://` link.
+   The path is relative to this skill's folder. The script downloads the previews, embeds
+   them in one self-contained HTML file in `~/.cache/envato-gallery`, and starts (or reuses)
+   a small local server so the page has an `http://localhost` link. It does **not** open a
+   browser: a browser stealing focus while the user is in another app is annoying. Add
+   `--open` only if the user asks for it. Standard library only, no install step. It prints
+   an `open:` line holding the link.
 6. **Report** the count and give the gallery as a clickable markdown link built from the
-   `open:` line, for example `[Open the gallery](file:///tmp/envato-gallery/x.html)`.
-   The file is in the system temp folder, which the OS clears out on its own, so it is
-   throwaway; pass `--out` if the user wants to keep a copy. Skipped previews are listed
-   by the script; mention them.
+   `open:` line, for example `[Open the gallery](http://localhost:53012/x.html)`. In VS Code
+   the click opens the page in a side panel. If the `open:` line is a `file://` link, the
+   server could not start: give the link and say it may need copying into a browser. Pages
+   older than 7 days are deleted on each build. Skipped previews are listed by the script;
+   mention them.
 7. **When the user picks**, give the Envato item link(s) as clickable URLs. Licensing and
    download happen on elements.envato.com, and that needs an active Elements subscription.
    Do not try to fetch the full-size image.
+
+## The local server
+
+One server is shared by every session on the machine, so several sessions do not start
+several. It serves only `~/.cache/envato-gallery`, listens on `127.0.0.1` (not the network), and
+exits by itself after an hour with no request. Pages are static with the images embedded, so a
+tab already open keeps working after the server stops; only a fresh click on an old link
+needs a new build. Manage it with `python3 scripts/gallery_server.py status|stop`.
+
+## No Python
+
+The gallery builder and the server are both Python, so without Python there is no gallery.
+Check first: `python3 --version`. On macOS without the developer tools, `python3` is a stub
+that pops up an install dialog, so check `xcode-select -p` first and skip the gallery if it
+fails. If Python is missing, do not treat it as an error: skip steps 4 to 5 and report the
+results as a plain list, each as a markdown link `[title](item link)` with the author, and
+mention that a gallery page needs Python 3.8 or newer.
 
 ## Gallery behaviour
 
