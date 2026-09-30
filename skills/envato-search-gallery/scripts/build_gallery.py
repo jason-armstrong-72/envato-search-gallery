@@ -324,7 +324,7 @@ __THEME_VARS__
   header{display:flex;flex-direction:column;gap:var(--sp-hgap);margin-bottom:var(--sp-hmb);padding-top:var(--sp-pagetop)}
   .eyebrow{@role eyebrow;color:var(--accent-text)}
   .eyebrow::before{content:"_01 "}
-  h1{margin:0;@role display;font-size:min(var(--t-display-s),11vw);max-width:16ch;text-wrap:balance;color:var(--ink)}
+  h1{margin:0;@role display;max-width:16ch;text-wrap:balance;overflow-wrap:anywhere;color:var(--ink)}
   .meta{@role meta;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 14px}
   .meta strong{color:var(--ink);font-weight:inherit}
   .filters{background:var(--surface);border:1px solid var(--border);border-radius:var(--sp-rcard);
