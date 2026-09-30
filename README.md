@@ -17,7 +17,10 @@ Unofficial. Not affiliated with or endorsed by Envato.
 - Click a thumbnail to enlarge it; arrow keys move between images, Escape closes.
 - The filters available for that asset type, and any that were applied, shown as chips.
 - A "View on Envato" link on every card.
-- Light and dark themes, and it holds together at phone width.
+- A Light, Dark and System switch (System follows the display setting, and the choice is
+  remembered), and it holds together at phone width.
+- A theme drives the whole look: colour, type, spacing, corners and the fonts. See
+  [Themes](#themes).
 
 ## Limits
 
@@ -195,6 +198,29 @@ Two ways to make it certain:
 The plugin's commands are namespaced by plugin name, so the command above is the form that has
 been tested. Some setups also accept the short `/envato-search`; try it and see.
 
+## Themes
+
+The page look is not written into the script. It is read from a theme file, and the default is
+[themes/archetype.json](skills/envato-search-gallery/themes/archetype.json): near-monochrome, one
+coral accent, Hanken Grotesk and IBM Plex Mono, light and dark.
+
+```bash
+python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme archetype
+python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme path/to/my-theme.json
+```
+
+- `--theme NAME` loads `themes/NAME.json`; `--theme PATH` loads a theme file from anywhere. A
+  missing or incomplete theme stops with a message that names what is missing.
+- The fonts are embedded in each page as base64 (about 100 KB), so a page needs no network and
+  looks the same offline. Only the latin subset is included; other scripts fall back to the
+  system font.
+- The fonts are under the SIL Open Font Licence. Their licence texts are in
+  [fonts/](skills/envato-search-gallery/fonts/).
+- To design a theme, open [themes/reference/tuner.html](themes/reference/tuner.html) in a browser;
+  [themes/README.md](themes/README.md) explains it.
+- The look before the Archetype theme is kept at the git tag `classic-look`
+  (`git show classic-look:skills/envato-search-gallery/scripts/build_gallery.py`).
+
 ## Layout
 
 ```text
@@ -203,8 +229,11 @@ skills/envato-search-gallery/
   SKILL.md                     what the agent does, step by step
   scripts/build_gallery.py     results JSON in, self-contained HTML out (stdlib only)
   scripts/gallery_server.py    shared local server for the pages, exits when idle
+  themes/archetype.json        the default look: colour, type, spacing, shape, fonts
+  fonts/                       the theme's font files (woff2) and their licences
   references/filters.json      filters per asset type, from the MCP tool schemas
   references/example-input.json
+themes/                        theme reference: README and the tuner page used to design themes
 ```
 
 ## Notes for maintainers

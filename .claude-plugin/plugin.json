@@ -1,7 +1,7 @@
 {
   "name": "envato-search-gallery",
   "description": "Search Envato Elements through the Envato MCP server and review the results as a visual gallery.",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "author": { "name": "Jason Armstrong" },
   "homepage": "https://github.com/jason-armstrong-72/envato-search-gallery",
   "repository": "https://github.com/jason-armstrong-72/envato-search-gallery",

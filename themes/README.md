@@ -1,14 +1,15 @@
 # Themes
 
-Design themes for the gallery page. This folder is a **reference**: the values are locked, but
-`skills/envato-search-gallery/scripts/build_gallery.py` does not read them yet. Wiring a `--theme`
-option and embedding the fonts is the next step.
+Design reference for the gallery page's themes. The theme itself lives with the skill, in
+[skills/envato-search-gallery/themes/](../skills/envato-search-gallery/themes/), so it travels when the
+skill folder is copied on its own, and `build_gallery.py` reads it (`--theme NAME|PATH`). This
+folder keeps the tuner page the theme was designed on.
 
 ## archetype
 
 A near-monochrome theme with one coral accent, derived from <https://www.archetypeai.io/>.
 
-- [archetype.json](archetype.json): every locked value (type roles, colour in light and dark,
+- [archetype.json](../skills/envato-search-gallery/themes/archetype.json): every locked value (type roles, colour in light and dark,
   spacing, shape, interaction states, components) plus the accepted trade-offs and what is still open.
 - [reference/tuner.html](reference/tuner.html): the page the theme was designed on. Open it in a
   browser and use **Tune** for controls on every value, with a light and dark switch. **Copy
@@ -55,7 +56,7 @@ bottom of the tuner page.
 ### Accessibility
 
 Measured in a browser on 2026-09-30 and recorded under `accessibility` in
-[archetype.json](archetype.json). Four fixes are applied (subtle grey, edges of interactive chips and
+[archetype.json](../skills/envato-search-gallery/themes/archetype.json). Four fixes are applied (subtle grey, edges of interactive chips and
 pagination, an ink focus ring on light, and 24px/44px control sizes). What remains: coral small text
 on the light page, which is accepted. The tuner's Touch
 switch previews the 44px targets.
@@ -63,4 +64,4 @@ switch previews the 44px targets.
 ### Known trade-offs
 
 Coral small text on the light page is 2.7:1, under the 4.5:1 target. It was accepted, and coral is
-used for shapes and interaction cues. See `accepted_debt` in [archetype.json](archetype.json).
+used for shapes and interaction cues. See `accepted_debt` in [archetype.json](../skills/envato-search-gallery/themes/archetype.json).

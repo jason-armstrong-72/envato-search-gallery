@@ -39,7 +39,9 @@ previews in one page, let the user pick, hand back the Envato link.
    a small local server so the page has an `http://localhost` link. It does **not** open a
    browser: a browser stealing focus while the user is in another app is annoying. Add
    `--open` only if the user asks for it. Standard library only, no install step. It prints
-   an `open:` line holding the link.
+   an `open:` line holding the link. The look comes from `themes/archetype.json`; add
+   `--theme NAME` (a file in `themes/`) or `--theme PATH` only if the user asks for a different
+   look.
 6. **Report** the count and give the gallery as a clickable markdown link built from the
    `open:` line, for example `[Open the gallery](http://localhost:53012/x.html)`. In VS Code
    the click opens the page in a side panel. If the `open:` line is a `file://` link, the
@@ -74,6 +76,10 @@ enlarged view is still the 600px watermarked preview, because the signed URL fix
 size, so it is good for judging composition, not detail. Applied and available filters
 are shown as chips. The page is static: to refine a search, ask the agent, which re-runs
 the search and rebuilds the page.
+
+The page has a Light, Dark and System switch (three icon buttons, top right). System is the
+default and follows the display setting; the choice is remembered in the browser. The fonts are
+embedded, so the page looks the same offline.
 
 ## Notes
 
