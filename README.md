@@ -143,8 +143,10 @@ exactly what it does.
   is the gallery server (not a leftover file, and not another program that reused the port)
   and starts a fresh one if not.
 - **An open page keeps working.** Each page has its images embedded, so a tab you already have
-  open does not need the server. Only opening a page afresh does, and the port can change each
-  time the server starts, so an old link may stop working; ask the agent to search again.
+  open does not need the server. Only opening a page afresh does. The server prefers port 47615
+  (set `ENVATO_GALLERY_PORT` to change it), so an old link keeps working after a restart. If that
+  port is taken by another program it uses a free one instead, and an old link may stop working;
+  ask the agent to search again.
 - **Old pages are deleted.** Galleries older than 7 days are removed the next time one is
   built. A three-image gallery is about 100 to 150 KB, so a machine that stops using the plugin keeps only a few small
   files.
