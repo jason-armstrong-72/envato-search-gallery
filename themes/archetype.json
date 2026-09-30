@@ -1,6 +1,6 @@
 {
   "name": "archetype",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "status": "reference, not yet read by build_gallery.py",
   "locked": "2026-09-30",
   "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json.",
@@ -212,7 +212,7 @@
   "coral_tint_percent": {
     "light": 8,
     "dark": 16,
-    "note": "Chip and pill hover fill. Pressed doubles it."
+    "note": "Chip and pill hover fill. Pressed doubles it, capped at 24% (dark pressed = 24%, light pressed = 16%)."
   },
   "spacing_and_shape": {
     "pagex": {
@@ -353,7 +353,7 @@
       "note": "Static in the gallery. The states apply only to an interactive chip, marked with class is-action. A pill is a chip with class pill (fully round).",
       "rest": "muted text, hairline border",
       "hover_focus": "coral text and border, coral tint fill",
-      "pressed": "as hover with the tint doubled",
+      "pressed": "as hover with the tint doubled, capped at 24%",
       "selected": "solid fill in button colour, button-text colour",
       "disabled": "40% opacity"
     },
@@ -375,7 +375,7 @@
     "Hairline border is 1.2:1 on light. Decorative, accepted."
   ],
   "open": [
-    "Accessibility: coral small text on light is accepted; the dark pressed-chip tint (32%, 4.42:1) is undecided.",
+    "Accessibility: only coral small text on the light page remains, and it is accepted.",
     "Selected = solid look for chips and pills: not yet confirmed by the owner.",
     "Button pressed fill (82% mix) and the doubled pressed tint are the assistant's choices.",
     "Spacing values are tuned per element, not snapped to a scale."
@@ -534,10 +534,6 @@
       {
         "id": "coral-text-light",
         "change": "Optional light-mode-only coral for small text and focus ring: #c73826 (4.62:1 on the page, 5.04:1 on surface). The owner declined a deeper coral on 2026-09-30, so this stays a proposal."
-      },
-      {
-        "id": "pressed-tint-dark",
-        "change": "Cap the pressed chip tint in dark at 24% (5.2:1) instead of 32% (4.42:1)."
       }
     ],
     "applied_2026-09-30": [
@@ -556,11 +552,15 @@
       {
         "id": "targets",
         "result": "24px minimum everywhere; 44px under a coarse pointer, verified with the Touch preview."
+      },
+      {
+        "id": "pressed-tint-dark",
+        "result": "Pressed tint capped at 24%: coral text on it is 5.2:1 in dark."
       }
     ],
     "remaining_after_fixes": {
       "light": "11 text styles, all coral small text on the light page (accepted 2026-09-30)",
-      "dark": "2 text styles: coral text on the 32% pressed chip tint, 4.42:1"
+      "dark": "none"
     }
   }
 }

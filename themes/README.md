@@ -46,7 +46,7 @@ bottom of the tuner page.
 Measured in a browser on 2026-09-30 and recorded under `accessibility` in
 [archetype.json](archetype.json). Four fixes are applied (subtle grey, edges of interactive chips and
 pagination, an ink focus ring on light, and 24px/44px control sizes). What remains: coral small text
-on the light page (accepted) and the dark pressed-chip tint, which is undecided. The tuner's Touch
+on the light page, which is accepted. The tuner's Touch
 switch previews the 44px targets.
 
 ### Known trade-offs
