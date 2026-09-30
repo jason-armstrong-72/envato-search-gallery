@@ -121,8 +121,8 @@ def filters_panel(asset_type, applied):
 # ---- theme ------------------------------------------------------------------------------------
 
 REQUIRED_ROLES = ["display", "title", "eyebrow", "meta", "author", "label", "option", "button"]
-REQUIRED_COLOURS = ["bg", "surface", "border", "ink", "muted", "coral", "coraltext", "btnbg",
-                    "btnink", "btnarrow", "focus"]
+REQUIRED_COLOURS = ["bg", "surface", "border", "ink", "muted", "accent", "accenttext", "error", "warning",
+                    "btnbg", "btnink", "btnarrow", "focus"]
 REQUIRED_SPACING = ["pagex", "pagetop", "pagebot", "maxw", "hgap", "hmb", "fpadx", "fpady", "fgapy",
                     "fgapx", "fmb", "chipgap", "chipx", "chipy", "gridgap", "cardmin", "cpadt", "cpadx",
                     "cpadb", "cgap", "btnx", "btny", "btngap", "footmt", "footpt", "rcard", "rchip", "rbtn"]
@@ -187,6 +187,8 @@ def theme_vars(theme):
         )
     for key, v in theme["spacing_and_shape"].items():
         lines.append(f"--sp-{key}:{v['px']}px;")
+    # the lightbox is dark in both modes, so its link uses the accent as it is in dark mode
+    lines.append(f"--accent-on-dark:{theme['colour']['accent']['dark']};")
     lines.append("}")
 
     def colours(mode):
@@ -194,7 +196,8 @@ def theme_vars(theme):
         g = lambda k: c[k][mode]
         return (
             f"--bg:{g('bg')};--surface:{g('surface')};--border:{g('border')};--ink:{g('ink')};"
-            f"--muted:{g('muted')};--coral:{g('coral')};--coral-text:{g('coraltext')};"
+            f"--muted:{g('muted')};--accent:{g('accent')};--accent-text:{g('accenttext')};"
+            f"--error:{g('error')};--warning:{g('warning')};"
             f"--btn-bg:{g('btnbg')};--btn-ink:{g('btnink')};--btn-arrow:{g('btnarrow')};"
             f"--focus:{g('focus')};color-scheme:{mode};"
         )
@@ -224,6 +227,46 @@ def expand_roles(css, theme):
     return re.sub(r"@role (\w+);", one, css)
 
 
+
+MIME = {".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
+        ".webp": "image/webp"}
+
+
+def brand_parts(theme, base):
+    """The brand mark for the page, or nothing. Returns (html, css_vars, notes). The logo files are
+    embedded as base64, like the fonts. A theme with no logo, or a missing file, shows no mark."""
+    brand = theme.get("brand") or {}
+    notes = []
+
+    def data_uri(name):
+        if not name:
+            return None
+        path = Path(name)
+        path = path if path.is_absolute() else Path(base) / path
+        mime = MIME.get(path.suffix.lower())
+        try:
+            if not mime:
+                raise ValueError(f"unsupported logo type {path.suffix or '(none)'}")
+            return f"data:{mime};base64,{base64.b64encode(path.read_bytes()).decode('ascii')}"
+        except (OSError, ValueError) as exc:
+            notes.append(f"logo not used: {exc} ({name})")
+            return None
+
+    light = data_uri(brand.get("logo"))
+    if not light:
+        return "", "", notes
+    dark = data_uri(brand.get("logo_dark"))
+    place = brand.get("placement", "above")
+    place = place if place in ("above", "topleft") else "above"
+    alt = html.escape(brand.get("alt", ""), quote=True)
+    classes = f"brand {place}" + (" has-dark" if dark else "") + (" inv" if brand.get("invert_in_dark") else "")
+    imgs = f'<img class="lg lg-light" src="{light}" alt="{alt}">'
+    if dark:
+        imgs += f'<img class="lg lg-dark" src="{dark}" alt="{alt}">'
+    height = int(brand.get("height_px", 28))
+    return f'<div class="{classes}">{imgs}</div>', f":root{{--brand-h:{height}px}}", notes
+
+
 TEMPLATE = r"""<!doctype html>
 <html lang="en">
 <head>
@@ -238,7 +281,7 @@ __THEME_VARS__
        padding:32px var(--sp-pagex) var(--sp-pagebot)}
   header,.filters,.grid,footer{max-width:var(--sp-maxw);margin-inline:auto}
   header{display:flex;flex-direction:column;gap:var(--sp-hgap);margin-bottom:var(--sp-hmb);padding-top:var(--sp-pagetop)}
-  .eyebrow{@role eyebrow;color:var(--coral-text)}
+  .eyebrow{@role eyebrow;color:var(--accent-text)}
   .eyebrow::before{content:"_01 "}
   h1{margin:0;@role display;font-size:min(var(--t-display-s),11vw);max-width:16ch;text-wrap:balance;color:var(--ink)}
   .meta{@role meta;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 14px}
@@ -249,9 +292,9 @@ __THEME_VARS__
   .filters h2{flex-basis:100%;margin:0 0 4px;@role label;color:var(--muted)}
   details{min-width:0}
   details[open]{flex-basis:100%}
-  summary{@role option;cursor:pointer;padding:4px 0;min-height:24px;color:var(--coral-text);transition:color .14s ease}
+  summary{@role option;cursor:pointer;padding:4px 0;min-height:24px;color:var(--accent-text);transition:color .14s ease}
   summary:hover,summary:focus-visible{color:var(--ink)}
-  summary:active{color:var(--coral-text);text-decoration:underline}
+  summary:active{color:var(--accent-text);text-decoration:underline}
   summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
   .chips{display:flex;flex-wrap:wrap;gap:var(--sp-chipgap);padding:4px 0 10px}
   .chip{@role label;padding:var(--sp-chipy) var(--sp-chipx);border:1px solid var(--border);
@@ -283,7 +326,7 @@ __THEME_VARS__
   .lb-cap{color:#f1f1f0;text-align:center;max-width:720px;display:flex;flex-direction:column;gap:6px;align-items:center}
   .lb-title{@role title;color:#f1f1f0}
   .lb-author{@role author;color:#a0a0a0}
-  .lb-link{color:#ff5c48;margin:0;gap:8px}
+  .lb-link{color:var(--accent-on-dark);margin:0;gap:8px}
   .lb button{all:unset;cursor:pointer;color:#f1f1f0;font-size:28px;line-height:1;padding:10px 14px;
              border-radius:var(--sp-rbtn);background:rgba(255,255,255,.1);position:absolute;min-width:44px;min-height:44px;
              display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}
@@ -293,6 +336,14 @@ __THEME_VARS__
   .lb .lb-prev{left:12px;top:50%;transform:translateY(-50%)}
   .lb .lb-next{right:12px;top:50%;transform:translateY(-50%)}
   footer{@role label;color:var(--muted);margin-top:var(--sp-footmt);padding-top:var(--sp-footpt);border-top:1px solid var(--border)}
+  .brand{display:flex;align-items:center}
+  .brand img{height:var(--brand-h);width:auto;display:block}
+  .brand.above{margin-bottom:8px}
+  .brand.topleft{position:fixed;z-index:5;left:var(--sp-pagex);top:calc(14px + (38px - var(--brand-h)) / 2)}
+  .brand .lg-dark{display:none}
+  :root[data-theme="dark"] .brand.has-dark .lg-light{display:none}
+  :root[data-theme="dark"] .brand.has-dark .lg-dark{display:block}
+  :root[data-theme="dark"] .brand.inv .lg-light{filter:invert(1)}
   .themebar{position:fixed;top:14px;right:20px;z-index:5;display:flex;gap:2px;padding:3px;background:var(--bg);
             border:1px solid var(--border);border-radius:var(--sp-rbtn)}
   .themebar button{all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:30px;display:inline-flex;
@@ -300,7 +351,7 @@ __THEME_VARS__
                    transition:color .14s ease}
   .themebar button svg{width:16px;height:16px;display:block}
   .themebar button[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink)}
-  .themebar button:not([aria-pressed="true"]):hover{color:var(--coral-text)}
+  .themebar button:not([aria-pressed="true"]):hover{color:var(--accent-text)}
   .themebar button:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
   @media (pointer:coarse){
     .card-link,summary,.themebar button{min-height:44px}
@@ -327,6 +378,7 @@ __THEME_VARS__
   <button type="button" data-mode="system" aria-pressed="false" aria-label="System, follow the display setting" title="System"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 21H16M12 17V21M4 5C4 4.06812 4 3.60218 4.15224 3.23463C4.35523 2.74458 4.74458 2.35523 5.23463 2.15224C5.60218 2 6.06812 2 7 2H17C17.9319 2 18.3978 2 18.7654 2.15224C19.2554 2.35523 19.6448 2.74458 19.8478 3.23463C20 3.60218 20 4.06812 20 5V13C20 13.9319 20 14.3978 19.8478 14.7654C19.6448 15.2554 19.2554 15.6448 18.7654 15.8478C18.3978 16 17.9319 16 17 16H7C6.06812 16 5.60218 16 5.23463 15.8478C4.74458 15.6448 4.35523 15.2554 4.15224 14.7654C4 14.3978 4 13.9319 4 13V5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 </div>
 <header>
+__BRAND__
   <div class="eyebrow">Envato Elements &middot; __ASSET_TYPE__</div>
   <h1>&ldquo;__QUERY__&rdquo;</h1>
   <div class="meta">
@@ -477,7 +529,14 @@ def main():
     faces, font_notes = font_faces(theme, SKILL_DIR)
     for note in font_notes:
         print(f"note: {note}")
-    template = TEMPLATE.replace("__FONT_FACES__", faces).replace("__THEME_VARS__", theme_vars(theme))
+    brand_html, brand_vars, brand_notes = brand_parts(theme, SKILL_DIR)
+    for note in brand_notes:
+        print(f"note: {note}")
+    template = (
+        TEMPLATE.replace("__FONT_FACES__", faces)
+        .replace("__THEME_VARS__", theme_vars(theme) + brand_vars)
+        .replace("__BRAND__", brand_html)
+    )
     page = (
         expand_roles(template, theme).replace("__TITLE__", html.escape(spec.get("query", "search")))
         .replace("__QUERY__", html.escape(spec.get("query", "search")))

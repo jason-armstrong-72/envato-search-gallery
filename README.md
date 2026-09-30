@@ -201,8 +201,9 @@ been tested. Some setups also accept the short `/envato-search`; try it and see.
 ## Themes
 
 The page look is not written into the script. It is read from a theme file, and the default is
-[themes/archetype.json](skills/envato-search-gallery/themes/archetype.json): near-monochrome, one
-coral accent, Hanken Grotesk and IBM Plex Mono, light and dark.
+[themes/archetype.json](skills/envato-search-gallery/themes/archetype.json): near-monochrome with a
+Forest green accent (coral is kept for errors and warnings), Hanken Grotesk and IBM Plex Mono, light
+and dark.
 
 ```bash
 python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme archetype
@@ -216,6 +217,9 @@ python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --the
   European); other scripts, such as Thai, fall back to the system font.
 - The fonts are under the SIL Open Font Licence. Their licence texts are in
   [fonts/](skills/envato-search-gallery/fonts/).
+- A theme can carry a brand logo (`brand` in the theme file: a path to an SVG or PNG, its height,
+  above the title or top left, and an optional dark-mode version). No logo is set yet, so pages
+  show none.
 - To design a theme, open [themes/reference/tuner.html](themes/reference/tuner.html) in a browser;
   [themes/README.md](themes/README.md) explains it.
 - The look before the Archetype theme is kept at the git tag `classic-look`

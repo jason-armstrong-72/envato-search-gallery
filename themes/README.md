@@ -7,7 +7,8 @@ folder keeps the tuner page the theme was designed on.
 
 ## archetype
 
-A near-monochrome theme with one coral accent, derived from <https://www.archetypeai.io/>.
+A near-monochrome theme with one Forest green accent, derived from <https://www.archetypeai.io/>.
+The house coral is kept for error and warning only.
 
 - [archetype.json](../skills/envato-search-gallery/themes/archetype.json): every locked value (type roles, colour in light and dark,
   spacing, shape, interaction states, components) plus the accepted trade-offs and what is still open.
@@ -23,7 +24,8 @@ A near-monochrome theme with one coral accent, derived from <https://www.archety
 | Sans | Hanken Grotesk, weights 200 to 500 (Google Fonts, SIL OFL) |
 | Mono | IBM Plex Mono, weights 200 to 500 (Google Fonts, SIL OFL) |
 | Ink and page | `#1a1a1a` on `#f1f1f0` (light), `#f1f1f0` on `#000000` (dark) |
-| Accent | coral `#ff5c48` |
+| Accent | Forest green `#0d8a4b` (text `#087f3f`) light, `#34d399` dark |
+| Error and warning | coral `#ff5c48`, separate tokens |
 | Corners | 1px |
 
 The reference site uses PP Neue Montreal, which is a paid font. The two Google fonts are close
@@ -42,10 +44,10 @@ and tags anything off it.
 
 ### Interaction states
 
-- **Button:** outlined at rest, solid on hover or keyboard focus, arrow coral throughout.
-- **Chip and pill:** coral border, text and a tint fill on hover (8% light, 16% dark). Static in the
+- **Button:** outlined at rest, solid on hover or keyboard focus, arrow in the accent throughout.
+- **Chip and pill:** accent border, text and a tint fill on hover (8% light, 16% dark). Static in the
   gallery; add class `is-action` to make one interactive, and `pill` for fully round ends.
-- **Toggle:** coral at rest, ink on hover, coral and underlined when pressed.
+- **Toggle:** accent at rest, ink on hover, accent and underlined when pressed.
 
 ### Components
 
@@ -57,11 +59,12 @@ bottom of the tuner page.
 
 Measured in a browser on 2026-09-30 and recorded under `accessibility` in
 [archetype.json](../skills/envato-search-gallery/themes/archetype.json). Four fixes are applied (subtle grey, edges of interactive chips and
-pagination, an ink focus ring on light, and 24px/44px control sizes). What remains: coral small text
-on the light page, which is accepted. The tuner's Touch
-switch previews the 44px targets.
+pagination, an ink focus ring on light, and 24px/44px control sizes). The audit was
+re-run for the Forest accent (see `accent_audit`): dark has no failures, and light has six hover and
+pressed states on the accent tint at roughly 3.5 to 4.5:1. The tuner's Touch switch previews the
+44px targets.
 
 ### Known trade-offs
 
-Coral small text on the light page is 2.7:1, under the 4.5:1 target. It was accepted, and coral is
-used for shapes and interaction cues. See `accepted_debt` in [archetype.json](../skills/envato-search-gallery/themes/archetype.json).
+Hover and pressed text on the accent tint in light mode is roughly 3.5 to 4.5:1 for interactive
+chips, pagination and the calendar. See `accepted_debt` in [archetype.json](../skills/envato-search-gallery/themes/archetype.json).
