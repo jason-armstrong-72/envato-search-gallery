@@ -236,7 +236,7 @@
   html.force-coarse nav.nv a,html.force-coarse .chip.is-action,html.force-coarse .ghost,html.force-coarse .toast .ta,html.force-coarse .tab,html.force-coarse .dp .dh button,html.force-coarse .md .x,html.force-coarse .toast .tx{display:inline-flex;align-items:center;justify-content:center}
   html.force-coarse .dp .g{grid-template-columns:repeat(7,44px)}html.force-coarse .dp .g a{height:44px}
 </style>
-</head>
+<style>.tuner .scl{display:flex;flex-wrap:wrap;gap:4px}.tuner .scl span{border:1px solid var(--border);padding:2px 7px;font-size:10px;color:var(--ink-soft)}.tuner label.off span{color:var(--coral-text)}.tuner label.off span::after{content:' off scale';color:var(--grey);font-size:10px}</style><style>.tuner .top{flex-wrap:nowrap;align-items:center}.tuner .top button{white-space:nowrap;padding:5px 8px;font-size:10px}.tuner .top #tMsg{font-size:10px;white-space:nowrap}</style></head>
 <body>
 <div class="themebar" role="group" aria-label="Theme"><button data-t="light" aria-pressed="false">Light</button><button data-t="dark" aria-pressed="false">Dark</button></div>
 <script>
@@ -406,10 +406,10 @@ var ROLES=[
 // id, label, group, default, min, max, step, selector, props (null = custom)
 var SP=[
  ['pagex','Side padding','Page',20,0,120,1,'body',['padding-left','padding-right']],
- ['pagetop','Space above header','Page',30,0,200,1,'header',['padding-top']],
+ ['pagetop','Space above header','Page',32,0,200,1,'header',['padding-top']],
  ['pagebot','Bottom padding','Page',40,0,200,1,'body',['padding-bottom']],
  ['maxw','Content max width','Page',1400,600,2000,10,'header, .filters, .grid, footer, .spec',['max-width']],
- ['hgap','Eyebrow / title / meta gap','Header',6,0,40,1,'header',['gap']],
+ ['hgap','Eyebrow / title / meta gap','Header',8,0,40,1,'header',['gap']],
  ['hmb','Space below header','Header',24,0,120,1,'header',['margin-bottom']],
  ['fpadx','Panel padding, sides','Filters',16,0,60,1,'.filters',['padding-left','padding-right']],
  ['fpady','Panel padding, top/bottom','Filters',12,0,60,1,'.filters',['padding-top','padding-bottom']],
@@ -417,22 +417,22 @@ var SP=[
  ['fgapx','Column gap','Filters',20,0,80,1,'.filters',['column-gap']],
  ['fmb','Space below panel','Filters',24,0,120,1,'.filters',['margin-bottom']],
  ['chipgap','Chip gap','Filters',8,0,30,1,'.chips',['gap']],
- ['chipx','Chip padding, sides','Filters',9,0,30,1,'.chip',['padding-left','padding-right']],
- ['chipy','Chip padding, top/bottom','Filters',3,0,20,1,'.chip',['padding-top','padding-bottom']],
+ ['chipx','Chip padding, sides','Filters',8,0,30,1,'.chip',['padding-left','padding-right']],
+ ['chipy','Chip padding, top/bottom','Filters',4,0,20,1,'.chip',['padding-top','padding-bottom']],
  ['gridgap','Grid gap','Cards',16,0,80,1,'.grid',['gap']],
  ['cardmin','Card minimum width','Cards',230,140,500,5,'.grid',null],
  ['cpadt','Text padding, top','Cards',16,0,60,1,'.card-body',['padding-top']],
  ['cpadx','Text padding, sides','Cards',16,0,60,1,'.card-body',['padding-left','padding-right']],
  ['cpadb','Text padding, bottom','Cards',16,0,60,1,'.card-body',['padding-bottom']],
- ['cgap','Gap inside card text','Cards',10,0,40,1,'.card-body',['gap']],
+ ['cgap','Gap inside card text','Cards',12,0,40,1,'.card-body',['gap']],
  ['btnx','Button padding, sides','Buttons',12,0,40,1,'.card-link',['padding-left','padding-right']],
- ['btny','Button padding, top/bottom','Buttons',9,0,30,1,'.card-link',['padding-top','padding-bottom']],
+ ['btny','Button padding, top/bottom','Buttons',8,0,30,1,'.card-link',['padding-top','padding-bottom']],
  ['btngap','Label to arrow gap','Buttons',12,0,40,1,'.card-link',['gap']],
  ['specmt','Space above specimen','Specimen, footer',56,0,200,1,'.spec',['margin-top']],
- ['specpad','Specimen row padding','Specimen, footer',14,0,60,1,'.spec .row',['padding-top','padding-bottom']],
+ ['specpad','Specimen row padding','Specimen, footer',16,0,60,1,'.spec .row',['padding-top','padding-bottom']],
  ['spectag','Specimen label column','Specimen, footer',140,60,300,5,'.spec .row',null],
- ['footmt','Space above footer','Specimen, footer',28,0,120,1,'footer',['margin-top']],
- ['footpt','Footer padding, top','Specimen, footer',14,0,60,1,'footer',['padding-top']],
+ ['footmt','Space above footer','Specimen, footer',32,0,120,1,'footer',['margin-top']],
+ ['footpt','Footer padding, top','Specimen, footer',16,0,60,1,'footer',['padding-top']],
  ['rcard','Card and panel radius','Shape',1,0,32,1,'.card, .filters',['border-radius']],
  ['rchip','Chip radius','Shape',1,0,999,1,'.chip',['border-radius']],
  ['rbtn','Button radius','Shape',1,0,32,1,'.card-link',['border-radius']]
@@ -457,10 +457,14 @@ function lum(x){var n=parseInt(x.slice(1),16),c=[n>>16&255,n>>8&255,n&255].map(f
 function ratio(a,b){var A=lum(a),B=lum(b);return (Math.max(A,B)+0.05)/(Math.min(A,B)+0.05)}
 var CDEF={};COL.forEach(function(c){CDEF[c[0]]={l:c[3],d:c[4]}});
 var cs=JSON.parse(JSON.stringify(CDEF));
+var SCALE=[4,8,12,16,20,24,32,40,48,56,64];
+var SNAPMAP={hgap:8,chipx:8,chipy:4,cgap:12,btny:8,specpad:16,footpt:16,footmt:32,pagetop:32};
+var UNSCALED={maxw:1,cardmin:1,spectag:1,rcard:1,rchip:1,rbtn:1};
+var savedSp=null;
 var DEF={},SDEF={};ROLES.forEach(function(r){DEF[r[0]]={s:r[5],w:r[6],t:r[7],l:r[8]}});SP.forEach(function(t){SDEF[t[0]]=t[3]});
 var st=JSON.parse(JSON.stringify(DEF)),sp=JSON.parse(JSON.stringify(SDEF));
 try{var sv=JSON.parse(localStorage.getItem('type-tuner-v3')||'null');if(sv)Object.keys(sv).forEach(function(k){if(st[k])st[k]=sv[k]});
- var ss=JSON.parse(localStorage.getItem('space-tuner-v2')||'null');if(ss)Object.keys(ss).forEach(function(k){if(k in sp)sp[k]=ss[k]})}catch(e){}
+ var ss=JSON.parse(localStorage.getItem('space-tuner-v3')||'null');if(ss)Object.keys(ss).forEach(function(k){if(k in sp)sp[k]=ss[k]})}catch(e){}
 try{var sc=JSON.parse(localStorage.getItem('color-tuner-v3')||'null');if(sc)Object.keys(sc).forEach(function(k){if(cs[k])cs[k]=sc[k]})}catch(e){}
 var ts={l:8,d:16};
 try{var st2=JSON.parse(localStorage.getItem('tint-tuner-v2')||'null');if(st2)ts=st2}catch(e){}
@@ -499,10 +503,10 @@ function apply(){
  });
  out+='@media (min-width:1100px){body.tuner-open{padding-right:'+(sp.pagex+376)+'px !important}}\n';
  css.textContent=out;
- try{localStorage.setItem('type-tuner-v3',JSON.stringify(st));localStorage.setItem('space-tuner-v2',JSON.stringify(sp));localStorage.setItem('color-tuner-v3',JSON.stringify(cs));localStorage.setItem('tint-tuner-v2',JSON.stringify(ts))}catch(e){}
+ try{localStorage.setItem('type-tuner-v3',JSON.stringify(st));localStorage.setItem('space-tuner-v3',JSON.stringify(sp));localStorage.setItem('color-tuner-v3',JSON.stringify(cs));localStorage.setItem('tint-tuner-v2',JSON.stringify(ts))}catch(e){}
 }
 var tuner=document.createElement('div');tuner.className='tuner';tuner.id='tuner';
-var html='<div class="top"><button id="tReset">Reset</button><button id="tCopy">Copy settings</button><span id="tMsg" style="align-self:center;color:var(--grey)"></span></div>';
+var html='<div class="top"><button id="tReset">Reset</button><button id="tCopy">Copy settings</button><button id="tSnap" title="Snap spacing to the size-N scale">Snap</button><button id="tUndo" title="Undo the last snap">Undo</button><span id="tMsg" style="align-self:center;color:var(--grey)"></span></div>';
 html+='<h3>Colour, light and dark</h3><div class="cl">';
 COL.forEach(function(c){
  html+='<div class="crow"><div class="nm"><span>'+c[1]+'</span><span>'+c[2]+'</span></div><div class="cc">';
@@ -520,6 +524,7 @@ ROLES.forEach(function(r){
  '<label>Track<input type="number" data-k="'+k+'" data-p="t" min="-0.1" max="0.3" step="0.005"></label>'+
  '<label>Line<input type="number" data-k="'+k+'" data-p="l" min="0.9" max="2.2" step="0.05"></label></div></div>';
 });
+html+='<h3>Spacing scale, size-N, px</h3><div class="scl">'+SCALE.map(function(s){return '<span>'+s+'</span>'}).join('')+'</div>';
 var lg='';
 SP.forEach(function(t){
  if(t[2]!==lg){if(lg)html+='</div>';html+='<h3>Spacing, '+t[2].toLowerCase()+'</h3><div class="sp">';lg=t[2]}
@@ -532,13 +537,14 @@ function cSync(){tuner.querySelectorAll('input[data-tint]').forEach(function(el)
   var t=tuner.querySelector('input[data-c="'+c[0]+'"][data-m="'+k+'"][data-kind="hex"]');if(document.activeElement!==t)t.value=v;
   var rt=tuner.querySelector('[data-rt="'+c[0]+'-'+k+'"]');
   if(c[5]){var r=ratio(v,cs[c[5]][k]);rt.textContent=r.toFixed(1)+':1 '+(r>=c[6]?'ok':'low');rt.className='rt '+(r>=c[6]?'ok':'bad')}else{rt.textContent='';rt.className='rt'}})})}
-function sync(){cSync();tuner.querySelectorAll('[data-p]').forEach(function(el){el.value=st[el.dataset.k][el.dataset.p]});
+function marks(){tuner.querySelectorAll('label[data-sk]').forEach(function(l){var id=l.dataset.sk;var off=!UNSCALED[id]&&SCALE.indexOf(sp[id])<0;l.classList.toggle('off',off)});var n=Object.keys(sp).filter(function(id){return !UNSCALED[id]&&SCALE.indexOf(sp[id])<0}).length;var m=document.getElementById('tMsg');if(m&&!m.textContent)m.dataset.off=n}
+function sync(){marks();cSync();tuner.querySelectorAll('[data-p]').forEach(function(el){el.value=st[el.dataset.k][el.dataset.p]});
  tuner.querySelectorAll('input[data-sk]').forEach(function(el){el.value=sp[el.dataset.sk]})}
 function onEdit(e){var el=e.target;
  if(el.dataset.tint){var tv=parseFloat(el.value);if(!isNaN(tv)){ts[el.dataset.tint]=Math.max(0,Math.min(50,tv));apply()}return}
  if(el.dataset.c){var val=el.value.trim();if(val[0]!=='#')val='#'+val;if(!/^#[0-9a-fA-F]{6}$/.test(val))return;cs[el.dataset.c][el.dataset.m]=val.toLowerCase();cSync();apply();return}
  var v=parseFloat(el.value);if(isNaN(v))return;
- if(el.dataset.p){st[el.dataset.k][el.dataset.p]=v;apply()}else if(el.dataset.sk){sp[el.dataset.sk]=v;apply()}}
+ if(el.dataset.p){st[el.dataset.k][el.dataset.p]=v;apply()}else if(el.dataset.sk){sp[el.dataset.sk]=v;marks();apply()}}
 tuner.addEventListener('input',onEdit);tuner.addEventListener('change',onEdit);
 function clearHl(){document.querySelectorAll('.hl').forEach(function(n){n.classList.remove('hl')})}
 tuner.addEventListener('mouseover',function(e){clearHl();var sel=null;
@@ -547,6 +553,9 @@ tuner.addEventListener('mouseover',function(e){clearHl();var sel=null;
  if(sel)document.querySelectorAll(sel).forEach(function(n){n.classList.add('hl')})});
 tuner.addEventListener('mouseleave',clearHl);
 document.getElementById('tReset').onclick=function(){st=JSON.parse(JSON.stringify(DEF));sp=JSON.parse(JSON.stringify(SDEF));cs=JSON.parse(JSON.stringify(CDEF));ts={l:8,d:16};sync();apply()};
+function nearest(v){var b=SCALE[0];SCALE.forEach(function(s){if(Math.abs(s-v)<=Math.abs(b-v))b=s});return b}
+document.getElementById('tSnap').onclick=function(){savedSp=JSON.parse(JSON.stringify(sp));var ch=[];Object.keys(sp).forEach(function(id){if(UNSCALED[id])return;var t=(id in SNAPMAP)?SNAPMAP[id]:nearest(sp[id]);if(t!==sp[id]){ch.push(id+' '+sp[id]+'>'+t);sp[id]=t}});sync();apply();var m=document.getElementById('tMsg');m.textContent=ch.length+' moved';setTimeout(function(){m.textContent=''},2500);window.__snapChanges=ch};
+document.getElementById('tUndo').onclick=function(){if(savedSp){sp=savedSp;savedSp=null;sync();apply()}};
 document.getElementById('tCopy').onclick=function(){
  var lines=['Hanken Grotesk + IBM Plex Mono'];ROLES.forEach(function(r){var v=st[r[0]];lines.push(r[0]+': '+v.s+'px / weight '+v.w+' / tracking '+v.t+'em / line-height '+v.l)});
  lines.push('','Colour (light / dark)');COL.forEach(function(c){lines.push(c[0]+': '+cs[c[0]].l+' / '+cs[c[0]].d+'   ('+c[1]+')')});lines.push('coral tint strength: '+ts.l+'% light / '+ts.d+'% dark');lines.push('','Spacing and shape (px)');SP.forEach(function(t){lines.push(t[0]+': '+sp[t[0]]+'   ('+t[2]+', '+t[1]+')')});

@@ -1,6 +1,6 @@
 {
   "name": "archetype",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "status": "reference, not yet read by build_gallery.py",
   "locked": "2026-09-30",
   "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json.",
@@ -220,7 +220,7 @@
       "usage": "Page side padding"
     },
     "pagetop": {
-      "px": 30,
+      "px": 32,
       "usage": "Space above header"
     },
     "pagebot": {
@@ -232,7 +232,7 @@
       "usage": "Content max width"
     },
     "hgap": {
-      "px": 6,
+      "px": 8,
       "usage": "Gap between eyebrow, title, meta"
     },
     "hmb": {
@@ -264,11 +264,11 @@
       "usage": "Chip gap"
     },
     "chipx": {
-      "px": 9,
+      "px": 8,
       "usage": "Chip padding, sides"
     },
     "chipy": {
-      "px": 3,
+      "px": 4,
       "usage": "Chip padding, top and bottom"
     },
     "gridgap": {
@@ -292,7 +292,7 @@
       "usage": "Card text padding, bottom"
     },
     "cgap": {
-      "px": 10,
+      "px": 12,
       "usage": "Gap inside card text"
     },
     "btnx": {
@@ -300,7 +300,7 @@
       "usage": "Button padding, sides"
     },
     "btny": {
-      "px": 9,
+      "px": 8,
       "usage": "Button padding, top and bottom"
     },
     "btngap": {
@@ -312,7 +312,7 @@
       "usage": "Space above specimen"
     },
     "specpad": {
-      "px": 14,
+      "px": 16,
       "usage": "Specimen row padding"
     },
     "spectag": {
@@ -320,11 +320,11 @@
       "usage": "Specimen label column width"
     },
     "footmt": {
-      "px": 28,
+      "px": 32,
       "usage": "Space above footer"
     },
     "footpt": {
-      "px": 14,
+      "px": 16,
       "usage": "Footer padding, top"
     },
     "rcard": {
@@ -377,8 +377,7 @@
   "open": [
     "Accessibility: only coral small text on the light page remains, and it is accepted.",
     "Selected = solid look for chips and pills: not yet confirmed by the owner.",
-    "Button pressed fill (82% mix) and the doubled pressed tint are the assistant's choices.",
-    "Spacing values are tuned per element, not snapped to a scale."
+    "Button pressed fill (82% mix) and the doubled pressed tint are the assistant's choices."
   ],
   "components": {
     "note": "Built from the locked tokens on 2026-09-30. Component states reuse the interaction rules under \"states\".",
@@ -561,6 +560,96 @@
     "remaining_after_fixes": {
       "light": "11 text styles, all coral small text on the light page (accepted 2026-09-30)",
       "dark": "none"
+    }
+  },
+  "spacing_scale": {
+    "note": "Spacing values sit on this scale. Named size-N, N in px (the reference site names its own sizes the same way). Locked 2026-09-30.",
+    "steps_px": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      32,
+      40,
+      48,
+      56,
+      64
+    ],
+    "not_on_the_scale_on_purpose": [
+      "maxw",
+      "cardmin",
+      "spectag",
+      "rcard",
+      "rchip",
+      "rbtn"
+    ],
+    "snapped_from_tuned_values": {
+      "pagetop": {
+        "was": 30,
+        "now": 32
+      },
+      "hgap": {
+        "was": 6,
+        "now": 8
+      },
+      "chipx": {
+        "was": 9,
+        "now": 8
+      },
+      "chipy": {
+        "was": 3,
+        "now": 4
+      },
+      "cgap": {
+        "was": 10,
+        "now": 12
+      },
+      "btny": {
+        "was": 9,
+        "now": 8
+      },
+      "specpad": {
+        "was": 14,
+        "now": 16
+      },
+      "footpt": {
+        "was": 14,
+        "now": 16
+      },
+      "footmt": {
+        "was": 28,
+        "now": 32
+      }
+    },
+    "tie_break": "Where a value sat exactly between two steps (6, 10, 14, 28) it was rounded up, because the tuning had moved towards airier spacing.",
+    "role_to_step": {
+      "pagex": "size-20",
+      "pagetop": "size-32",
+      "pagebot": "size-40",
+      "hgap": "size-8",
+      "hmb": "size-24",
+      "fpadx": "size-16",
+      "fpady": "size-12",
+      "fgapy": "size-4",
+      "fgapx": "size-20",
+      "fmb": "size-24",
+      "chipgap": "size-8",
+      "chipx": "size-8",
+      "chipy": "size-4",
+      "gridgap": "size-16",
+      "cpadt": "size-16",
+      "cpadx": "size-16",
+      "cpadb": "size-16",
+      "cgap": "size-12",
+      "btnx": "size-12",
+      "btny": "size-8",
+      "btngap": "size-12",
+      "specmt": "size-56",
+      "specpad": "size-16",
+      "footmt": "size-32",
+      "footpt": "size-16"
     }
   }
 }

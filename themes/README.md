@@ -28,6 +28,12 @@ A near-monochrome theme with one coral accent, derived from <https://www.archety
 The reference site uses PP Neue Montreal, which is a paid font. The two Google fonts are close
 stand-ins. The site has no dark mode, so the dark theme is derived.
 
+### Spacing scale
+
+Spacing sits on a scale named `size-N` (4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64 px). Layout measures
+and corner radii are deliberately off it. The tuner's Snap button snaps any tuned values to the scale
+and tags anything off it.
+
 ### Interaction states
 
 - **Button:** outlined at rest, solid on hover or keyboard focus, arrow coral throughout.
