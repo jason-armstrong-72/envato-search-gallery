@@ -28,6 +28,17 @@ A near-monochrome theme with one coral accent, derived from <https://www.archety
 The reference site uses PP Neue Montreal, which is a paid font. The two Google fonts are close
 stand-ins. The site has no dark mode, so the dark theme is derived.
 
+### Colour mode switch
+
+Light, Dark and System as three icon buttons (sun, moon, monitor). System is the default and follows
+the display setting. The choice is remembered in the browser.
+
+### Spacing scale
+
+Spacing sits on a scale named `size-N` (4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64 px). Layout measures
+and corner radii are deliberately off it. The tuner's Snap button snaps any tuned values to the scale
+and tags anything off it.
+
 ### Interaction states
 
 - **Button:** outlined at rest, solid on hover or keyboard focus, arrow coral throughout.
@@ -37,9 +48,17 @@ stand-ins. The site has no dark mode, so the dark theme is derived.
 
 ### Components
 
-Input, select, table, callouts, code, modal, and the empty, loading and error states are specified
-in `components` and shown at the bottom of the tuner page. Tabs, tooltips, toasts, pagination,
-navigation and a date picker are not covered yet.
+Input, select, table, callouts, code, modal, the empty, loading and error states, tabs, tooltip,
+toast, pagination, navigation and a date picker are specified in `components` and shown at the
+bottom of the tuner page.
+
+### Accessibility
+
+Measured in a browser on 2026-09-30 and recorded under `accessibility` in
+[archetype.json](archetype.json). Four fixes are applied (subtle grey, edges of interactive chips and
+pagination, an ink focus ring on light, and 24px/44px control sizes). What remains: coral small text
+on the light page, which is accepted. The tuner's Touch
+switch previews the 44px targets.
 
 ### Known trade-offs
 

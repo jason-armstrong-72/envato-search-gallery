@@ -1,6 +1,6 @@
 {
   "name": "archetype",
-  "version": "0.2.0",
+  "version": "0.6.0",
   "status": "reference, not yet read by build_gallery.py",
   "locked": "2026-09-30",
   "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json.",
@@ -169,9 +169,9 @@
       "usage": "Muted text"
     },
     "subtle": {
-      "light": "#707070",
-      "dark": "#707070",
-      "usage": "Subtle labels"
+      "light": "#6a6a6a",
+      "dark": "#7a7a7a",
+      "usage": "Subtle labels (was #707070 in 0.1.0; darkened for contrast)"
     },
     "coral": {
       "light": "#ff5c48",
@@ -202,12 +202,17 @@
       "light": "#ff5c48",
       "dark": "#ff5c48",
       "usage": "Button arrow"
+    },
+    "focus": {
+      "light": "#1a1a1a",
+      "dark": "#ff5c48",
+      "usage": "Keyboard focus ring, 2px, 2px offset"
     }
   },
   "coral_tint_percent": {
     "light": 8,
     "dark": 16,
-    "note": "Chip and pill hover fill. Pressed doubles it."
+    "note": "Chip and pill hover fill. Pressed doubles it, capped at 24% (dark pressed = 24%, light pressed = 16%)."
   },
   "spacing_and_shape": {
     "pagex": {
@@ -215,7 +220,7 @@
       "usage": "Page side padding"
     },
     "pagetop": {
-      "px": 30,
+      "px": 32,
       "usage": "Space above header"
     },
     "pagebot": {
@@ -227,7 +232,7 @@
       "usage": "Content max width"
     },
     "hgap": {
-      "px": 6,
+      "px": 8,
       "usage": "Gap between eyebrow, title, meta"
     },
     "hmb": {
@@ -259,11 +264,11 @@
       "usage": "Chip gap"
     },
     "chipx": {
-      "px": 9,
+      "px": 8,
       "usage": "Chip padding, sides"
     },
     "chipy": {
-      "px": 3,
+      "px": 4,
       "usage": "Chip padding, top and bottom"
     },
     "gridgap": {
@@ -287,7 +292,7 @@
       "usage": "Card text padding, bottom"
     },
     "cgap": {
-      "px": 10,
+      "px": 12,
       "usage": "Gap inside card text"
     },
     "btnx": {
@@ -295,7 +300,7 @@
       "usage": "Button padding, sides"
     },
     "btny": {
-      "px": 9,
+      "px": 8,
       "usage": "Button padding, top and bottom"
     },
     "btngap": {
@@ -307,7 +312,7 @@
       "usage": "Space above specimen"
     },
     "specpad": {
-      "px": 14,
+      "px": 16,
       "usage": "Specimen row padding"
     },
     "spectag": {
@@ -315,11 +320,11 @@
       "usage": "Specimen label column width"
     },
     "footmt": {
-      "px": 28,
+      "px": 32,
       "usage": "Space above footer"
     },
     "footpt": {
-      "px": 14,
+      "px": 16,
       "usage": "Footer padding, top"
     },
     "rcard": {
@@ -342,13 +347,13 @@
       "pressed": "solid fill mixed 82% with page background",
       "disabled": "rest look at 40% opacity, no hover",
       "arrow": "coral in every state",
-      "focus_ring": "2px coral, 2px offset"
+      "focus_ring": "2px focus-colour ring, 2px offset (ink on light, coral on dark)"
     },
     "chip_and_pill": {
       "note": "Static in the gallery. The states apply only to an interactive chip, marked with class is-action. A pill is a chip with class pill (fully round).",
       "rest": "muted text, hairline border",
       "hover_focus": "coral text and border, coral tint fill",
-      "pressed": "as hover with the tint doubled",
+      "pressed": "as hover with the tint doubled, capped at 24%",
       "selected": "solid fill in button colour, button-text colour",
       "disabled": "40% opacity"
     },
@@ -370,11 +375,7 @@
     "Hairline border is 1.2:1 on light. Decorative, accepted."
   ],
   "open": [
-    "Accessibility pass not done: contrast per role and state, disabled states, touch target height.",
-    "Selected = solid look for chips and pills: not yet confirmed by the owner.",
-    "Disabled-state contrast is not measured.",
-    "Button pressed fill (82% mix) and the doubled pressed tint are the assistant's choices.",
-    "Spacing values are tuned per element, not snapped to a scale."
+    "Accessibility: only coral small text on the light page remains, and it is accepted."
   ],
   "components": {
     "note": "Built from the locked tokens on 2026-09-30. Component states reuse the interaction rules under \"states\".",
@@ -432,12 +433,238 @@
       "dark": "left as #2a2a2a on black (owner decision)"
     },
     "not_covered": [
-      "tabs",
-      "tooltip",
-      "toast",
-      "pagination",
-      "navigation",
-      "date picker"
-    ]
-  }
+      "combobox",
+      "accordion",
+      "breadcrumb",
+      "progress bar",
+      "file upload"
+    ],
+    "tabs": {
+      "tab": "mono 12px weight 400, uppercase, muted text; hover ink; selected ink with a 2px coral underline; focus 2px coral ring; disabled 40%",
+      "list": "1px hairline under the row, scrolls sideways on narrow screens"
+    },
+    "tooltip": {
+      "panel": "button-fill background, button-text colour, mono 11px weight 400 uppercase, 7px 10px padding, 1px radius, 9px arrow"
+    },
+    "toast": {
+      "panel": "button-fill background, button-text colour, sans 15px weight 300, 12px 16px padding",
+      "error": "52px coral square flush to the left, top and bottom edges, with a white square-capped cross (18px, 2.4px stroke); replaces the thin coral bar",
+      "action": "mono 12px uppercase, underlined, coral on hover",
+      "dismiss": "cross at the right",
+      "error_note": "White on coral is 3.05:1, enough for a graphic (3:1), not for text. The message text stays in the button-text colour.",
+      "min_height_px": 52
+    },
+    "pagination": {
+      "item": "32px minimum square, mono 12px weight 400 uppercase, hairline box",
+      "hover": "coral box and text with tint fill",
+      "current": "solid button fill",
+      "disabled": "40%"
+    },
+    "navigation": {
+      "link": "mono 11px weight 400 uppercase, ink; numbered prefix in subtle grey (_01)",
+      "hover": "coral text",
+      "current": "2px coral underline"
+    },
+    "date_picker": {
+      "panel": "surface fill, hairline border, 14px padding",
+      "grid": "7 columns of 36px cells, Monday first, weekday row mono 11px weight 300",
+      "today": "1px ink ring",
+      "selected": "solid button fill",
+      "hover": "coral box with tint fill",
+      "disabled_and_outside_month": "reduced opacity"
+    },
+    "interactive_edges": {
+      "note": "The rest edge of an interactive chip and of pagination uses the muted outline colour (5.56:1 light, 8.03:1 dark), as form fields do. Static gallery chips keep the hairline."
+    },
+    "touch_targets": {
+      "minimum_always_px": 24,
+      "coarse_pointer_px": 44,
+      "note": "Under a coarse pointer, buttons, fields, tabs, pagination, navigation, interactive chips, toggles, the ghost button, toast controls, modal close and calendar cells are at least 44px (the calendar grid widens to 44px cells). The tuner has a Touch switch to preview it."
+    },
+    "theme_switch": {
+      "modes": [
+        "light",
+        "dark",
+        "system"
+      ],
+      "default": "system (follows the display setting, and updates live if the display setting changes)",
+      "control": "three icon buttons in one group: sun (Light), moon (Dark), monitor (System). 16px, 1.5px outline icons, 32x30px buttons, 1px radius group. Selected is the solid button fill; unselected hover is coral.",
+      "icons_source": "The sun, moon-02 and monitor-01 icons from the Vaultia chat app icon map (aws_agent UI/chat/src/app/shared/icon/icon-map.ts). Their upstream licence has not been checked.",
+      "memory": "The chosen mode is remembered in the browser (localStorage, guarded so the page still works if storage is blocked).",
+      "accessibility": "Each button has a text label and title; the pressed state is exposed with aria-pressed.",
+      "shipped_gallery": "The shipped gallery page gets this switch; the tuner keeps its Tune and Touch buttons beside it."
+    }
+  },
+  "accessibility": {
+    "measured": "2026-09-30",
+    "method": "Browser audit of computed styles in both themes: text contrast for every text style on the tuner page (including forced hover, pressed and disabled samples), boundary contrast for form fields, chips, pagination and buttons, focus ring contrast, and control sizes.",
+    "text": {
+      "light": {
+        "text_styles_checked": 86,
+        "active_failures": 16,
+        "inactive_failures_exempt": 9
+      },
+      "dark": {
+        "text_styles_checked": 86,
+        "active_failures": 7,
+        "inactive_failures_exempt": 9
+      }
+    },
+    "text_findings": {
+      "coral_on_light": "Coral small text on the light page is 2.7:1 (toggle rest, eyebrow, hover and pressed states of chips, pagination, navigation, calendar). Accepted by the owner; not changed.",
+      "subtle_grey": "Resolved in 0.4.0: subtle text is now #6a6a6a light and #7a7a7a dark.",
+      "dark_pressed_chip": "Coral text on the doubled 32% tint in dark is 4.42:1.",
+      "inactive_controls": "Disabled controls at 40% opacity measure 1.7 to 3.4:1. Inactive controls are exempt from WCAG contrast rules; recorded for information."
+    },
+    "non_text": {
+      "form_fields": "Outline is 5.56:1 light, 8.03:1 dark. Pass.",
+      "buttons_callouts_rules": "15.4:1 light, 18.6:1 dark. Pass.",
+      "interactive_chip_and_pagination_edges": "Resolved in 0.4.0: muted outline at rest.",
+      "focus_ring": "Resolved in 0.4.0: ink ring on light, coral on dark."
+    },
+    "control_sizes_px": {
+      "card_button": "210x34",
+      "input": "191x38",
+      "select": "190x38",
+      "tab": "46x39",
+      "pagination": "32x32",
+      "nav_link": "69x26",
+      "calendar_day": "36x36",
+      "interactive_chip": "83x23",
+      "filter_toggle": "89x23",
+      "theme_bar_button": "55x28",
+      "ghost_button": "54x33",
+      "toast_action": "39x27",
+      "toast_dismiss": "22x28",
+      "modal_close": "27x31",
+      "calendar_nav": "28x26",
+      "note": "After 0.4.0: 24px minimum everywhere, 44px under a coarse pointer. Sizes above are the desktop pointer measurements before the 24px fix."
+    },
+    "proposals_not_applied": [
+      {
+        "id": "coral-text-light",
+        "change": "Optional light-mode-only coral for small text and focus ring: #c73826 (4.62:1 on the page, 5.04:1 on surface). The owner declined a deeper coral on 2026-09-30, so this stays a proposal."
+      }
+    ],
+    "applied_2026-09-30": [
+      {
+        "id": "subtle-text",
+        "result": "#6a6a6a on light 4.79:1, #7a7a7a on dark 4.89:1. Text failures fell from 16 to 11 (light) and 7 to 2 (dark)."
+      },
+      {
+        "id": "interactive-edges",
+        "result": "Interactive chip and pagination edges 5.56:1 light, 8.03:1 dark."
+      },
+      {
+        "id": "focus-ring",
+        "result": "Focus ring is ink on light (15.4:1) and coral on dark (6.88:1)."
+      },
+      {
+        "id": "targets",
+        "result": "24px minimum everywhere; 44px under a coarse pointer, verified with the Touch preview."
+      },
+      {
+        "id": "pressed-tint-dark",
+        "result": "Pressed tint capped at 24%: coral text on it is 5.2:1 in dark."
+      }
+    ],
+    "remaining_after_fixes": {
+      "light": "11 text styles, all coral small text on the light page (accepted 2026-09-30)",
+      "dark": "none"
+    }
+  },
+  "spacing_scale": {
+    "note": "Spacing values sit on this scale. Named size-N, N in px (the reference site names its own sizes the same way). Locked 2026-09-30.",
+    "steps_px": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      32,
+      40,
+      48,
+      56,
+      64
+    ],
+    "not_on_the_scale_on_purpose": [
+      "maxw",
+      "cardmin",
+      "spectag",
+      "rcard",
+      "rchip",
+      "rbtn"
+    ],
+    "snapped_from_tuned_values": {
+      "pagetop": {
+        "was": 30,
+        "now": 32
+      },
+      "hgap": {
+        "was": 6,
+        "now": 8
+      },
+      "chipx": {
+        "was": 9,
+        "now": 8
+      },
+      "chipy": {
+        "was": 3,
+        "now": 4
+      },
+      "cgap": {
+        "was": 10,
+        "now": 12
+      },
+      "btny": {
+        "was": 9,
+        "now": 8
+      },
+      "specpad": {
+        "was": 14,
+        "now": 16
+      },
+      "footpt": {
+        "was": 14,
+        "now": 16
+      },
+      "footmt": {
+        "was": 28,
+        "now": 32
+      }
+    },
+    "tie_break": "Where a value sat exactly between two steps (6, 10, 14, 28) it was rounded up, because the tuning had moved towards airier spacing.",
+    "role_to_step": {
+      "pagex": "size-20",
+      "pagetop": "size-32",
+      "pagebot": "size-40",
+      "hgap": "size-8",
+      "hmb": "size-24",
+      "fpadx": "size-16",
+      "fpady": "size-12",
+      "fgapy": "size-4",
+      "fgapx": "size-20",
+      "fmb": "size-24",
+      "chipgap": "size-8",
+      "chipx": "size-8",
+      "chipy": "size-4",
+      "gridgap": "size-16",
+      "cpadt": "size-16",
+      "cpadx": "size-16",
+      "cpadb": "size-16",
+      "cgap": "size-12",
+      "btnx": "size-12",
+      "btny": "size-8",
+      "btngap": "size-12",
+      "specmt": "size-56",
+      "specpad": "size-16",
+      "footmt": "size-32",
+      "footpt": "size-16"
+    }
+  },
+  "decisions_confirmed": [
+    "Selected chips and pills use the solid look (confirmed 2026-09-30).",
+    "Button pressed fill is an 82% mix of the button fill and the page (confirmed 2026-09-30)."
+  ]
 }
