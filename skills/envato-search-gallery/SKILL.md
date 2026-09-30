@@ -23,7 +23,8 @@ previews in one page, let the user pick, hand back the Envato link.
    per call; for more, request further `page`s and merge. Default `sortBy` is `popular`;
    use `relevance` when the user described something specific.
 4. **Write the results to a JSON file** in a temp directory (see `references/example-input.json`).
-   From each card in the tool result take the image `src` as `img`, the image `alt` as
+   The file is an object whose list is under the key `results` (not `items`), with optional
+   `query`, `asset_type`, `sort` and `filters` beside it. From each card in the tool result take the image `src` as `img`, the image `alt` as
    `title`, the "by ..." text as `author`, and the link button's `url` as `link`.
    **Copy every `img` URL whole, including the trailing `&s=<signature>`.** The CDN
    rejects a truncated URL with "Wrong signature", and the script will say so.
