@@ -322,6 +322,8 @@ TEMPLATE = r"""<!doctype html>
 __FONT_FACES__
 __THEME_VARS__
   *{box-sizing:border-box}
+  /* stop phones enlarging some text blocks by themselves when held sideways */
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:var(--t-title-w);
        padding:32px var(--sp-pagex) var(--sp-pagebot)}
   header,.filters,.grid,footer{max-width:var(--sp-maxw);margin-inline:auto}
