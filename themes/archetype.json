@@ -1,6 +1,6 @@
 {
   "name": "archetype",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "status": "reference, not yet read by build_gallery.py",
   "locked": "2026-09-30",
   "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json.",
@@ -169,9 +169,9 @@
       "usage": "Muted text"
     },
     "subtle": {
-      "light": "#707070",
-      "dark": "#707070",
-      "usage": "Subtle labels"
+      "light": "#6a6a6a",
+      "dark": "#7a7a7a",
+      "usage": "Subtle labels (was #707070 in 0.1.0; darkened for contrast)"
     },
     "coral": {
       "light": "#ff5c48",
@@ -202,6 +202,11 @@
       "light": "#ff5c48",
       "dark": "#ff5c48",
       "usage": "Button arrow"
+    },
+    "focus": {
+      "light": "#1a1a1a",
+      "dark": "#ff5c48",
+      "usage": "Keyboard focus ring, 2px, 2px offset"
     }
   },
   "coral_tint_percent": {
@@ -342,7 +347,7 @@
       "pressed": "solid fill mixed 82% with page background",
       "disabled": "rest look at 40% opacity, no hover",
       "arrow": "coral in every state",
-      "focus_ring": "2px coral, 2px offset"
+      "focus_ring": "2px focus-colour ring, 2px offset (ink on light, coral on dark)"
     },
     "chip_and_pill": {
       "note": "Static in the gallery. The states apply only to an interactive chip, marked with class is-action. A pill is a chip with class pill (fully round).",
@@ -370,7 +375,7 @@
     "Hairline border is 1.2:1 on light. Decorative, accepted."
   ],
   "open": [
-    "Accessibility findings are measured but no fix is applied; see accessibility.proposals_not_applied.",
+    "Accessibility: coral small text on light is accepted; the dark pressed-chip tint (32%, 4.42:1) is undecided.",
     "Selected = solid look for chips and pills: not yet confirmed by the owner.",
     "Button pressed fill (82% mix) and the doubled pressed tint are the assistant's choices.",
     "Spacing values are tuned per element, not snapped to a scale."
@@ -468,6 +473,14 @@
       "selected": "solid button fill",
       "hover": "coral box with tint fill",
       "disabled_and_outside_month": "reduced opacity"
+    },
+    "interactive_edges": {
+      "note": "The rest edge of an interactive chip and of pagination uses the muted outline colour (5.56:1 light, 8.03:1 dark), as form fields do. Static gallery chips keep the hairline."
+    },
+    "touch_targets": {
+      "minimum_always_px": 24,
+      "coarse_pointer_px": 44,
+      "note": "Under a coarse pointer, buttons, fields, tabs, pagination, navigation, interactive chips, toggles, the ghost button, toast controls, modal close and calendar cells are at least 44px (the calendar grid widens to 44px cells). The tuner has a Touch switch to preview it."
     }
   },
   "accessibility": {
@@ -487,15 +500,15 @@
     },
     "text_findings": {
       "coral_on_light": "Coral small text on the light page is 2.7:1 (toggle rest, eyebrow, hover and pressed states of chips, pagination, navigation, calendar). Accepted by the owner; not changed.",
-      "subtle_grey": "Subtle text #707070 is 4.38:1 on light and 4.24:1 on dark (labels, numbered nav prefix, empty-state eyebrow, specimen captions). Just under 4.5:1.",
+      "subtle_grey": "Resolved in 0.4.0: subtle text is now #6a6a6a light and #7a7a7a dark.",
       "dark_pressed_chip": "Coral text on the doubled 32% tint in dark is 4.42:1.",
       "inactive_controls": "Disabled controls at 40% opacity measure 1.7 to 3.4:1. Inactive controls are exempt from WCAG contrast rules; recorded for information."
     },
     "non_text": {
       "form_fields": "Outline is 5.56:1 light, 8.03:1 dark. Pass.",
       "buttons_callouts_rules": "15.4:1 light, 18.6:1 dark. Pass.",
-      "interactive_chip_and_pagination_edges": "Hairline edge is 1.17:1 light, 1.46:1 dark, below the 3:1 wanted for the boundary of an interactive control. Gallery chips are static and unaffected.",
-      "focus_ring": "Coral ring is 2.70:1 on the light page (needs 3:1) and 6.88:1 on dark."
+      "interactive_chip_and_pagination_edges": "Resolved in 0.4.0: muted outline at rest.",
+      "focus_ring": "Resolved in 0.4.0: ink ring on light, coral on dark."
     },
     "control_sizes_px": {
       "card_button": "210x34",
@@ -513,13 +526,9 @@
       "toast_dismiss": "22x28",
       "modal_close": "27x31",
       "calendar_nav": "28x26",
-      "note": "Under the 24x24 minimum (WCAG 2.2 AA): interactive chip (23 high), filter toggle (23 high), toast dismiss (22 wide). Under 44px for touch: most controls."
+      "note": "After 0.4.0: 24px minimum everywhere, 44px under a coarse pointer. Sizes above are the desktop pointer measurements before the 24px fix."
     },
     "proposals_not_applied": [
-      {
-        "id": "subtle-text",
-        "change": "Darken subtle text to #6a6a6a on light (4.79:1) and lighten to #7a7a7a on dark (4.89:1)."
-      },
       {
         "id": "coral-text-light",
         "change": "Optional light-mode-only coral for small text and focus ring: #c73826 (4.62:1 on the page, 5.04:1 on surface). The owner declined a deeper coral on 2026-09-30, so this stays a proposal."
@@ -527,19 +536,29 @@
       {
         "id": "pressed-tint-dark",
         "change": "Cap the pressed chip tint in dark at 24% (5.2:1) instead of 32% (4.42:1)."
+      }
+    ],
+    "applied_2026-09-30": [
+      {
+        "id": "subtle-text",
+        "result": "#6a6a6a on light 4.79:1, #7a7a7a on dark 4.89:1. Text failures fell from 16 to 11 (light) and 7 to 2 (dark)."
       },
       {
         "id": "interactive-edges",
-        "change": "Use the muted outline (#606060 light 5.56:1, #767676 dark 4.62:1) for the rest edge of interactive chips and pagination, as fields already do."
+        "result": "Interactive chip and pagination edges 5.56:1 light, 8.03:1 dark."
       },
       {
         "id": "focus-ring",
-        "change": "Use ink for the focus ring on light (15.4:1) and coral on dark, or a two-tone ring."
+        "result": "Focus ring is ink on light (15.4:1) and coral on dark (6.88:1)."
       },
       {
         "id": "targets",
-        "change": "Under a coarse pointer, give buttons, tabs, pagination and toggles a 44px minimum height; make the toast dismiss at least 24px wide."
+        "result": "24px minimum everywhere; 44px under a coarse pointer, verified with the Touch preview."
       }
-    ]
+    ],
+    "remaining_after_fixes": {
+      "light": "11 text styles, all coral small text on the light page (accepted 2026-09-30)",
+      "dark": "2 text styles: coral text on the 32% pressed chip tint, 4.42:1"
+    }
   }
 }
