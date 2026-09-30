@@ -1,9 +1,9 @@
 {
   "name": "archetype",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "status": "in use: read by skills/envato-search-gallery/scripts/build_gallery.py",
   "locked": "2026-09-30",
-  "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json. The accent is Forest green (chosen 2026-09-30 from six options). The house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json is kept for error and warning only.",
+  "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. The accent is Forest green (chosen 2026-09-30 from six options). The house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json is kept for error and warning only.",
   "fonts": {
     "sans": {
       "family": "Hanken Grotesk",
@@ -444,7 +444,6 @@
     "motion": "0.14s ease on colour, background and border. None when the visitor prefers reduced motion."
   },
   "accepted_debt": [
-    "Subtle text #707070 measures 4.4:1 on light and 4.2:1 on dark, just under 4.5:1. Accepted.",
     "Hairline border is 1.2:1 on light. Decorative, accepted."
   ],
   "open": [
@@ -584,16 +583,16 @@
       }
     },
     "text_findings": {
-      "coral_on_light": "Coral small text on the light page is 2.7:1 (toggle rest, eyebrow, hover and pressed states of chips, pagination, navigation, calendar). Accepted by the owner; not changed.",
+      "coral_on_light": "Coral-era finding, superseded by the Forest accent (see accent_audit); coral is no longer used for text. Coral small text on the light page is 2.7:1 (toggle rest, eyebrow, hover and pressed states of chips, pagination, navigation, calendar). Accepted by the owner; not changed.",
       "subtle_grey": "Resolved in 0.4.0: subtle text is now #6a6a6a light and #7a7a7a dark.",
-      "dark_pressed_chip": "Coral text on the doubled 32% tint in dark is 4.42:1.",
+      "dark_pressed_chip": "Coral-era finding, superseded by the Forest accent (see accent_audit); coral is no longer used for text. Coral text on the doubled 32% tint in dark is 4.42:1.",
       "inactive_controls": "Disabled controls at 40% opacity measure 1.7 to 3.4:1. Inactive controls are exempt from WCAG contrast rules; recorded for information."
     },
     "non_text": {
       "form_fields": "Outline is 5.56:1 light, 8.03:1 dark. Pass.",
       "buttons_callouts_rules": "15.4:1 light, 18.6:1 dark. Pass.",
       "interactive_chip_and_pagination_edges": "Resolved in 0.4.0: muted outline at rest.",
-      "focus_ring": "Resolved in 0.4.0: ink ring on light, coral on dark."
+      "focus_ring": "Resolved in 0.4.0: ink ring on light, accent on dark. Under the Forest accent this is ink 15.4:1 on light and accent 10.9:1 on dark (it was coral on dark in the coral era)."
     },
     "control_sizes_px": {
       "card_button": "210x34",
@@ -616,7 +615,7 @@
     "proposals_not_applied": [
       {
         "id": "coral-text-light",
-        "change": "Optional light-mode-only coral for small text and focus ring: #c73826 (4.62:1 on the page, 5.04:1 on surface). The owner declined a deeper coral on 2026-09-30, so this stays a proposal."
+        "change": "Closed: no longer relevant, because coral is not used as text since the Forest accent (2026-09-30). Historical proposal: optional light-mode-only coral for small text and focus ring: #c73826 (4.62:1 on the page, 5.04:1 on surface). The owner declined a deeper coral on 2026-09-30."
       }
     ],
     "applied_2026-09-30": [
@@ -630,7 +629,7 @@
       },
       {
         "id": "focus-ring",
-        "result": "Focus ring is ink on light (15.4:1) and coral on dark (6.88:1)."
+        "result": "Focus ring is ink on light (15.4:1) and accent on dark (10.9:1 under Forest). Coral-era figure for dark was 6.88:1 (history)."
       },
       {
         "id": "targets",
@@ -638,12 +637,12 @@
       },
       {
         "id": "pressed-tint-dark",
-        "result": "Pressed tint capped at 24%: coral text on it is 5.2:1 in dark."
+        "result": "Pressed tint capped at 24%. Coral-era figure (history): coral text on it was 5.2:1 in dark; coral is no longer used for text."
       }
     ],
     "remaining_after_fixes": {
-      "light": "11 text styles, all coral small text on the light page (accepted 2026-09-30)",
-      "dark": "none"
+      "light": "none in a real state under the Forest accent (coral-era history: 11 text styles, all coral small text on the light page, accepted 2026-09-30)",
+      "dark": "none in a real state under the Forest accent"
     },
     "note": "The measurements and fixes in this section were made with the coral accent (themes 0.1 to 0.6). See accent_audit for the Forest accent that replaced it."
   },
