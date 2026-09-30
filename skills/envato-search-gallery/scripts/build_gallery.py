@@ -306,7 +306,7 @@ __THEME_VARS__
   details{min-width:0}
   details[open]{flex-basis:100%}
   summary{@role option;cursor:pointer;padding:4px 0;min-height:24px;color:var(--accent-text);transition:color .14s ease}
-  summary:hover,summary:focus-visible{color:var(--ink)}
+  summary:focus-visible{color:var(--ink)}
   summary:active{color:var(--accent-text);text-decoration:underline}
   summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
   .chips{display:flex;flex-wrap:wrap;gap:var(--sp-chipgap);padding:4px 0 10px}
@@ -329,7 +329,7 @@ __THEME_VARS__
   .card-link{margin-top:auto;align-self:stretch;padding:var(--sp-btny) var(--sp-btnx);border-radius:var(--sp-rbtn);
        background:transparent;color:var(--btn-bg);box-shadow:inset 0 0 0 1px var(--btn-bg)}
   .card-link::after,.lb-link::after{content:"\2197";color:var(--btn-arrow)}
-  .card-link:hover,.card-link:focus-visible{background:var(--btn-bg);color:var(--btn-ink)}
+  .card-link:focus-visible{background:var(--btn-bg);color:var(--btn-ink)}
   .card-link:active{background:color-mix(in srgb,var(--btn-bg) 82%,var(--bg));color:var(--btn-ink)}
   .card-link:focus-visible,.lb-link:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
   .lb{position:fixed;inset:0;background:var(--lb-bg);display:none;align-items:center;justify-content:center;
@@ -343,7 +343,6 @@ __THEME_VARS__
   .lb button{all:unset;cursor:pointer;color:var(--ink-on-dark);font-size:28px;line-height:1;padding:10px 14px;
              border-radius:var(--sp-rbtn);background:rgba(255,255,255,.1);position:absolute;min-width:44px;min-height:44px;
              display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}
-  .lb button:hover{background:rgba(255,255,255,.22)}
   .lb button:focus-visible{outline:2px solid var(--ink-on-dark);outline-offset:2px}
   .lb .lb-close{top:14px;right:14px}
   .lb .lb-prev{left:12px;top:50%;transform:translateY(-50%)}
@@ -364,8 +363,14 @@ __THEME_VARS__
                    transition:color .14s ease}
   .themebar button svg{width:16px;height:16px;display:block}
   .themebar button[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink)}
-  .themebar button:not([aria-pressed="true"]):hover{color:var(--accent-text)}
   .themebar button:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+  /* hover styles only where the device can hover: on touch, :hover sticks to the last thing tapped */
+  @media (hover:hover){
+    summary:hover:not(:active){color:var(--ink)}
+    .card-link:hover:not(:active){background:var(--btn-bg);color:var(--btn-ink)}
+    .lb button:hover{background:rgba(255,255,255,.22)}
+    .themebar button:not([aria-pressed="true"]):hover{color:var(--accent-text)}
+  }
   @media (pointer:coarse){
     .card-link,summary,.themebar button{min-height:44px}
     .themebar button{min-width:44px}
