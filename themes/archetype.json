@@ -1,6 +1,6 @@
 {
   "name": "archetype",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "status": "reference, not yet read by build_gallery.py",
   "locked": "2026-09-30",
   "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json.",
@@ -370,10 +370,74 @@
     "Hairline border is 1.2:1 on light. Decorative, accepted."
   ],
   "open": [
+    "Accessibility pass not done: contrast per role and state, disabled states, touch target height.",
     "Selected = solid look for chips and pills: not yet confirmed by the owner.",
     "Disabled-state contrast is not measured.",
     "Button pressed fill (82% mix) and the doubled pressed tint are the assistant's choices.",
-    "Components not yet designed: input, select, table, callout, code block, modal, empty, loading and error states.",
     "Spacing values are tuned per element, not snapped to a scale."
-  ]
+  ],
+  "components": {
+    "note": "Built from the locked tokens on 2026-09-30. Component states reuse the interaction rules under \"states\".",
+    "text_input": {
+      "font": "sans 15px weight 300 (not 200, for legibility while typing)",
+      "padding_px": "9 12",
+      "radius_px": 1,
+      "outline": "1px inside, muted text colour",
+      "hover": "outline in ink",
+      "focus": "outline in ink plus a 2px coral ring, 2px offset",
+      "filled": "ink text",
+      "error": "outline in coral, plus a 7px coral square and ink help text (no small coral text)",
+      "disabled": "40% opacity",
+      "placeholder": "muted text colour at 80%",
+      "label": "mono 11px weight 300, uppercase, muted",
+      "help": "mono 11px weight 300"
+    },
+    "select": {
+      "note": "as text input, with a two-triangle chevron and 34px right padding"
+    },
+    "table": {
+      "header": "mono 11px weight 400, uppercase, 1px ink rule under it",
+      "cell": "sans 15px weight 300, hairline rule between rows",
+      "numbers": "mono 12px, right-aligned",
+      "row_hover": "coral tint fill",
+      "overflow": "wrap in a scrolling container on narrow screens"
+    },
+    "callout": {
+      "base": "surface fill, hairline border, 3px ink bar on the left",
+      "note": "ink bar",
+      "warning": "coral bar, coral tint fill",
+      "error": "coral bar, doubled coral tint fill",
+      "title": "mono 11px weight 400, uppercase"
+    },
+    "code": {
+      "block": "surface fill, hairline border, mono 13px weight 300",
+      "inline": "mono at 0.88em, surface fill, hairline border"
+    },
+    "modal": {
+      "panel": "surface fill, hairline border, 24px padding, close cross top right",
+      "backdrop": {
+        "light": "rgba(0,0,0,0.9)",
+        "dark": "rgba(241,241,240,0.14)",
+        "note": "lighter in dark mode so the panel sits on a visible backdrop"
+      },
+      "actions": "ghost text button (ink, coral on hover) plus the standard button"
+    },
+    "empty_and_error": {
+      "panel": "1px dashed muted border, centred, 40px 24px padding",
+      "eyebrow": "mono 11px weight 400, uppercase; error adds a 7px coral square",
+      "action": "the standard button"
+    },
+    "loading": {
+      "skeleton": "hairline-coloured bars, pulsing opacity, no pulse when reduced motion is preferred",
+      "dark": "left as #2a2a2a on black (owner decision)"
+    },
+    "not_covered": [
+      "tabs",
+      "tooltip",
+      "toast",
+      "pagination",
+      "navigation",
+      "date picker"
+    ]
+  }
 }

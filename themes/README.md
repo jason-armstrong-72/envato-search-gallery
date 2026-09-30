@@ -9,7 +9,7 @@ option and embedding the fonts is the next step.
 A near-monochrome theme with one coral accent, derived from <https://www.archetypeai.io/>.
 
 - [archetype.json](archetype.json): every locked value (type roles, colour in light and dark,
-  spacing, shape, interaction states) plus the accepted trade-offs and what is still open.
+  spacing, shape, interaction states, components) plus the accepted trade-offs and what is still open.
 - [reference/tuner.html](reference/tuner.html): the page the theme was designed on. Open it in a
   browser and use **Tune** for controls on every value, with a light and dark switch. **Copy
   settings** exports the current values as text. The Envato preview images are grey placeholders
@@ -34,6 +34,12 @@ stand-ins. The site has no dark mode, so the dark theme is derived.
 - **Chip and pill:** coral border, text and a tint fill on hover (8% light, 16% dark). Static in the
   gallery; add class `is-action` to make one interactive, and `pill` for fully round ends.
 - **Toggle:** coral at rest, ink on hover, coral and underlined when pressed.
+
+### Components
+
+Input, select, table, callouts, code, modal, and the empty, loading and error states are specified
+in `components` and shown at the bottom of the tuner page. Tabs, tooltips, toasts, pagination,
+navigation and a date picker are not covered yet.
 
 ### Known trade-offs
 

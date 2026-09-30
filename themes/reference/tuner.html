@@ -136,7 +136,47 @@
   @media (max-width: 1099px) { .tuner { top: auto; left: 8px; right: 8px; bottom: 8px; width: auto; max-height: 58vh; } }
   @media (max-width: 700px) { .spec .row { grid-template-columns: 1fr; } }
 </style>
-<style>.tuner .sp{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}.tuner .sp label{flex-direction:column}.tuner .sp label span{color:var(--ink);text-transform:none;letter-spacing:0;font-size:11px}.tuner label[data-sk]:hover{background:var(--accent-soft)}</style><style>.tuner .cl{display:block}.tuner .crow{border-top:1px solid var(--border);padding:7px 0 8px}.tuner .cc{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tuner .cell{display:flex;flex-direction:column;gap:3px}.tuner .mk{color:var(--grey)}.tuner .pick{display:flex;gap:4px}.tuner .pick input[type=color]{width:30px;height:28px;padding:1px;flex:none}.tuner .pick input[type=text]{width:100%;text-transform:none}.tuner .rt{font-size:10px;color:var(--grey);min-height:12px;text-transform:none;letter-spacing:0}.tuner .rt.bad{color:#ff5c48}.tuner .rt.ok{color:var(--grey)}</style><style>.states{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:flex-start}.st{display:flex;flex-direction:column;gap:8px;min-width:0}.st>span:first-child{font:300 10px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--grey)}.st .card-link{min-width:190px;margin-top:0}</style></head>
+<style>.tuner .sp{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}.tuner .sp label{flex-direction:column}.tuner .sp label span{color:var(--ink);text-transform:none;letter-spacing:0;font-size:11px}.tuner label[data-sk]:hover{background:var(--accent-soft)}</style><style>.tuner .cl{display:block}.tuner .crow{border-top:1px solid var(--border);padding:7px 0 8px}.tuner .cc{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tuner .cell{display:flex;flex-direction:column;gap:3px}.tuner .mk{color:var(--grey)}.tuner .pick{display:flex;gap:4px}.tuner .pick input[type=color]{width:30px;height:28px;padding:1px;flex:none}.tuner .pick input[type=text]{width:100%;text-transform:none}.tuner .rt{font-size:10px;color:var(--grey);min-height:12px;text-transform:none;letter-spacing:0}.tuner .rt.bad{color:#ff5c48}.tuner .rt.ok{color:var(--grey)}</style><style>.states{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:flex-start}.st{display:flex;flex-direction:column;gap:8px;min-width:0}.st>span:first-child{font:300 10px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--grey)}.st .card-link{min-width:190px;margin-top:0}</style><style>
+  .f-field{display:flex;flex-direction:column;gap:6px;min-width:190px}
+  .f-label{font-family:var(--mono);font-size:11px;font-weight:300;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft)}
+  .f-input,.f-select{font-family:var(--font);font-size:15px;font-weight:300;color:var(--ink);background:transparent;border:0;border-radius:1px;padding:9px 12px;width:100%;box-shadow:inset 0 0 0 1px var(--ink-soft);outline:none;transition:box-shadow .14s ease}
+  .f-input::placeholder{color:var(--ink-soft);opacity:.8}
+  .f-input:hover,.f-select:hover,.f-input.force-hover{box-shadow:inset 0 0 0 1px var(--ink)}
+  .f-input:focus-visible,.f-select:focus-visible,.f-input.force-focus{box-shadow:inset 0 0 0 1px var(--ink);outline:2px solid var(--coral);outline-offset:2px}
+  .f-input.err,.f-select.err{box-shadow:inset 0 0 0 1px var(--coral)}
+  .f-input:disabled,.f-select:disabled{opacity:.4;cursor:not-allowed}
+  .f-select{appearance:none;-webkit-appearance:none;padding-right:34px;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+  .f-help{font-family:var(--mono);font-size:11px;font-weight:300;letter-spacing:.02em;color:var(--ink-soft)}
+  .f-help.err{color:var(--ink)}.f-help.err::before{content:"";display:inline-block;width:7px;height:7px;background:var(--coral);margin-right:8px}
+  table.t{width:100%;border-collapse:collapse;max-width:640px}
+  table.t th{font-family:var(--mono);font-size:11px;font-weight:400;text-transform:uppercase;letter-spacing:.04em;text-align:left;padding:8px 12px;border-bottom:1px solid var(--ink);color:var(--ink)}
+  table.t td{font-family:var(--font);font-size:15px;font-weight:300;padding:10px 12px;border-bottom:1px solid var(--border)}
+  table.t td.n,table.t th.n{font-family:var(--mono);text-align:right;font-size:12px}
+  table.t tbody tr:hover td,table.t tbody tr.force-hover td{background:var(--coral-tint)}
+  .co{display:flex;gap:12px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--ink);max-width:640px;margin-bottom:10px}
+  .co.warn{border-left-color:var(--coral);background:var(--coral-tint)}.co.err{border-left-color:var(--coral);background:var(--coral-tint-2)}
+  .co .ct{font-family:var(--mono);font-size:11px;font-weight:400;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+  .co p{margin:0;font-size:15px;font-weight:300;line-height:1.5}
+  pre.cb{margin:0;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:1px;font-family:var(--mono);font-size:13px;font-weight:300;line-height:1.5;overflow:auto;max-width:640px}
+  code.ic{font-family:var(--mono);font-size:.88em;font-weight:300;padding:1px 6px;background:var(--surface);border:1px solid var(--border);border-radius:1px}
+  .md-wrap{padding:28px 20px;background:var(--scrim);max-width:640px}
+  .md{max-width:440px;margin:auto;background:var(--surface);border:1px solid var(--border);padding:24px;position:relative;display:flex;flex-direction:column;gap:12px}
+  .md .x{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:18px;font-weight:300;color:var(--ink-soft);cursor:pointer;background:none;border:0;padding:4px 8px}
+  .md .x:hover{color:var(--coral-text)}
+  .md .act{display:flex;gap:16px;align-items:center;justify-content:flex-end;margin-top:8px}
+  .ghost{font-family:var(--mono);font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.04em;color:var(--ink);background:none;border:0;cursor:pointer;padding:9px 4px;transition:color .14s ease}
+  .ghost:hover,.ghost.force-hover{color:var(--coral-text)}
+  .md .card-link,.es .card-link{margin-top:0;align-self:auto;min-width:0;display:inline-flex}
+  .es{border:1px dashed var(--ink-soft);padding:40px 24px;text-align:center;max-width:640px;display:flex;flex-direction:column;align-items:center;gap:10px}
+  .es .ey{font-family:var(--mono);font-size:11px;font-weight:400;text-transform:uppercase;letter-spacing:.04em;color:var(--grey)}
+  .es.bad .ey{color:var(--ink)}.es.bad .ey::before{content:"";display:inline-block;width:7px;height:7px;background:var(--coral);margin-right:8px}
+  .es p{margin:0;max-width:44ch}
+  .sk{max-width:640px;display:flex;flex-direction:column;gap:10px}
+  .sk i{display:block;height:12px;background:var(--border);border-radius:1px}
+  .sk i:nth-child(1){width:38%;height:18px}.sk i:nth-child(2){width:92%}.sk i:nth-child(3){width:76%}
+  @media (prefers-reduced-motion:no-preference){.sk i{animation:skp 1.4s ease-in-out infinite}@keyframes skp{50%{opacity:.45}}}
+</style>
+<style>.spec .row>*{min-width:0}.spec .row>.tag{overflow-wrap:anywhere}</style><style>:root[data-theme="dark"] .md-wrap{background:rgba(241,241,240,.14)}</style></head>
 <body>
 <div class="themebar" role="group" aria-label="Theme"><button data-t="light" aria-pressed="false">Light</button><button data-t="dark" aria-pressed="false">Dark</button></div>
 <script>
@@ -193,6 +233,30 @@ set(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');})();
     <div class="st"><span>Hover, focus</span><details><summary class="force-hover">Orientation</summary></details></div>
     <div class="st"><span>Pressed</span><details><summary class="force-active">Orientation</summary></details></div>
     <div class="st"><span>Disabled</span><details aria-disabled="true"><summary>Orientation</summary></details></div></div></div>
+  <div class="row"><span class="tag">Text input</span><div class="states">
+    <div class="st"><span>Rest</span><div class="f-field"><label class="f-label">Email</label><input class="f-input" placeholder="name@example.com"></div></div>
+    <div class="st"><span>Hover</span><div class="f-field"><label class="f-label">Email</label><input class="f-input force-hover" placeholder="name@example.com"></div></div>
+    <div class="st"><span>Focus</span><div class="f-field"><label class="f-label">Email</label><input class="f-input force-focus" placeholder="name@example.com"></div></div>
+    <div class="st"><span>Filled</span><div class="f-field"><label class="f-label">Email</label><input class="f-input" value="jason@example.com"></div></div>
+    <div class="st"><span>Error</span><div class="f-field"><label class="f-label">Email</label><input class="f-input err" value="jason@"><span class="f-help err">Enter a full email address</span></div></div>
+    <div class="st"><span>Disabled</span><div class="f-field"><label class="f-label">Email</label><input class="f-input" value="locked" disabled></div></div></div></div>
+  <div class="row"><span class="tag">Select</span><div class="states">
+    <div class="st"><span>Rest</span><div class="f-field"><label class="f-label">Sort by</label><select class="f-select"><option>Relevance</option><option>Popular</option></select></div></div>
+    <div class="st"><span>Error</span><div class="f-field"><label class="f-label">Sort by</label><select class="f-select err"><option>Choose</option></select><span class="f-help err">Pick one</span></div></div>
+    <div class="st"><span>Disabled</span><div class="f-field"><label class="f-label">Sort by</label><select class="f-select" disabled><option>Relevance</option></select></div></div></div></div>
+  <div class="row"><span class="tag">Table</span><div style="overflow-x:auto"><table class="t"><thead><tr><th>Item</th><th>Author</th><th class="n">Size</th></tr></thead><tbody>
+    <tr><td>Mortar and pestle</td><td>Wavebreakmedia</td><td class="n">4.2 MB</td></tr>
+    <tr class="force-hover"><td>Pill counting tray (row hover)</td><td>chartchaik1</td><td class="n">3.1 MB</td></tr>
+    <tr><td>Sterile production line</td><td>ckstockphoto</td><td class="n">5.6 MB</td></tr></tbody></table></div></div>
+  <div class="row"><span class="tag">Callouts</span><div>
+    <div class="co"><div><div class="ct">Note</div><p>Previews are watermarked and for review only.</p></div></div>
+    <div class="co warn"><div><div class="ct">Warning</div><p>An Envato Elements subscription is needed to license this item.</p></div></div>
+    <div class="co err"><div><div class="ct">Error</div><p>The search could not be completed. Check the connection and try again.</p></div></div></div></div>
+  <div class="row"><span class="tag">Code, block and inline</span><div style="display:flex;flex-direction:column;gap:12px"><pre class="cb">python3 scripts/build_gallery.py results.json --theme archetype</pre><p class="spec-body" style="margin:0">Run <code class="ic">build_gallery.py</code> with a results file to build the page.</p></div></div>
+  <div class="row"><span class="tag">Modal</span><div class="md-wrap"><div class="md"><button class="x" aria-label="Close">&times;</button><h3 class="spec-h3" style="margin:0">Discard this search?</h3><p class="spec-body" style="margin:0">The gallery page will be deleted. You can rebuild it by running the search again.</p><div class="act"><button class="ghost">Cancel</button><a class="card-link" href="#" onclick="return false">Discard</a></div></div></div></div>
+  <div class="row"><span class="tag">Empty state</span><div class="es"><span class="ey">_00 No results</span><h3 class="spec-h3" style="margin:0">Nothing matched that search</h3><p class="spec-body">Try fewer words, or remove a filter.</p><a class="card-link" href="#" onclick="return false">Clear filters</a></div></div>
+  <div class="row"><span class="tag">Loading state</span><div class="sk" role="status" aria-label="Loading"><i></i><i></i><i></i></div></div>
+  <div class="row"><span class="tag">Error state</span><div class="es bad"><span class="ey">Error</span><h3 class="spec-h3" style="margin:0">The search failed</h3><p class="spec-body">The Envato server did not respond.</p><a class="card-link" href="#" onclick="return false">Try again</a></div></div>
   <div class="row"><span class="tag">Code</span><p class="spec-code">python3 scripts/build_gallery.py results.json --theme archetype.json</p></div>
 </section>
 <footer>
@@ -364,7 +428,7 @@ function apply(){
  SP.forEach(function(t){var v=sp[t[0]];
   if(t[8]){out+=t[7]+'{'+t[8].map(function(p){return p+':'+v+'px !important'}).join(';')+'}\n'}
   else if(t[0]==='cardmin'){out+='.grid{grid-template-columns:repeat(auto-fill,minmax('+v+'px,1fr)) !important}\n'}
-  else if(t[0]==='spectag'){out+='.spec .row{grid-template-columns:'+v+'px 1fr !important}\n'}
+  else if(t[0]==='spectag'){out+='@media (min-width:701px){.spec .row{grid-template-columns:'+v+'px 1fr !important}}\n'}
  });
  out+='@media (min-width:1100px){body.tuner-open{padding-right:'+(sp.pagex+376)+'px !important}}\n';
  css.textContent=out;
