@@ -53,13 +53,14 @@ claude plugin update envato-search-gallery@envato-search-gallery
 claude plugin uninstall envato-search-gallery@envato-search-gallery
 ```
 
-- An update only takes effect in a new session. In the VS Code extension, run "Developer:
-  Reload Window" from the Command Palette, or start a new conversation. A window reload ends
-  every Claude Code conversation open in that window; each can be resumed from the history.
+- `claude plugin update` prints "Restart to apply changes". Start a new session, or run
+  `/reload-plugins` in the current one to switch hooks, MCP servers and LSP servers to the new
+  version without stopping. Anything that runs as a monitor needs a full restart (this plugin
+  has none).
 - An update is only offered when the version in `.claude-plugin/plugin.json` changes. A change
   that does not bump the version does not reach installed copies.
-- To see what is installed, run `claude plugin list` in a terminal. The `/plugin` command may
-  not be available in the VS Code extension's chat panel.
+- To see what is installed, run `claude plugin list` in a terminal. In the VS Code extension's
+  chat panel, `/plugins` (plural) opens the Manage plugins dialog.
 
 ### Other environments
 
