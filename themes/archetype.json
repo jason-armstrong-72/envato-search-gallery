@@ -1,0 +1,443 @@
+{
+  "name": "archetype",
+  "version": "0.2.0",
+  "status": "reference, not yet read by build_gallery.py",
+  "locked": "2026-09-30",
+  "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json.",
+  "fonts": {
+    "sans": {
+      "family": "Hanken Grotesk",
+      "weights": [
+        200,
+        300,
+        400,
+        500
+      ],
+      "source": "Google Fonts, SIL OFL",
+      "note": "Free stand-in for PP Neue Montreal (paid), which the reference site uses."
+    },
+    "mono": {
+      "family": "IBM Plex Mono",
+      "weights": [
+        200,
+        300,
+        400,
+        500
+      ],
+      "source": "Google Fonts, SIL OFL",
+      "note": "Stand-in for PP Neue Montreal Mono."
+    }
+  },
+  "type": {
+    "display": {
+      "family": "sans",
+      "size_px": 64,
+      "weight": 300,
+      "tracking_em": -0.035,
+      "line_height": 1.02,
+      "usage": "Page title"
+    },
+    "h2": {
+      "family": "sans",
+      "size_px": 36,
+      "weight": 200,
+      "tracking_em": -0.03,
+      "line_height": 1.08,
+      "usage": "Heading 2 (specimen)"
+    },
+    "h3": {
+      "family": "sans",
+      "size_px": 22,
+      "weight": 200,
+      "tracking_em": -0.02,
+      "line_height": 1.2,
+      "usage": "Heading 3 (specimen)"
+    },
+    "lead": {
+      "family": "sans",
+      "size_px": 18,
+      "weight": 200,
+      "tracking_em": -0.01,
+      "line_height": 1.45,
+      "usage": "Lead paragraph (specimen)"
+    },
+    "title": {
+      "family": "sans",
+      "size_px": 15,
+      "weight": 200,
+      "tracking_em": -0.01,
+      "line_height": 1.35,
+      "usage": "Card title"
+    },
+    "body": {
+      "family": "sans",
+      "size_px": 15,
+      "weight": 200,
+      "tracking_em": 0,
+      "line_height": 1.5,
+      "usage": "Body copy (specimen)"
+    },
+    "caption": {
+      "family": "sans",
+      "size_px": 13,
+      "weight": 200,
+      "tracking_em": 0,
+      "line_height": 1.4,
+      "usage": "Caption (specimen)"
+    },
+    "eyebrow": {
+      "family": "mono",
+      "size_px": 11,
+      "weight": 400,
+      "tracking_em": 0.04,
+      "line_height": 1.2,
+      "usage": "Small label above the title"
+    },
+    "meta": {
+      "family": "mono",
+      "size_px": 11,
+      "weight": 400,
+      "tracking_em": 0.04,
+      "line_height": 1.4,
+      "usage": "Results and sort line"
+    },
+    "author": {
+      "family": "mono",
+      "size_px": 11,
+      "weight": 300,
+      "tracking_em": 0.04,
+      "line_height": 1.3,
+      "usage": "Card author"
+    },
+    "label": {
+      "family": "mono",
+      "size_px": 11,
+      "weight": 300,
+      "tracking_em": 0.04,
+      "line_height": 1.4,
+      "usage": "Filter heading, chip, note, footer"
+    },
+    "option": {
+      "family": "mono",
+      "size_px": 11,
+      "weight": 300,
+      "tracking_em": 0.04,
+      "line_height": 1.4,
+      "usage": "Filter toggle row"
+    },
+    "button": {
+      "family": "mono",
+      "size_px": 12,
+      "weight": 400,
+      "tracking_em": 0.04,
+      "line_height": 1.2,
+      "usage": "Buttons, links and the theme toggle"
+    },
+    "code": {
+      "family": "mono",
+      "size_px": 13,
+      "weight": 300,
+      "tracking_em": 0,
+      "line_height": 1.5,
+      "usage": "Code (specimen)"
+    }
+  },
+  "colour": {
+    "bg": {
+      "light": "#f1f1f0",
+      "dark": "#000000",
+      "usage": "Page background"
+    },
+    "surface": {
+      "light": "#fbfbfa",
+      "dark": "#111111",
+      "usage": "Cards and panel"
+    },
+    "border": {
+      "light": "#e0e0e0",
+      "dark": "#2a2a2a",
+      "usage": "Hairline border"
+    },
+    "ink": {
+      "light": "#1a1a1a",
+      "dark": "#f1f1f0",
+      "usage": "Main text"
+    },
+    "muted": {
+      "light": "#606060",
+      "dark": "#a0a0a0",
+      "usage": "Muted text"
+    },
+    "subtle": {
+      "light": "#707070",
+      "dark": "#707070",
+      "usage": "Subtle labels"
+    },
+    "coral": {
+      "light": "#ff5c48",
+      "dark": "#ff5c48",
+      "usage": "Coral for shapes"
+    },
+    "coraltext": {
+      "light": "#ff5c48",
+      "dark": "#ff5c48",
+      "usage": "Coral for small text"
+    },
+    "soft": {
+      "light": "#e3e3e3",
+      "dark": "#2b1613",
+      "usage": "Coral tint, hover"
+    },
+    "btnbg": {
+      "light": "#1a1a1a",
+      "dark": "#f1f1f0",
+      "usage": "Button fill"
+    },
+    "btnink": {
+      "light": "#ffffff",
+      "dark": "#000000",
+      "usage": "Button text"
+    },
+    "btnarrow": {
+      "light": "#ff5c48",
+      "dark": "#ff5c48",
+      "usage": "Button arrow"
+    }
+  },
+  "coral_tint_percent": {
+    "light": 8,
+    "dark": 16,
+    "note": "Chip and pill hover fill. Pressed doubles it."
+  },
+  "spacing_and_shape": {
+    "pagex": {
+      "px": 20,
+      "usage": "Page side padding"
+    },
+    "pagetop": {
+      "px": 30,
+      "usage": "Space above header"
+    },
+    "pagebot": {
+      "px": 40,
+      "usage": "Page bottom padding"
+    },
+    "maxw": {
+      "px": 1400,
+      "usage": "Content max width"
+    },
+    "hgap": {
+      "px": 6,
+      "usage": "Gap between eyebrow, title, meta"
+    },
+    "hmb": {
+      "px": 24,
+      "usage": "Space below header"
+    },
+    "fpadx": {
+      "px": 16,
+      "usage": "Filter panel padding, sides"
+    },
+    "fpady": {
+      "px": 12,
+      "usage": "Filter panel padding, top and bottom"
+    },
+    "fgapy": {
+      "px": 4,
+      "usage": "Filter row gap"
+    },
+    "fgapx": {
+      "px": 20,
+      "usage": "Filter column gap"
+    },
+    "fmb": {
+      "px": 24,
+      "usage": "Space below filter panel"
+    },
+    "chipgap": {
+      "px": 8,
+      "usage": "Chip gap"
+    },
+    "chipx": {
+      "px": 9,
+      "usage": "Chip padding, sides"
+    },
+    "chipy": {
+      "px": 3,
+      "usage": "Chip padding, top and bottom"
+    },
+    "gridgap": {
+      "px": 16,
+      "usage": "Card grid gap"
+    },
+    "cardmin": {
+      "px": 230,
+      "usage": "Card minimum width"
+    },
+    "cpadt": {
+      "px": 16,
+      "usage": "Card text padding, top"
+    },
+    "cpadx": {
+      "px": 16,
+      "usage": "Card text padding, sides"
+    },
+    "cpadb": {
+      "px": 16,
+      "usage": "Card text padding, bottom"
+    },
+    "cgap": {
+      "px": 10,
+      "usage": "Gap inside card text"
+    },
+    "btnx": {
+      "px": 12,
+      "usage": "Button padding, sides"
+    },
+    "btny": {
+      "px": 9,
+      "usage": "Button padding, top and bottom"
+    },
+    "btngap": {
+      "px": 12,
+      "usage": "Button label to arrow gap"
+    },
+    "specmt": {
+      "px": 56,
+      "usage": "Space above specimen"
+    },
+    "specpad": {
+      "px": 14,
+      "usage": "Specimen row padding"
+    },
+    "spectag": {
+      "px": 140,
+      "usage": "Specimen label column width"
+    },
+    "footmt": {
+      "px": 28,
+      "usage": "Space above footer"
+    },
+    "footpt": {
+      "px": 14,
+      "usage": "Footer padding, top"
+    },
+    "rcard": {
+      "px": 1,
+      "usage": "Card and panel radius"
+    },
+    "rchip": {
+      "px": 1,
+      "usage": "Chip radius"
+    },
+    "rbtn": {
+      "px": 1,
+      "usage": "Button radius"
+    }
+  },
+  "states": {
+    "button": {
+      "rest": "transparent fill, 1px inside outline and text in button colour",
+      "hover_focus": "solid fill in button colour, text in button-text colour",
+      "pressed": "solid fill mixed 82% with page background",
+      "disabled": "rest look at 40% opacity, no hover",
+      "arrow": "coral in every state",
+      "focus_ring": "2px coral, 2px offset"
+    },
+    "chip_and_pill": {
+      "note": "Static in the gallery. The states apply only to an interactive chip, marked with class is-action. A pill is a chip with class pill (fully round).",
+      "rest": "muted text, hairline border",
+      "hover_focus": "coral text and border, coral tint fill",
+      "pressed": "as hover with the tint doubled",
+      "selected": "solid fill in button colour, button-text colour",
+      "disabled": "40% opacity"
+    },
+    "toggle": {
+      "rest": "coral text",
+      "hover_focus": "ink text",
+      "pressed": "coral text, underlined",
+      "disabled": "muted text at 40% opacity"
+    },
+    "theme_bar": {
+      "unselected_hover": "coral text",
+      "selected": "solid, unchanged on hover"
+    },
+    "motion": "0.14s ease on colour, background and border. None when the visitor prefers reduced motion."
+  },
+  "accepted_debt": [
+    "Coral text on the light page is 2.7:1, below 4.5:1. Accepted 2026-09-30; coral is used for shapes and interaction cues. A deeper light-mode coral (about #d6402d) was offered and declined.",
+    "Subtle text #707070 measures 4.4:1 on light and 4.2:1 on dark, just under 4.5:1. Accepted.",
+    "Hairline border is 1.2:1 on light. Decorative, accepted."
+  ],
+  "open": [
+    "Accessibility pass not done: contrast per role and state, disabled states, touch target height.",
+    "Selected = solid look for chips and pills: not yet confirmed by the owner.",
+    "Disabled-state contrast is not measured.",
+    "Button pressed fill (82% mix) and the doubled pressed tint are the assistant's choices.",
+    "Spacing values are tuned per element, not snapped to a scale."
+  ],
+  "components": {
+    "note": "Built from the locked tokens on 2026-09-30. Component states reuse the interaction rules under \"states\".",
+    "text_input": {
+      "font": "sans 15px weight 300 (not 200, for legibility while typing)",
+      "padding_px": "9 12",
+      "radius_px": 1,
+      "outline": "1px inside, muted text colour",
+      "hover": "outline in ink",
+      "focus": "outline in ink plus a 2px coral ring, 2px offset",
+      "filled": "ink text",
+      "error": "outline in coral, plus a 7px coral square and ink help text (no small coral text)",
+      "disabled": "40% opacity",
+      "placeholder": "muted text colour at 80%",
+      "label": "mono 11px weight 300, uppercase, muted",
+      "help": "mono 11px weight 300"
+    },
+    "select": {
+      "note": "as text input, with a two-triangle chevron and 34px right padding"
+    },
+    "table": {
+      "header": "mono 11px weight 400, uppercase, 1px ink rule under it",
+      "cell": "sans 15px weight 300, hairline rule between rows",
+      "numbers": "mono 12px, right-aligned",
+      "row_hover": "coral tint fill",
+      "overflow": "wrap in a scrolling container on narrow screens"
+    },
+    "callout": {
+      "base": "surface fill, hairline border, 3px ink bar on the left",
+      "note": "ink bar",
+      "warning": "coral bar, coral tint fill",
+      "error": "coral bar, doubled coral tint fill",
+      "title": "mono 11px weight 400, uppercase"
+    },
+    "code": {
+      "block": "surface fill, hairline border, mono 13px weight 300",
+      "inline": "mono at 0.88em, surface fill, hairline border"
+    },
+    "modal": {
+      "panel": "surface fill, hairline border, 24px padding, close cross top right",
+      "backdrop": {
+        "light": "rgba(0,0,0,0.9)",
+        "dark": "rgba(241,241,240,0.14)",
+        "note": "lighter in dark mode so the panel sits on a visible backdrop"
+      },
+      "actions": "ghost text button (ink, coral on hover) plus the standard button"
+    },
+    "empty_and_error": {
+      "panel": "1px dashed muted border, centred, 40px 24px padding",
+      "eyebrow": "mono 11px weight 400, uppercase; error adds a 7px coral square",
+      "action": "the standard button"
+    },
+    "loading": {
+      "skeleton": "hairline-coloured bars, pulsing opacity, no pulse when reduced motion is preferred",
+      "dark": "left as #2a2a2a on black (owner decision)"
+    },
+    "not_covered": [
+      "tabs",
+      "tooltip",
+      "toast",
+      "pagination",
+      "navigation",
+      "date picker"
+    ]
+  }
+}
