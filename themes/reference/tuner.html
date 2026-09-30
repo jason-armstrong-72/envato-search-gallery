@@ -236,14 +236,18 @@
   html.force-coarse nav.nv a,html.force-coarse .chip.is-action,html.force-coarse .ghost,html.force-coarse .toast .ta,html.force-coarse .tab,html.force-coarse .dp .dh button,html.force-coarse .md .x,html.force-coarse .toast .tx{display:inline-flex;align-items:center;justify-content:center}
   html.force-coarse .dp .g{grid-template-columns:repeat(7,44px)}html.force-coarse .dp .g a{height:44px}
 </style>
-<style>.tuner .scl{display:flex;flex-wrap:wrap;gap:4px}.tuner .scl span{border:1px solid var(--border);padding:2px 7px;font-size:10px;color:var(--ink-soft)}.tuner label.off span{color:var(--coral-text)}.tuner label.off span::after{content:' off scale';color:var(--grey);font-size:10px}</style><style>.tuner .top{flex-wrap:nowrap;align-items:center}.tuner .top button{white-space:nowrap;padding:5px 8px;font-size:10px}.tuner .top #tMsg{font-size:10px;white-space:nowrap}</style></head>
+<style>.tuner .scl{display:flex;flex-wrap:wrap;gap:4px}.tuner .scl span{border:1px solid var(--border);padding:2px 7px;font-size:10px;color:var(--ink-soft)}.tuner label.off span{color:var(--coral-text)}.tuner label.off span::after{content:' off scale';color:var(--grey);font-size:10px}</style><style>.tuner .top{flex-wrap:nowrap;align-items:center}.tuner .top button{white-space:nowrap;padding:5px 8px;font-size:10px}.tuner .top #tMsg{font-size:10px;white-space:nowrap}</style><style>.themebar .modes{display:flex;gap:2px}.themebar .modes button{width:32px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center}.themebar .modes svg{width:16px;height:16px;display:block}</style></head>
 <body>
-<div class="themebar" role="group" aria-label="Theme"><button data-t="light" aria-pressed="false">Light</button><button data-t="dark" aria-pressed="false">Dark</button></div>
+<div class="themebar" role="toolbar" aria-label="Theme"><div class="modes" role="group" aria-label="Colour mode"><button data-t="light" aria-pressed="false" aria-label="Light" title="Light"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12,2v2M12,20v2M4,12h-2M6.3,6.3l-1.4-1.4M17.7,6.3l1.4-1.4M6.3,17.7l-1.4,1.4M17.7,17.7l1.4,1.4M22,12h-2M17,12c0,2.8-2.2,5-5,5s-5-2.2-5-5,2.2-5,5-5,5,2.2,5,5Z"/></svg></button><button data-t="dark" aria-pressed="false" aria-label="Dark" title="Dark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.5" d="M22,13c-1.4,2.4-4,4-7,4-4.4,0-8-3.6-8-8s1.6-5.6,4-7C6,2.5,2,6.8,2,12s4.5,10,10,10,9.5-4,10-9Z"/></svg></button><button data-t="system" aria-pressed="false" aria-label="System, follow the display setting" title="System"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 21H16M12 17V21M4 5C4 4.06812 4 3.60218 4.15224 3.23463C4.35523 2.74458 4.74458 2.35523 5.23463 2.15224C5.60218 2 6.06812 2 7 2H17C17.9319 2 18.3978 2 18.7654 2.15224C19.2554 2.35523 19.6448 2.74458 19.8478 3.23463C20 3.60218 20 4.06812 20 5V13C20 13.9319 20 14.3978 19.8478 14.7654C19.6448 15.2554 19.2554 15.6448 18.7654 15.8478C18.3978 16 17.9319 16 17 16H7C6.06812 16 5.60218 16 5.23463 15.8478C4.74458 15.6448 4.35523 15.2554 4.15224 14.7654C4 14.3978 4 13.9319 4 13V5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
 <script>
-(function(){var r=document.documentElement,bs=document.querySelectorAll('.themebar button');
-function set(t){r.setAttribute('data-theme',t);bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===t)})}
+(function(){var r=document.documentElement,bs=document.querySelectorAll('.themebar .modes button'),mq=matchMedia('(prefers-color-scheme: dark)'),mode='system';
+try{var sv=localStorage.getItem('gallery-mode');if(sv==='light'||sv==='dark'||sv==='system')mode=sv}catch(e){}
+function eff(){return mode==='system'?(mq.matches?'dark':'light'):mode}
+function set(m){mode=m;try{localStorage.setItem('gallery-mode',m)}catch(e){}apply()}
+function apply(){r.setAttribute('data-theme',eff());r.setAttribute('data-mode',mode);bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===mode)})}
 bs.forEach(function(b){b.onclick=function(){set(b.dataset.t)}});
-set(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');})();
+if(mq.addEventListener)mq.addEventListener('change',function(){if(mode==='system')apply()});
+apply();})();
 </script>
 
 <header>

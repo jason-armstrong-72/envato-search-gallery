@@ -1,6 +1,6 @@
 {
   "name": "archetype",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "status": "reference, not yet read by build_gallery.py",
   "locked": "2026-09-30",
   "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json.",
@@ -375,9 +375,7 @@
     "Hairline border is 1.2:1 on light. Decorative, accepted."
   ],
   "open": [
-    "Accessibility: only coral small text on the light page remains, and it is accepted.",
-    "Selected = solid look for chips and pills: not yet confirmed by the owner.",
-    "Button pressed fill (82% mix) and the doubled pressed tint are the assistant's choices."
+    "Accessibility: only coral small text on the light page remains, and it is accepted."
   ],
   "components": {
     "note": "Built from the locked tokens on 2026-09-30. Component states reuse the interaction rules under \"states\".",
@@ -482,6 +480,19 @@
       "minimum_always_px": 24,
       "coarse_pointer_px": 44,
       "note": "Under a coarse pointer, buttons, fields, tabs, pagination, navigation, interactive chips, toggles, the ghost button, toast controls, modal close and calendar cells are at least 44px (the calendar grid widens to 44px cells). The tuner has a Touch switch to preview it."
+    },
+    "theme_switch": {
+      "modes": [
+        "light",
+        "dark",
+        "system"
+      ],
+      "default": "system (follows the display setting, and updates live if the display setting changes)",
+      "control": "three icon buttons in one group: sun (Light), moon (Dark), monitor (System). 16px, 1.5px outline icons, 32x30px buttons, 1px radius group. Selected is the solid button fill; unselected hover is coral.",
+      "icons_source": "The sun, moon-02 and monitor-01 icons from the Vaultia chat app icon map (aws_agent UI/chat/src/app/shared/icon/icon-map.ts). Their upstream licence has not been checked.",
+      "memory": "The chosen mode is remembered in the browser (localStorage, guarded so the page still works if storage is blocked).",
+      "accessibility": "Each button has a text label and title; the pressed state is exposed with aria-pressed.",
+      "shipped_gallery": "The shipped gallery page gets this switch; the tuner keeps its Tune and Touch buttons beside it."
     }
   },
   "accessibility": {
@@ -651,5 +662,9 @@
       "footmt": "size-32",
       "footpt": "size-16"
     }
-  }
+  },
+  "decisions_confirmed": [
+    "Selected chips and pills use the solid look (confirmed 2026-09-30).",
+    "Button pressed fill is an 82% mix of the button fill and the page (confirmed 2026-09-30)."
+  ]
 }
