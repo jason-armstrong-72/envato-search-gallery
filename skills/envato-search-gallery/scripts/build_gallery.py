@@ -324,6 +324,8 @@ __THEME_VARS__
   header{display:flex;flex-direction:column;gap:var(--sp-hgap);margin-bottom:var(--sp-hmb);padding-top:var(--sp-pagetop)}
   .eyebrow{@role eyebrow;color:var(--accent-text)}
   .eyebrow::before{content:"_01 "}
+  /* the theme sets the size (desktop and small screen); fitTitle() below only shrinks it when one word
+     is too long for the line, and a word may break only if it still cannot fit at the smallest size */
   h1{margin:0;@role display;max-width:16ch;text-wrap:balance;overflow-wrap:anywhere;color:var(--ink)}
   .meta{@role meta;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 14px}
   .meta strong{color:var(--ink);font-weight:inherit}
@@ -517,6 +519,21 @@ __FILTERS__
     else if (e.key === 'ArrowLeft') show(current - 1);
     else if (e.key === 'ArrowRight') show(current + 1);
   });
+
+// Title size: the theme's size is the guide. Shrink only when a single word is wider than the line,
+// one pixel at a time, down to a floor. Runs again when the fonts load and when the window resizes.
+(function(){
+  var h=document.querySelector('h1'); if(!h) return; var FLOOR=24;
+  function fitTitle(){
+    h.style.fontSize=''; h.style.overflowWrap='normal';
+    var size=parseFloat(getComputedStyle(h).fontSize);
+    while(h.scrollWidth>h.clientWidth+0.5 && size>FLOOR){ size-=1; h.style.fontSize=size+'px'; }
+    h.style.overflowWrap='';
+  }
+  fitTitle();
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fitTitle);
+  window.addEventListener('resize',fitTitle);
+})();
 </script>
 </body>
 </html>
