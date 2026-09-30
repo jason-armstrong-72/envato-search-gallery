@@ -211,9 +211,9 @@ python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --the
 
 - `--theme NAME` loads `themes/NAME.json`; `--theme PATH` loads a theme file from anywhere. A
   missing or incomplete theme stops with a message that names what is missing.
-- The fonts are embedded in each page as base64 (about 100 KB), so a page needs no network and
-  looks the same offline. Only the latin subset is included; other scripts fall back to the
-  system font.
+- The fonts are embedded in each page as base64 (about 180 KB), so a page needs no network and
+  looks the same offline. The latin and latin-extended subsets are included (Western and Central
+  European); other scripts, such as Thai, fall back to the system font.
 - The fonts are under the SIL Open Font Licence. Their licence texts are in
   [fonts/](skills/envato-search-gallery/fonts/).
 - To design a theme, open [themes/reference/tuner.html](themes/reference/tuner.html) in a browser;

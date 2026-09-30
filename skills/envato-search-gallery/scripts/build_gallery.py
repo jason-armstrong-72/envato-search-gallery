@@ -164,9 +164,10 @@ def font_faces(theme, base):
         except OSError:
             notes.append(f"font file not found, using the fallback font: {file}")
             continue
+        rng = f'unicode-range:{entry["unicode_range"]};' if entry.get("unicode_range") else ""
         faces.append(
-            '@font-face{font-family:"%s";font-style:normal;font-weight:%s;font-display:swap;'
-            'src:url(data:font/woff2;base64,%s) format("woff2")}' % (entry["family"], entry["weight"], data)
+            '@font-face{font-family:"%s";font-style:normal;font-weight:%s;font-display:swap;%s'
+            'src:url(data:font/woff2;base64,%s) format("woff2")}' % (entry["family"], entry["weight"], rng, data)
         )
     return "\n".join(faces), notes
 
