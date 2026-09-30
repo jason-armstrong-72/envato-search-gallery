@@ -1,0 +1,435 @@
+<!doctype html>
+<!--
+  Reference: the type, spacing, shape and colour tuner used to design the archetype theme.
+  Open this file in a browser. Use the Tune button for the controls, Copy settings to export.
+  The Envato preview images were replaced with grey placeholders on purpose:
+  previews are for review only and must not be committed.
+  Values are locked in themes/archetype.json; this page is a working reference, not a build input.
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Envato results: pharmacist compounding medication close-up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@200;300;400;500&family=IBM+Plex+Mono:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root, :root[data-theme="light"] {
+    --bg: #f1f1f0; --surface: #fbfbfa; --border: #e0e0e0; --ink: #1a1a1a; --ink-soft: #606060;
+    --accent: #1a1a1a; --accent-soft: #e3e3e3; --chip-bg: transparent; --chip-ink: #606060;
+    --scrim: rgba(0,0,0,0.9); --coral: #ff5c48; --grey: #868686;
+    --font: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --bg: #000; --surface: #111111; --border: #2a2a2a; --ink: #f1f1f0; --ink-soft: #a0a0a0;
+    --accent: #ff5c48; --accent-soft: #2b1613; --chip-bg: transparent; --chip-ink: #a0a0a0;
+    --scrim: rgba(0,0,0,0.92); --grey: #868686;
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+      --bg: #000; --surface: #111111; --border: #2a2a2a; --ink: #f1f1f0; --ink-soft: #a0a0a0;
+      --accent: #ff5c48; --accent-soft: #2b1613; --chip-bg: transparent; --chip-ink: #a0a0a0; color-scheme: dark;
+    }
+  }
+  body { max-width: none; padding: 20px 20px 48px; }
+  header, .filters, .grid, footer { max-width: 1400px; margin-inline: auto; }
+  header { padding-top: 72px; }
+  h1 { font-weight: 400 !important; letter-spacing: -0.035em; line-height: 1.02; font-size: clamp(34px, 5.2vw, 64px) !important; max-width: 16ch; }
+  .eyebrow, .filters h2, .meta, .card-link, .lb-link, .card-author, .chip, summary, .note, footer { font-family: var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+  .eyebrow { color: #ff5c48 !important; }
+  .eyebrow::before { content: "_01 "; }
+  .meta { font-size: 11px; } .meta strong { font-weight: 500; }
+  .card-author { font-size: 11px; } .card-title { font-weight: 500; letter-spacing: -0.01em; }
+  .card, .filters { border-radius: 4px !important; background: var(--surface); box-shadow: none !important; }
+  .card img { border-radius: 0; }
+  .chip { border-radius: 4px; border: 1px solid var(--border); font-size: 11px; }
+  .chip.on { border-color: var(--ink); color: var(--ink); background: transparent; }
+  .card-link { display: inline-flex; align-items: center; justify-content: space-between; gap: 12px; align-self: stretch;
+               margin-top: auto; padding: 9px 12px; border-radius: 3px; background: #1a1a1a; color: #fff !important; font-size: 11px; font-weight: 500; }
+  .card-link::after { content: "+"; color: #ff5c48; font-size: 16px; line-height: 1; }
+  :root[data-theme="dark"] .card-link { background: #f1f1f0; color: #000 !important; }
+  :root[data-theme="dark"] .card-link::after { color: #000; }
+  .themebar { position: fixed; top: 14px; right: 20px; z-index: 20; display: flex; gap: 2px; padding: 3px;
+              border: 1px solid var(--border); border-radius: 4px; background: var(--bg); }
+  .themebar button { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .04em; border: 0; border-radius: 3px;
+                     padding: 7px 12px; cursor: pointer; background: transparent; color: var(--ink-soft); }
+  .themebar button[aria-pressed="true"] { background: #1a1a1a; color: #fff; }
+  :root[data-theme="dark"] .themebar button[aria-pressed="true"] { background: #f1f1f0; color: #000; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font);
+         padding: 32px 20px 48px; max-width: 1120px; margin-inline: auto; }
+  header { display: flex; flex-direction: column; gap: 6px; margin-bottom: 24px; }
+  .eyebrow { font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  h1 { margin: 0; font-size: clamp(26px, 4vw, 38px); font-weight: 650; text-wrap: balance; }
+  .meta { color: var(--ink-soft); font-size: 14px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .meta strong { color: var(--ink); font-weight: 600; }
+  .filters { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+             padding: 12px 16px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 4px 20px; }
+  .filters h2 { flex-basis: 100%; margin: 0 0 4px; font: 600 12px var(--mono); text-transform: uppercase;
+                letter-spacing: .06em; color: var(--ink-soft); }
+  details { min-width: 0; }
+  summary { cursor: pointer; font-size: 13px; padding: 4px 0; color: var(--ink); }
+  details[open] { flex-basis: 100%; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0 10px; }
+  .chip { font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--chip-bg); color: var(--chip-ink); }
+  .chip.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .note { font-size: 12px; color: var(--ink-soft); padding: 2px 0 10px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+          display: flex; flex-direction: column; min-width: 0; }
+  .thumb { all: unset; display: block; cursor: zoom-in; position: relative; }
+  .thumb:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+  .thumb img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--chip-bg); }
+  .card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .card-title { font-size: 14px; font-weight: 600; line-height: 1.35; overflow-wrap: anywhere; }
+  .card-author { font-size: 12px; color: var(--ink-soft); }
+  .card-link, .lb-link { margin-top: auto; font-size: 13px; font-weight: 600; color: var(--accent); text-decoration: none; }
+  .card-link::after, .lb-link::after { content: " \2197"; }
+  .lb { position: fixed; inset: 0; background: var(--scrim); display: none; align-items: center; justify-content: center;
+        flex-direction: column; gap: 14px; padding: 24px 16px; z-index: 10; }
+  .lb[data-open="true"] { display: flex; }
+  .lb img { max-width: min(96vw, 1200px); max-height: 74vh; border-radius: 8px; background: var(--chip-bg); }
+  .lb-cap { color: #f1efe9; text-align: center; max-width: 720px; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+  .lb-title { font-size: 15px; font-weight: 600; }
+  .lb-author { font-size: 13px; color: #b9b2a3; }
+  .lb-link { color: #ff5c48; margin: 0; }
+  .lb button { all: unset; cursor: pointer; color: #f1efe9; font-size: 28px; line-height: 1; padding: 10px 14px;
+               border-radius: 8px; background: rgba(255,255,255,.1); position: absolute; }
+  .lb button:hover, .lb button:focus-visible { background: rgba(255,255,255,.22); }
+  .lb-close { top: 14px; right: 14px; }
+  .lb-prev { left: 12px; top: 50%; transform: translateY(-50%); }
+  .lb-next { right: 12px; top: 50%; transform: translateY(-50%); }
+  footer { margin-top: 28px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 12px; color: var(--ink-soft); }
+  @media (prefers-reduced-motion: no-preference) { .lb[data-open="true"] { animation: fade .12s ease-out; } }
+  @keyframes fade { from { opacity: 0; } }
+</style>
+<style>
+  :root { --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace; }
+  .spec { max-width: 1400px; margin: 56px auto 0; padding-top: 24px; border-top: 1px solid var(--border); }
+  .spec .eyebrow { margin-bottom: 20px; }
+  .spec .row { display: grid; grid-template-columns: 140px 1fr; gap: 6px 24px; padding: 14px 0; border-top: 1px solid var(--border); align-items: baseline; }
+  .spec .row > .tag { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--grey); font-weight: 300; }
+  .spec p, .spec h2, .spec h3 { margin: 0; max-width: 62ch; }
+  .spec-code { text-transform: none !important; }
+  .hl { outline: 1px dashed #ff5c48; outline-offset: 3px; }
+  .tuner { position: fixed; top: 60px; right: 12px; z-index: 40; width: 372px; max-height: calc(100vh - 76px); overflow: auto;
+           background: var(--bg); color: var(--ink); border: 1px solid var(--border); border-radius: 4px; padding: 12px 12px 14px;
+           font: 300 11px var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+  .tuner[hidden] { display: none; }
+  .tuner h3 { margin: 14px 0 6px; font: 500 11px var(--mono); color: var(--grey); }
+  .tuner .top { display: flex; gap: 6px; margin-bottom: 4px; }
+  .tuner button, .tuner input, .tuner select { font: 400 11px var(--mono); color: var(--ink); background: var(--surface); border: 1px solid var(--border);
+           border-radius: 3px; padding: 5px 6px; min-width: 0; text-transform: none; }
+  .tuner button { cursor: pointer; text-transform: uppercase; }
+  .tuner .role { border-top: 1px solid var(--border); padding: 7px 0 8px; }
+  .tuner .role:hover { background: var(--accent-soft); }
+  .tuner .nm { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
+  .tuner .nm span:last-child { color: var(--grey); text-transform: none; letter-spacing: 0; text-align: right; }
+  .tuner .f { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+  .tuner label { display: flex; flex-direction: column; gap: 2px; color: var(--grey); }
+  .tuner input, .tuner select { width: 100%; }
+  .drawerbtn { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .04em; border: 0; border-radius: 3px; padding: 7px 12px; cursor: pointer; background: transparent; color: var(--ink-soft); }
+  @media (min-width: 1100px) { body.tuner-open { padding-right: 396px; } }
+  @media (max-width: 1099px) { .tuner { top: auto; left: 8px; right: 8px; bottom: 8px; width: auto; max-height: 58vh; } }
+  @media (max-width: 700px) { .spec .row { grid-template-columns: 1fr; } }
+</style>
+<style>.tuner .sp{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}.tuner .sp label{flex-direction:column}.tuner .sp label span{color:var(--ink);text-transform:none;letter-spacing:0;font-size:11px}.tuner label[data-sk]:hover{background:var(--accent-soft)}</style><style>.tuner .cl{display:block}.tuner .crow{border-top:1px solid var(--border);padding:7px 0 8px}.tuner .cc{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tuner .cell{display:flex;flex-direction:column;gap:3px}.tuner .mk{color:var(--grey)}.tuner .pick{display:flex;gap:4px}.tuner .pick input[type=color]{width:30px;height:28px;padding:1px;flex:none}.tuner .pick input[type=text]{width:100%;text-transform:none}.tuner .rt{font-size:10px;color:var(--grey);min-height:12px;text-transform:none;letter-spacing:0}.tuner .rt.bad{color:#ff5c48}.tuner .rt.ok{color:var(--grey)}</style><style>.states{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:flex-start}.st{display:flex;flex-direction:column;gap:8px;min-width:0}.st>span:first-child{font:300 10px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--grey)}.st .card-link{min-width:190px;margin-top:0}</style></head>
+<body>
+<div class="themebar" role="group" aria-label="Theme"><button data-t="light" aria-pressed="false">Light</button><button data-t="dark" aria-pressed="false">Dark</button></div>
+<script>
+(function(){var r=document.documentElement,bs=document.querySelectorAll('.themebar button');
+function set(t){r.setAttribute('data-theme',t);bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.t===t)})}
+bs.forEach(function(b){b.onclick=function(){set(b.dataset.t)}});
+set(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');})();
+</script>
+
+<header>
+  <div class="eyebrow">Envato Elements &middot; photos</div>
+  <h1>&ldquo;pharmacist compounding medication close-up&rdquo;</h1>
+  <div class="meta">
+    <span><strong>10</strong> results</span>
+    <span>sorted by <strong>relevance</strong></span>
+    <span>no filters applied</span>
+  </div>
+</header>
+<section class="filters"><h2>Filters available for photos</h2><details><summary>orientation</summary><div class="chips"><span class="chip">landscape</span><span class="chip">portrait</span><span class="chip">square</span></div></details><details><summary>number_of_people</summary><div class="chips"><span class="chip">No people</span><span class="chip">1 person</span><span class="chip">2 people</span><span class="chip">3+ people</span></div></details><details><summary>colors</summary><div class="chips"><span class="chip">pink</span><span class="chip">red</span><span class="chip">orange</span><span class="chip">yellow</span><span class="chip">green</span><span class="chip">teal</span><span class="chip">blue</span><span class="chip">purple</span><span class="chip">brown</span><span class="chip">black</span><span class="chip">grey</span><span class="chip">white</span></div></details></section>
+<div class="grid" id="grid"></div>
+<section class="spec" aria-label="Type specimen">
+  <div class="eyebrow">Type specimen, roles not used by the gallery</div>
+  <div class="row"><span class="tag">Heading 2</span><h2 class="spec-h2">Compounded medicines, made to order</h2></div>
+  <div class="row"><span class="tag">Heading 3</span><h3 class="spec-h3">Formulations, strengths and dose forms</h3></div>
+  <div class="row"><span class="tag">Lead</span><p class="spec-lead">A compounding pharmacist prepares a medicine to a prescriber's exact specification, from the active ingredient to the dose form.</p></div>
+  <div class="row"><span class="tag">Body</span><p class="spec-body">Each preparation is weighed, mixed and labelled in the pharmacy, then checked against the prescription before it is released. Body copy sets the reading rhythm for long text.</p></div>
+  <div class="row"><span class="tag">Caption</span><p class="spec-caption">Photo: junior pharmacist mixing a medicine, Wavebreakmedia. Watermarked preview.</p></div>
+  <div class="row"><span class="tag">Button states</span><div class="states">
+    <div class="st"><span>Rest</span><a class="card-link" href="#" onclick="return false">View on Envato</a></div>
+    <div class="st"><span>Hover, focus</span><a class="card-link force-hover" href="#" onclick="return false">View on Envato</a></div>
+    <div class="st"><span>Pressed</span><a class="card-link force-active" href="#" onclick="return false">View on Envato</a></div>
+    <div class="st"><span>Disabled</span><a class="card-link" aria-disabled="true" href="#" onclick="return false">View on Envato</a></div></div></div>
+  <div class="row"><span class="tag">Chip states (interactive: add class is-action)</span><div class="states">
+    <div class="st"><span>Rest</span><span class="chip is-action">landscape</span></div>
+    <div class="st"><span>Hover, focus</span><span class="chip is-action force-hover">landscape</span></div>
+    <div class="st"><span>Pressed</span><span class="chip is-action force-active">landscape</span></div>
+    <div class="st"><span>Selected</span><span class="chip is-action on">landscape</span></div>
+    <div class="st"><span>Disabled</span><span class="chip is-action" aria-disabled="true">landscape</span></div></div></div>
+  <div class="row"><span class="tag">Pill states (same as chip, round)</span><div class="states">
+    <div class="st"><span>Rest</span><span class="chip pill is-action">landscape</span></div>
+    <div class="st"><span>Hover, focus</span><span class="chip pill is-action force-hover">landscape</span></div>
+    <div class="st"><span>Pressed</span><span class="chip pill is-action force-active">landscape</span></div>
+    <div class="st"><span>Selected</span><span class="chip pill is-action on">landscape</span></div>
+    <div class="st"><span>Disabled</span><span class="chip pill is-action" aria-disabled="true">landscape</span></div></div></div>
+  <div class="row"><span class="tag">Hover tint options (compare)</span><div class="states">
+    <div class="st"><span>4%</span><span class="chip is-action force-hover" style="--coral-tint:color-mix(in srgb,var(--coral) 4%,transparent) !important">landscape</span></div>
+    <div class="st"><span>8%</span><span class="chip is-action force-hover" style="--coral-tint:color-mix(in srgb,var(--coral) 8%,transparent) !important">landscape</span></div>
+    <div class="st"><span>12%</span><span class="chip is-action force-hover" style="--coral-tint:color-mix(in srgb,var(--coral) 12%,transparent) !important">landscape</span></div>
+    <div class="st"><span>16%</span><span class="chip is-action force-hover" style="--coral-tint:color-mix(in srgb,var(--coral) 16%,transparent) !important">landscape</span></div>
+    <div class="st"><span>20%</span><span class="chip is-action force-hover" style="--coral-tint:color-mix(in srgb,var(--coral) 20%,transparent) !important">landscape</span></div>
+  </div></div>
+  <div class="row"><span class="tag">Toggle states</span><div class="states">
+    <div class="st"><span>Rest</span><details><summary>Orientation</summary></details></div>
+    <div class="st"><span>Hover, focus</span><details><summary class="force-hover">Orientation</summary></details></div>
+    <div class="st"><span>Pressed</span><details><summary class="force-active">Orientation</summary></details></div>
+    <div class="st"><span>Disabled</span><details aria-disabled="true"><summary>Orientation</summary></details></div></div></div>
+  <div class="row"><span class="tag">Code</span><p class="spec-code">python3 scripts/build_gallery.py results.json --theme archetype.json</p></div>
+</section>
+<footer>
+  Watermarked previews for review only. Click an image to enlarge it, then use &ldquo;View on Envato&rdquo;
+  to license and download the original on elements.envato.com. Unofficial tool; not affiliated with Envato.
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image preview" data-open="false">
+  <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="lb-prev" id="lbPrev" aria-label="Previous image">&lsaquo;</button>
+  <img id="lbImg" alt="">
+  <div class="lb-cap">
+    <div class="lb-title" id="lbTitle"></div>
+    <div class="lb-author" id="lbAuthor"></div>
+    <a class="lb-link" id="lbLink" target="_blank" rel="noopener">View on Envato</a>
+  </div>
+  <button class="lb-next" id="lbNext" aria-label="Next image">&rsaquo;</button>
+</div>
+
+<script type="application/json" id="data">[{"title": "Junior pharmacist mixing a medicine at the hospital pharmacy", "author": "Wavebreakmedia", "link": "https://elements.envato.com/junior-pharmacist-mixing-a-medicine-at-the-hospita-P7SFU8J", "src": "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='3'%3E%3Crect width='4' height='3' fill='%23bbb'/%3E%3C/svg%3E"}, {"title": "Woman pharmacist Working and Arranging Medications, counting and arrange pills on stainless counting", "author": "CharliePix", "link": "https://elements.envato.com/woman-pharmacist-working-and-arranging-medications-MMKGM9Q", "src": "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='3'%3E%3Crect width='4' height='3' fill='%23bbb'/%3E%3C/svg%3E"}, {"title": "Pharmacist wearing lab coat and stethoscope is using a pill counting tray and a spatula to prepare m", "author": "chartchaik1", "link": "https://elements.envato.com/pharmacist-wearing-lab-coat-and-stethoscope-is-usi-HEE8M46", "src": "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='3'%3E%3Crect width='4' height='3' fill='%23bbb'/%3E%3C/svg%3E"}, {"title": "Pharmacist putting pill into bottle at white table in clinic, closeup", "author": "africaimages", "link": "https://elements.envato.com/pharmacist-putting-pill-into-bottle-at-white-table-BH245P4", "src": "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='3'%3E%3Crect width='4' height='3' fill='%23bbb'/%3E%3C/svg%3E"}, {"title": "Pharmaceutical woman worker in protective clothing operating production line in sterile environment", "author": "ckstockphoto", "link": "https://elements.envato.com/pharmaceutical-woman-worker-in-protective-clothing-Y3EBQZB", "src": "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='3'%3E%3Crect width='4' height='3' fill='%23bbb'/%3E%3C/svg%3E"}, {"title": "Doctor preparing medication for patient, holding medicine bottle, counting pills on metal tray in me", "author": "AmnajKhetsamtip", "link": "https://elements.envato.com/doctor-preparing-medication-for-patient-holding-me-NXZZTNR", "src": "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='3'%3E%3Crect width='4' height='3' fill='%23bbb'/%3E%3C/svg%3E"}, {"title": "Female ophthalmologist holding tweezers with contact lens", "author": "svitlanah", "link": "https://elements.envato.com/female-ophthalmologist-holding-tweezers-with-conta-YW6K2Z8", "src": "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='3'%3E%3Crect width='4' height='3' fill='%23bbb'/%3E%3C/svg%3E"}, {"title": "Sorting Medications", "author": "microgen", "link": "https://elements.envato.com/sorting-medications-8UY7SNE", "src": "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='3'%3E%3Crect width='4' height='3' fill='%23bbb'/%3E%3C/svg%3E"}, {"title": "Counting, pills and hands with tools, chemist and sorting medicine, healthcare and medical services", "author": "YuriArcursPeopleimages", "link": "https://elements.envato.com/counting-pills-and-hands-with-tools-chemist-and-so-TBS6GWG", "src": "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='3'%3E%3Crect width='4' height='3' fill='%23bbb'/%3E%3C/svg%3E"}, {"title": "Pharmacist sorting different pills at white table in clinic, closeup", "author": "africaimages", "link": "https://elements.envato.com/pharmacist-sorting-different-pills-at-white-table--QTU25NB", "src": "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='3'%3E%3Crect width='4' height='3' fill='%23bbb'/%3E%3C/svg%3E"}]</script>
+<script>
+  var items = JSON.parse(document.getElementById('data').textContent);
+  var grid = document.getElementById('grid');
+  var lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
+  var current = -1, opener = null;
+
+  items.forEach(function (it, i) {
+    var card = document.createElement('div'); card.className = 'card';
+    var thumb = document.createElement('button'); thumb.className = 'thumb'; thumb.type = 'button';
+    thumb.setAttribute('aria-label', 'Enlarge: ' + it.title);
+    var img = document.createElement('img'); img.src = it.src; img.alt = it.title; img.loading = 'lazy';
+    thumb.appendChild(img);
+    thumb.addEventListener('click', function () { openAt(i, thumb); });
+    var body = document.createElement('div'); body.className = 'card-body';
+    var t = document.createElement('div'); t.className = 'card-title'; t.textContent = it.title;
+    var a = document.createElement('div'); a.className = 'card-author'; a.textContent = it.author ? 'by ' + it.author : '';
+    var l = document.createElement('a'); l.className = 'card-link'; l.href = it.link; l.target = '_blank';
+    l.rel = 'noopener'; l.textContent = 'View on Envato';
+    body.append(t, a, l); card.append(thumb, body); grid.appendChild(card);
+  });
+
+  function show(i) {
+    current = (i + items.length) % items.length;
+    var it = items[current];
+    lbImg.src = it.src; lbImg.alt = it.title;
+    document.getElementById('lbTitle').textContent = it.title;
+    document.getElementById('lbAuthor').textContent = it.author ? 'by ' + it.author : '';
+    document.getElementById('lbLink').href = it.link;
+  }
+  function openAt(i, from) { opener = from; show(i); lb.dataset.open = 'true'; document.getElementById('lbClose').focus(); }
+  function closeLb() { lb.dataset.open = 'false'; if (opener) opener.focus(); }
+  document.getElementById('lbClose').addEventListener('click', closeLb);
+  document.getElementById('lbPrev').addEventListener('click', function () { show(current - 1); });
+  document.getElementById('lbNext').addEventListener('click', function () { show(current + 1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', function (e) {
+    if (lb.dataset.open !== 'true') return;
+    if (e.key === 'Escape') closeLb();
+    else if (e.key === 'ArrowLeft') show(current - 1);
+    else if (e.key === 'ArrowRight') show(current + 1);
+  });
+</script>
+<script>
+(function(){
+var ROLES=[
+ ['display','Display','sans','h1','Page title',64,300,-0.035,1.02],
+ ['h2','Heading 2','sans','.spec-h2','Specimen',36,200,-0.03,1.08],
+ ['h3','Heading 3','sans','.spec-h3','Specimen',22,200,-0.02,1.2],
+ ['lead','Lead','sans','.spec-lead','Specimen',18,200,-0.01,1.45],
+ ['title','Card title','sans','.card-title','Cards',15,200,-0.01,1.35],
+ ['body','Body','sans','.spec-body','Specimen',15,200,0,1.5],
+ ['caption','Caption','sans','.spec-caption','Specimen',13,200,0,1.4],
+ ['eyebrow','Eyebrow','mono','.eyebrow','Above the title',11,400,0.04,1.2],
+ ['meta','Meta line','mono','.meta, .meta strong','Results, sort',11,400,0.04,1.4],
+ ['author','Author','mono','.card-author','Cards',11,300,0.04,1.3],
+ ['label','Label / chip','mono','.filters h2, .chip, .note, footer','Filters, footer',11,300,0.04,1.4],
+ ['option','Option row','mono','summary','Filter list',11,300,0.04,1.4],
+ ['button','Button / link','mono','.card-link, .themebar button, .drawerbtn','Buttons, toggle',12,400,0.04,1.2],
+ ['code','Code','mono','.spec-code','Specimen',13,300,0,1.5]
+];
+// id, label, group, default, min, max, step, selector, props (null = custom)
+var SP=[
+ ['pagex','Side padding','Page',20,0,120,1,'body',['padding-left','padding-right']],
+ ['pagetop','Space above header','Page',30,0,200,1,'header',['padding-top']],
+ ['pagebot','Bottom padding','Page',40,0,200,1,'body',['padding-bottom']],
+ ['maxw','Content max width','Page',1400,600,2000,10,'header, .filters, .grid, footer, .spec',['max-width']],
+ ['hgap','Eyebrow / title / meta gap','Header',6,0,40,1,'header',['gap']],
+ ['hmb','Space below header','Header',24,0,120,1,'header',['margin-bottom']],
+ ['fpadx','Panel padding, sides','Filters',16,0,60,1,'.filters',['padding-left','padding-right']],
+ ['fpady','Panel padding, top/bottom','Filters',12,0,60,1,'.filters',['padding-top','padding-bottom']],
+ ['fgapy','Row gap','Filters',4,0,40,1,'.filters',['row-gap']],
+ ['fgapx','Column gap','Filters',20,0,80,1,'.filters',['column-gap']],
+ ['fmb','Space below panel','Filters',24,0,120,1,'.filters',['margin-bottom']],
+ ['chipgap','Chip gap','Filters',8,0,30,1,'.chips',['gap']],
+ ['chipx','Chip padding, sides','Filters',9,0,30,1,'.chip',['padding-left','padding-right']],
+ ['chipy','Chip padding, top/bottom','Filters',3,0,20,1,'.chip',['padding-top','padding-bottom']],
+ ['gridgap','Grid gap','Cards',16,0,80,1,'.grid',['gap']],
+ ['cardmin','Card minimum width','Cards',230,140,500,5,'.grid',null],
+ ['cpadt','Text padding, top','Cards',16,0,60,1,'.card-body',['padding-top']],
+ ['cpadx','Text padding, sides','Cards',16,0,60,1,'.card-body',['padding-left','padding-right']],
+ ['cpadb','Text padding, bottom','Cards',16,0,60,1,'.card-body',['padding-bottom']],
+ ['cgap','Gap inside card text','Cards',10,0,40,1,'.card-body',['gap']],
+ ['btnx','Button padding, sides','Buttons',12,0,40,1,'.card-link',['padding-left','padding-right']],
+ ['btny','Button padding, top/bottom','Buttons',9,0,30,1,'.card-link',['padding-top','padding-bottom']],
+ ['btngap','Label to arrow gap','Buttons',12,0,40,1,'.card-link',['gap']],
+ ['specmt','Space above specimen','Specimen, footer',56,0,200,1,'.spec',['margin-top']],
+ ['specpad','Specimen row padding','Specimen, footer',14,0,60,1,'.spec .row',['padding-top','padding-bottom']],
+ ['spectag','Specimen label column','Specimen, footer',140,60,300,5,'.spec .row',null],
+ ['footmt','Space above footer','Specimen, footer',28,0,120,1,'footer',['margin-top']],
+ ['footpt','Footer padding, top','Specimen, footer',14,0,60,1,'footer',['padding-top']],
+ ['rcard','Card and panel radius','Shape',1,0,32,1,'.card, .filters',['border-radius']],
+ ['rchip','Chip radius','Shape',1,0,999,1,'.chip',['border-radius']],
+ ['rbtn','Button radius','Shape',1,0,32,1,'.card-link',['border-radius']]
+];
+// id, label, note, light, dark, contrast-against id (null none), threshold
+var COL=[
+ ['bg','Page background','',   '#f1f1f0','#000000',null,0],
+ ['surface','Surface (cards, panel)','','#fbfbfa','#111111',null,0],
+ ['border','Border, hairline','vs page','#e0e0e0','#2a2a2a','bg',1.3],
+ ['ink','Ink (main text)','vs page','#1a1a1a','#f1f1f0','bg',4.5],
+ ['muted','Muted text','vs surface','#606060','#a0a0a0','surface',4.5],
+ ['subtle','Subtle text (labels)','vs page','#707070','#707070','bg',4.5],
+ ['coral','Coral, shapes','vs page, needs 3','#ff5c48','#ff5c48','bg',3],
+ ['coraltext','Coral, small text','vs page','#ff5c48','#ff5c48','bg',4.5],
+ ['soft','Coral tint, hover','','#e3e3e3','#2b1613',null,0],
+ ['btnbg','Button fill','vs page, needs 3','#1a1a1a','#f1f1f0','bg',3],
+ ['btnink','Button text','vs button fill','#ffffff','#000000','btnbg',4.5],
+ ['btnarrow','Button arrow','vs button fill','#ff5c48','#ff5c48','btnbg',3]
+];
+function lum(x){var n=parseInt(x.slice(1),16),c=[n>>16&255,n>>8&255,n&255].map(function(v){v/=255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});return 0.2126*c[0]+0.7152*c[1]+0.0722*c[2]}
+function ratio(a,b){var A=lum(a),B=lum(b);return (Math.max(A,B)+0.05)/(Math.min(A,B)+0.05)}
+var CDEF={};COL.forEach(function(c){CDEF[c[0]]={l:c[3],d:c[4]}});
+var cs=JSON.parse(JSON.stringify(CDEF));
+var DEF={},SDEF={};ROLES.forEach(function(r){DEF[r[0]]={s:r[5],w:r[6],t:r[7],l:r[8]}});SP.forEach(function(t){SDEF[t[0]]=t[3]});
+var st=JSON.parse(JSON.stringify(DEF)),sp=JSON.parse(JSON.stringify(SDEF));
+try{var sv=JSON.parse(localStorage.getItem('type-tuner-v3')||'null');if(sv)Object.keys(sv).forEach(function(k){if(st[k])st[k]=sv[k]});
+ var ss=JSON.parse(localStorage.getItem('space-tuner-v2')||'null');if(ss)Object.keys(ss).forEach(function(k){if(k in sp)sp[k]=ss[k]})}catch(e){}
+try{var sc=JSON.parse(localStorage.getItem('color-tuner-v2')||'null');if(sc)Object.keys(sc).forEach(function(k){if(cs[k])cs[k]=sc[k]})}catch(e){}
+var ts={l:8,d:16};
+try{var st2=JSON.parse(localStorage.getItem('tint-tuner-v2')||'null');if(st2)ts=st2}catch(e){}
+var css=document.createElement('style');document.head.appendChild(css);
+function fam(r){return r[2]==='sans'?'var(--font)':'var(--mono)'}
+function apply(){
+ var out='body{max-width:none !important}\n';
+ ['light','dark'].forEach(function(m){var k=m[0];var g=function(id){return cs[id][k]};
+  out+=':root[data-theme="'+m+'"]{--bg:'+g('bg')+' !important;--surface:'+g('surface')+' !important;--border:'+g('border')+' !important;--ink:'+g('ink')+' !important;--ink-soft:'+g('muted')+' !important;--chip-ink:'+g('muted')+' !important;--grey:'+g('subtle')+' !important;--accent:'+g('coral')+' !important;--coral:'+g('coral')+' !important;--coral-text:'+g('coraltext')+' !important;--accent-soft:'+g('soft')+' !important;--btn-bg:'+g('btnbg')+' !important;--btn-ink:'+g('btnink')+' !important;--btn-arrow:'+g('btnarrow')+' !important;--coral-tint:color-mix(in srgb,'+g('coral')+' '+ts[k]+'%,transparent) !important;--coral-tint-2:color-mix(in srgb,'+g('coral')+' '+Math.min(ts[k]*2,100)+'%,transparent) !important}\n'});
+ out+='.eyebrow{color:var(--coral-text) !important}.card-link{background:var(--btn-bg) !important;color:var(--btn-ink) !important}.card-link::after{color:var(--btn-arrow) !important}.themebar button[aria-pressed="true"]{background:var(--btn-bg) !important;color:var(--btn-ink) !important}.lb-link{color:var(--coral) !important}.hl{outline-color:var(--coral) !important}\n';
+ out+=':root[data-theme] .card-link{background:transparent !important;color:var(--btn-bg) !important;box-shadow:inset 0 0 0 1px var(--btn-bg) !important}\n'
+  +':root[data-theme] .card-link:hover,:root[data-theme] .card-link:focus-visible,:root[data-theme] .card-link.force-hover{background:var(--btn-bg) !important;color:var(--btn-ink) !important}\n'
+  +'.card-link:focus-visible{outline:2px solid var(--coral);outline-offset:2px}\n'
+  +':root[data-theme] summary{color:var(--coral-text) !important}\n'
+  +':root[data-theme] summary:hover,:root[data-theme] summary:focus-visible,:root[data-theme] summary.force-hover{color:var(--ink) !important}\n'
+  +'summary:focus-visible{outline:2px solid var(--coral);outline-offset:2px}\n'
+  +':root[data-theme] .card-link:active,:root[data-theme] .card-link.force-active{background:color-mix(in srgb,var(--btn-bg) 82%,var(--bg)) !important;color:var(--btn-ink) !important}\n'
+  +'.card-link[aria-disabled="true"]{opacity:.4;pointer-events:none;cursor:not-allowed}\n'
+  +':root[data-theme] summary:active,:root[data-theme] summary.force-active{color:var(--coral-text) !important;text-decoration:underline}\n'
+  +':root[data-theme] details[aria-disabled="true"] summary{color:var(--ink-soft) !important;opacity:.4;pointer-events:none;cursor:not-allowed}\n'
+  +':root[data-theme] .chip.is-action:hover:not(.on),:root[data-theme] .chip.is-action.force-hover:not(.on){color:var(--coral-text) !important;border-color:var(--coral) !important;background:var(--coral-tint) !important}\n'
+  +':root[data-theme] .chip.is-action:active:not(.on),:root[data-theme] .chip.is-action.force-active:not(.on){background:var(--coral-tint-2) !important;color:var(--coral-text) !important;border-color:var(--coral) !important}\n'
+  +'.chip.on{background:var(--btn-bg) !important;border-color:var(--btn-bg) !important;color:var(--btn-ink) !important}.chip.pill{border-radius:999px !important}\n'
+  +'.chip.is-action{cursor:pointer}.chip[aria-disabled="true"]{opacity:.4;pointer-events:none;cursor:not-allowed}\n'
+  +':root[data-theme] .themebar button:not([aria-pressed="true"]):hover,:root[data-theme] .themebar button:not([aria-pressed="true"]):focus-visible{color:var(--coral-text) !important}\n'
+  +'.themebar button:focus-visible{outline:2px solid var(--coral);outline-offset:1px}\n'
+  +'@media (prefers-reduced-motion:no-preference){.card-link,summary,.chip,.themebar button{transition:background-color .14s ease,color .14s ease,border-color .14s ease}}\n';
+ ROLES.forEach(function(r){var k=r[0],v=st[k];
+  var size=k==='display'?'min('+v.s+'px, 11vw)':v.s+'px';
+  out+=r[3]+'{font-family:'+fam(r)+' !important;font-size:'+size+' !important;font-weight:'+v.w+' !important;letter-spacing:'+v.t+'em !important;line-height:'+v.l+' !important}\n';
+ });
+ SP.forEach(function(t){var v=sp[t[0]];
+  if(t[8]){out+=t[7]+'{'+t[8].map(function(p){return p+':'+v+'px !important'}).join(';')+'}\n'}
+  else if(t[0]==='cardmin'){out+='.grid{grid-template-columns:repeat(auto-fill,minmax('+v+'px,1fr)) !important}\n'}
+  else if(t[0]==='spectag'){out+='.spec .row{grid-template-columns:'+v+'px 1fr !important}\n'}
+ });
+ out+='@media (min-width:1100px){body.tuner-open{padding-right:'+(sp.pagex+376)+'px !important}}\n';
+ css.textContent=out;
+ try{localStorage.setItem('type-tuner-v3',JSON.stringify(st));localStorage.setItem('space-tuner-v2',JSON.stringify(sp));localStorage.setItem('color-tuner-v2',JSON.stringify(cs));localStorage.setItem('tint-tuner-v2',JSON.stringify(ts))}catch(e){}
+}
+var tuner=document.createElement('div');tuner.className='tuner';tuner.id='tuner';
+var html='<div class="top"><button id="tReset">Reset</button><button id="tCopy">Copy settings</button><span id="tMsg" style="align-self:center;color:var(--grey)"></span></div>';
+html+='<h3>Colour, light and dark</h3><div class="cl">';
+COL.forEach(function(c){
+ html+='<div class="crow"><div class="nm"><span>'+c[1]+'</span><span>'+c[2]+'</span></div><div class="cc">';
+ ['l','d'].forEach(function(k){html+='<div class="cell"><span class="mk">'+(k==='l'?'Light':'Dark')+'</span><div class="pick"><input type="color" data-c="'+c[0]+'" data-m="'+k+'" data-kind="sw"><input type="text" data-c="'+c[0]+'" data-m="'+k+'" data-kind="hex" maxlength="7" spellcheck="false"></div><span class="rt" data-rt="'+c[0]+'-'+k+'"></span></div>'});
+ html+='</div></div>'});
+html+='<div class="crow"><div class="nm"><span>Coral tint strength</span><span>chip, pill hover, %</span></div><div class="cc"><div class="cell"><span class="mk">Light</span><input type="number" data-tint="l" min="0" max="50" step="1"></div><div class="cell"><span class="mk">Dark</span><input type="number" data-tint="d" min="0" max="50" step="1"></div></div></div>';
+html+='</div>';
+var last='';
+ROLES.forEach(function(r){
+ if(r[2]!==last){html+='<h3>'+(r[2]==='sans'?'Type, sans, Hanken Grotesk':'Type, mono, IBM Plex Mono')+'</h3>';last=r[2]}
+ var k=r[0];
+ html+='<div class="role" data-k="'+k+'"><div class="nm"><span>'+r[1]+'</span><span>'+r[4]+'</span></div><div class="f">'+
+ '<label>Size<input type="number" data-k="'+k+'" data-p="s" min="8" max="140" step="1"></label>'+
+ '<label>Weight<select data-k="'+k+'" data-p="w"><option>200</option><option>300</option><option>400</option><option>500</option></select></label>'+
+ '<label>Track<input type="number" data-k="'+k+'" data-p="t" min="-0.1" max="0.3" step="0.005"></label>'+
+ '<label>Line<input type="number" data-k="'+k+'" data-p="l" min="0.9" max="2.2" step="0.05"></label></div></div>';
+});
+var lg='';
+SP.forEach(function(t){
+ if(t[2]!==lg){if(lg)html+='</div>';html+='<h3>Spacing, '+t[2].toLowerCase()+'</h3><div class="sp">';lg=t[2]}
+ html+='<label data-sk="'+t[0]+'"><span>'+t[1]+'</span><input type="number" data-sk="'+t[0]+'" min="'+t[4]+'" max="'+t[5]+'" step="'+t[6]+'"></label>';
+});
+html+='</div>';
+tuner.innerHTML=html;document.body.appendChild(tuner);
+function cSync(){tuner.querySelectorAll('input[data-tint]').forEach(function(el){if(document.activeElement!==el)el.value=ts[el.dataset.tint]});COL.forEach(function(c){['l','d'].forEach(function(k){
+  var v=cs[c[0]][k];tuner.querySelector('input[data-c="'+c[0]+'"][data-m="'+k+'"][data-kind="sw"]').value=v;
+  var t=tuner.querySelector('input[data-c="'+c[0]+'"][data-m="'+k+'"][data-kind="hex"]');if(document.activeElement!==t)t.value=v;
+  var rt=tuner.querySelector('[data-rt="'+c[0]+'-'+k+'"]');
+  if(c[5]){var r=ratio(v,cs[c[5]][k]);rt.textContent=r.toFixed(1)+':1 '+(r>=c[6]?'ok':'low');rt.className='rt '+(r>=c[6]?'ok':'bad')}else{rt.textContent='';rt.className='rt'}})})}
+function sync(){cSync();tuner.querySelectorAll('[data-p]').forEach(function(el){el.value=st[el.dataset.k][el.dataset.p]});
+ tuner.querySelectorAll('input[data-sk]').forEach(function(el){el.value=sp[el.dataset.sk]})}
+function onEdit(e){var el=e.target;
+ if(el.dataset.tint){var tv=parseFloat(el.value);if(!isNaN(tv)){ts[el.dataset.tint]=Math.max(0,Math.min(50,tv));apply()}return}
+ if(el.dataset.c){var val=el.value.trim();if(val[0]!=='#')val='#'+val;if(!/^#[0-9a-fA-F]{6}$/.test(val))return;cs[el.dataset.c][el.dataset.m]=val.toLowerCase();cSync();apply();return}
+ var v=parseFloat(el.value);if(isNaN(v))return;
+ if(el.dataset.p){st[el.dataset.k][el.dataset.p]=v;apply()}else if(el.dataset.sk){sp[el.dataset.sk]=v;apply()}}
+tuner.addEventListener('input',onEdit);tuner.addEventListener('change',onEdit);
+function clearHl(){document.querySelectorAll('.hl').forEach(function(n){n.classList.remove('hl')})}
+tuner.addEventListener('mouseover',function(e){clearHl();var sel=null;
+ var row=e.target.closest('.role');if(row){sel=ROLES.filter(function(x){return x[0]===row.dataset.k})[0][3]}
+ else{var lab=e.target.closest('label[data-sk]');if(lab){sel=SP.filter(function(x){return x[0]===lab.dataset.sk})[0][7]}}
+ if(sel)document.querySelectorAll(sel).forEach(function(n){n.classList.add('hl')})});
+tuner.addEventListener('mouseleave',clearHl);
+document.getElementById('tReset').onclick=function(){st=JSON.parse(JSON.stringify(DEF));sp=JSON.parse(JSON.stringify(SDEF));cs=JSON.parse(JSON.stringify(CDEF));ts={l:8,d:16};sync();apply()};
+document.getElementById('tCopy').onclick=function(){
+ var lines=['Hanken Grotesk + IBM Plex Mono'];ROLES.forEach(function(r){var v=st[r[0]];lines.push(r[0]+': '+v.s+'px / weight '+v.w+' / tracking '+v.t+'em / line-height '+v.l)});
+ lines.push('','Colour (light / dark)');COL.forEach(function(c){lines.push(c[0]+': '+cs[c[0]].l+' / '+cs[c[0]].d+'   ('+c[1]+')')});lines.push('coral tint strength: '+ts.l+'% light / '+ts.d+'% dark');lines.push('','Spacing and shape (px)');SP.forEach(function(t){lines.push(t[0]+': '+sp[t[0]]+'   ('+t[2]+', '+t[1]+')')});
+ var txt=lines.join('\n'),m=document.getElementById('tMsg');
+ function done(ok){m.textContent=ok?'copied':'copy failed';setTimeout(function(){m.textContent=''},1800)}
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){done(true)},function(){done(false)})}else done(false)};
+var bar=document.querySelector('.themebar'),btn=document.createElement('button');btn.className='drawerbtn';btn.textContent='Tune';btn.setAttribute('aria-pressed','true');
+bar.insertBefore(btn,bar.firstChild);
+function open(o){tuner.hidden=!o;document.body.classList.toggle('tuner-open',o);btn.setAttribute('aria-pressed',o)}
+btn.onclick=function(){open(tuner.hidden)};
+open(matchMedia('(min-width:1100px)').matches);
+sync();apply();
+window.__typeState=function(){return {type:st,space:sp,colour:cs}};
+})();
+</script>
+</body>
+</html>
