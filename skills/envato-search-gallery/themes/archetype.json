@@ -1,6 +1,6 @@
 {
   "name": "archetype",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "status": "in use: read by skills/envato-search-gallery/scripts/build_gallery.py",
   "locked": "2026-09-30",
   "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json. The accent is Forest green (chosen 2026-09-30 from six options). The house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json is kept for error and warning only.",
@@ -248,9 +248,9 @@
       "usage": "Accent for shapes, bars, borders, arrows (Forest green)"
     },
     "accenttext": {
-      "light": "#087f3f",
+      "light": "#066f33",
       "dark": "#34d399",
-      "usage": "Accent for small text (deeper in light for contrast, 4.5:1)"
+      "usage": "Accent for small text (deeper in light: 5.6:1 on the page, 5.1:1 on the hover tint, 4.6:1 on the pressed tint)"
     },
     "soft": {
       "light": "#e3e3e3",
@@ -444,12 +444,10 @@
     "motion": "0.14s ease on colour, background and border. None when the visitor prefers reduced motion."
   },
   "accepted_debt": [
-    "Hover and pressed text on the accent tint in light mode is roughly 3.5 to 4.5:1 for interactive chips, pagination and the calendar. Not yet addressed (see accent_audit).",
     "Subtle text #707070 measures 4.4:1 on light and 4.2:1 on dark, just under 4.5:1. Accepted.",
     "Hairline border is 1.2:1 on light. Decorative, accepted."
   ],
   "open": [
-    "The six light-mode hover-tint states are below 4.5:1 (see accent_audit.proposal_not_applied).",
     "Brand logo: support is built, no logo file has been supplied yet (see brand)."
   ],
   "components": {
@@ -754,8 +752,8 @@
     "method": "The same browser audit as above, on the tuner page with the Forest accent, in both modes.",
     "light": {
       "text_styles_checked": 87,
-      "active_failures": 6,
-      "detail": "All six are hover or pressed text on the accent tint fill (interactive chip and pill, pagination, calendar day), roughly 3.5 to 4.5:1. Eyebrow, toggles, links, tabs and navigation pass."
+      "active_failures": 0,
+      "detail": "After deepening the light accent text from #087f3f to #066f33, the hover and pressed states on the accent tint all reach 4.5:1. The tuner's \"hover tint options\" row shows deliberately strong tints (12, 16 and 20%) for comparison; its 20% sample is 4.4:1 and is not a real state."
     },
     "dark": {
       "text_styles_checked": 87,
@@ -765,7 +763,7 @@
       "light": "ink 15.4:1",
       "dark": "accent 10.9:1"
     },
-    "compared_with_coral": "Coral had 11 light failures (all small coral text); Forest has 6, and they are only the hover-tint states.",
+    "compared_with_coral": "Coral had 11 light failures (all small coral text); Forest has none in a real state.",
     "presets_audited": [
       "emerald",
       "forest",
@@ -773,7 +771,7 @@
       "electric blue",
       "royal blue"
     ],
-    "proposal_not_applied": "Lower the light-mode tint (for example 5%) or deepen the hover text so the six hover-tint states reach 4.5:1."
+    "fix_applied": "Light accent text deepened to #066f33 (5.58:1 on the page)."
   },
   "brand": {
     "note": "The owner's personal-brand mark. Support is in the builder; no file yet, so pages show none.",

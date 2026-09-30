@@ -24,7 +24,7 @@ The house coral is kept for error and warning only.
 | Sans | Hanken Grotesk, weights 200 to 500 (Google Fonts, SIL OFL) |
 | Mono | IBM Plex Mono, weights 200 to 500 (Google Fonts, SIL OFL) |
 | Ink and page | `#1a1a1a` on `#f1f1f0` (light), `#f1f1f0` on `#000000` (dark) |
-| Accent | Forest green `#0d8a4b` (text `#087f3f`) light, `#34d399` dark |
+| Accent | Forest green `#0d8a4b` (text `#066f33`) light, `#34d399` dark |
 | Error and warning | coral `#ff5c48`, separate tokens |
 | Corners | 1px |
 
@@ -60,11 +60,11 @@ bottom of the tuner page.
 Measured in a browser on 2026-09-30 and recorded under `accessibility` in
 [archetype.json](../skills/envato-search-gallery/themes/archetype.json). Four fixes are applied (subtle grey, edges of interactive chips and
 pagination, an ink focus ring on light, and 24px/44px control sizes). The audit was
-re-run for the Forest accent (see `accent_audit`): dark has no failures, and light has six hover and
-pressed states on the accent tint at roughly 3.5 to 4.5:1. The tuner's Touch switch previews the
-44px targets.
+re-run for the Forest accent (see `accent_audit`) and has no failures in a real state, in light or dark.
+The tuner's Touch switch previews the 44px targets.
 
 ### Known trade-offs
 
-Hover and pressed text on the accent tint in light mode is roughly 3.5 to 4.5:1 for interactive
-chips, pagination and the calendar. See `accepted_debt` in [archetype.json](../skills/envato-search-gallery/themes/archetype.json).
+No accepted contrast debt is recorded for the Forest accent. Coral, used only for error and warning,
+is 2.7:1 as text on the light page, so it is used for shapes and bars, with ink text. See
+`accepted_debt` and `accent_audit` in [archetype.json](../skills/envato-search-gallery/themes/archetype.json).

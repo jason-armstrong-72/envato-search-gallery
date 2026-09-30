@@ -471,7 +471,7 @@ var COL=[
  ['muted','Muted text','vs surface','#606060','#a0a0a0','surface',4.5],
  ['subtle','Subtle text (labels)','vs page','#6a6a6a','#7a7a7a','bg',4.5],
  ['accent','Accent, shapes','vs page, needs 3','#0d8a4b','#34d399','bg',3],
- ['accenttext','Accent, small text','vs page','#087f3f','#34d399','bg',4.5],
+ ['accenttext','Accent, small text','vs page','#066f33','#34d399','bg',4.5],
  ['soft','Accent tint (dark hover fill)','','#e3e3e3','#082218',null,0],
  ['error','Error, shapes and bars','vs page, needs 3','#ff5c48','#ff5c48','bg',3],
  ['warning','Warning, shapes and bars','vs page, needs 3','#ff5c48','#ff5c48','bg',3],
@@ -492,7 +492,7 @@ var DEF={},SDEF={};ROLES.forEach(function(r){DEF[r[0]]={s:r[5],w:r[6],t:r[7],l:r
 var st=JSON.parse(JSON.stringify(DEF)),sp=JSON.parse(JSON.stringify(SDEF));
 try{var sv=JSON.parse(localStorage.getItem('type-tuner-v3')||'null');if(sv)Object.keys(sv).forEach(function(k){if(st[k])st[k]=sv[k]});
  var ss=JSON.parse(localStorage.getItem('space-tuner-v3')||'null');if(ss)Object.keys(ss).forEach(function(k){if(k in sp)sp[k]=ss[k]})}catch(e){}
-try{var sc=JSON.parse(localStorage.getItem('color-tuner-v5')||'null');if(sc)Object.keys(sc).forEach(function(k){if(cs[k])cs[k]=sc[k]})}catch(e){}
+try{var sc=JSON.parse(localStorage.getItem('color-tuner-v6')||'null');if(sc)Object.keys(sc).forEach(function(k){if(cs[k])cs[k]=sc[k]})}catch(e){}
 var ts={l:8,d:16};
 try{var st2=JSON.parse(localStorage.getItem('tint-tuner-v2')||'null');if(st2)ts=st2}catch(e){}
 var css=document.createElement('style');document.head.appendChild(css);
@@ -531,7 +531,7 @@ function apply(){
  out+='@media (min-width:1100px){body.tuner-open{padding-right:'+(sp.pagex+376)+'px !important}}\n';
  css.textContent=out;
  if(typeof brandApply==='function')brandApply();
- try{localStorage.setItem('type-tuner-v3',JSON.stringify(st));localStorage.setItem('space-tuner-v3',JSON.stringify(sp));localStorage.setItem('color-tuner-v5',JSON.stringify(cs));localStorage.setItem('tint-tuner-v2',JSON.stringify(ts))}catch(e){}
+ try{localStorage.setItem('type-tuner-v3',JSON.stringify(st));localStorage.setItem('space-tuner-v3',JSON.stringify(sp));localStorage.setItem('color-tuner-v6',JSON.stringify(cs));localStorage.setItem('tint-tuner-v2',JSON.stringify(ts))}catch(e){}
 }
 var tuner=document.createElement('div');tuner.className='tuner';tuner.id='tuner';
 var html='<div class="top"><button id="tReset">Reset</button><button id="tCopy">Copy settings</button><button id="tSnap" title="Snap spacing to the size-N scale">Snap</button><button id="tUndo" title="Undo the last snap">Undo</button><span id="tMsg" style="align-self:center;color:var(--grey)"></span></div>';
@@ -571,7 +571,7 @@ tuner.innerHTML=html;document.body.appendChild(tuner);
 var PRESETS=[
  {id:'coral',name:'Coral (previous)',accL:'#ff5c48',txtL:'#ff5c48',accD:'#ff5c48'},
  {id:'emerald',name:'Emerald',accL:'#0f9d58',txtL:'#0a7d3c',accD:'#3ddc84'},
- {id:'forest',name:'Forest',accL:'#0d8a4b',txtL:'#087f3f',accD:'#34d399'},
+ {id:'forest',name:'Forest',accL:'#0d8a4b',txtL:'#066f33',accD:'#34d399'},
  {id:'cobalt',name:'Cobalt',accL:'#2563eb',txtL:'#2563eb',accD:'#4d8dff'},
  {id:'electric',name:'Electric blue',accL:'#0b5cff',txtL:'#0b5cff',accD:'#5b9bff'},
  {id:'royal',name:'Royal blue',accL:'#1d4ed8',txtL:'#1d4ed8',accD:'#60a5fa'}];
