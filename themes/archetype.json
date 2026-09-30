@@ -1,6 +1,6 @@
 {
   "name": "archetype",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "status": "reference, not yet read by build_gallery.py",
   "locked": "2026-09-30",
   "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json.",
@@ -451,9 +451,11 @@
     },
     "toast": {
       "panel": "button-fill background, button-text colour, sans 15px weight 300, 12px 16px padding",
-      "error": "3px coral bar on the left",
+      "error": "52px coral square flush to the left, top and bottom edges, with a white square-capped cross (18px, 2.4px stroke); replaces the thin coral bar",
       "action": "mono 12px uppercase, underlined, coral on hover",
-      "dismiss": "cross at the right"
+      "dismiss": "cross at the right",
+      "error_note": "White on coral is 3.05:1, enough for a graphic (3:1), not for text. The message text stays in the button-text colour.",
+      "min_height_px": 52
     },
     "pagination": {
       "item": "32px minimum square, mono 12px weight 400 uppercase, hairline box",
