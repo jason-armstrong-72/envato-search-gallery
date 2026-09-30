@@ -220,7 +220,35 @@ def theme_vars(theme):
     lines.append(f':root[data-theme="dark"]{{{dark}}}')
     # without JavaScript the page still follows the display setting
     lines.append(f"@media (prefers-color-scheme:dark){{:root:not([data-theme]){{{dark}}}}}")
+    small = small_screen_sizes(theme)
+    if small:
+        rules = "".join(f"--t-{role}-s:{px}px;" for role, px in small.items())
+        lines.append(f"@media (max-width:{theme['small_screen']['max_width_px']}px){{:root{{{rules}}}}}")
     return "\n".join(lines)
+
+
+def small_screen_sizes(theme):
+    """Type sizes that change on a narrow screen: small ones grow, the largest come down to a cap.
+
+    The same two rules as the design-system-creator (its spec, section 3.8). A role listed under
+    small_screen.roles is set outright. Returns {role: px} for the roles that change.
+    """
+    ss = theme.get("small_screen")
+    if not ss:
+        return {}
+    out = {}
+    for role, spec in theme["type"].items():
+        size = spec["size_px"]
+        if size < ss["grow_below_px"]:
+            new = size + ss["grow_by_px"]
+        elif size > ss["cap_px"]:
+            new = ss["cap_px"]
+        else:
+            new = size
+        new = ss.get("roles", {}).get(role, {}).get("size_px", new)
+        if new != size:
+            out[role] = new
+    return out
 
 
 def expand_roles(css, theme):
@@ -296,7 +324,9 @@ __THEME_VARS__
   header{display:flex;flex-direction:column;gap:var(--sp-hgap);margin-bottom:var(--sp-hmb);padding-top:var(--sp-pagetop)}
   .eyebrow{@role eyebrow;color:var(--accent-text)}
   .eyebrow::before{content:"_01 "}
-  h1{margin:0;@role display;font-size:min(var(--t-display-s),11vw);max-width:16ch;text-wrap:balance;color:var(--ink)}
+  /* the theme sets the size (desktop and small screen); fitTitle() below only shrinks it when one word
+     is too long for the line, and a word may break only if it still cannot fit at the smallest size */
+  h1{margin:0;@role display;max-width:16ch;text-wrap:balance;overflow-wrap:anywhere;color:var(--ink)}
   .meta{@role meta;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 14px}
   .meta strong{color:var(--ink);font-weight:inherit}
   .filters{background:var(--surface);border:1px solid var(--border);border-radius:var(--sp-rcard);
@@ -306,7 +336,12 @@ __THEME_VARS__
   details{min-width:0}
   details[open]{flex-basis:100%}
   summary{@role option;cursor:pointer;padding:4px 0;min-height:24px;color:var(--accent-text);transition:color .14s ease}
-  summary:hover,summary:focus-visible{color:var(--ink)}
+  /* our own open/closed arrow: the browser's marker disappears when summary is a flex row (touch sizes) */
+  summary{list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"\25B8";display:inline-block;width:1.2em}
+  details[open]>summary::before{content:"\25BE"}
+  summary:focus-visible{color:var(--ink)}
   summary:active{color:var(--accent-text);text-decoration:underline}
   summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
   .chips{display:flex;flex-wrap:wrap;gap:var(--sp-chipgap);padding:4px 0 10px}
@@ -329,7 +364,7 @@ __THEME_VARS__
   .card-link{margin-top:auto;align-self:stretch;padding:var(--sp-btny) var(--sp-btnx);border-radius:var(--sp-rbtn);
        background:transparent;color:var(--btn-bg);box-shadow:inset 0 0 0 1px var(--btn-bg)}
   .card-link::after,.lb-link::after{content:"\2197";color:var(--btn-arrow)}
-  .card-link:hover,.card-link:focus-visible{background:var(--btn-bg);color:var(--btn-ink)}
+  .card-link:focus-visible{background:var(--btn-bg);color:var(--btn-ink)}
   .card-link:active{background:color-mix(in srgb,var(--btn-bg) 82%,var(--bg));color:var(--btn-ink)}
   .card-link:focus-visible,.lb-link:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
   .lb{position:fixed;inset:0;background:var(--lb-bg);display:none;align-items:center;justify-content:center;
@@ -343,7 +378,6 @@ __THEME_VARS__
   .lb button{all:unset;cursor:pointer;color:var(--ink-on-dark);font-size:28px;line-height:1;padding:10px 14px;
              border-radius:var(--sp-rbtn);background:rgba(255,255,255,.1);position:absolute;min-width:44px;min-height:44px;
              display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}
-  .lb button:hover{background:rgba(255,255,255,.22)}
   .lb button:focus-visible{outline:2px solid var(--ink-on-dark);outline-offset:2px}
   .lb .lb-close{top:14px;right:14px}
   .lb .lb-prev{left:12px;top:50%;transform:translateY(-50%)}
@@ -364,8 +398,14 @@ __THEME_VARS__
                    transition:color .14s ease}
   .themebar button svg{width:16px;height:16px;display:block}
   .themebar button[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink)}
-  .themebar button:not([aria-pressed="true"]):hover{color:var(--accent-text)}
   .themebar button:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+  /* hover styles only where the device can hover: on touch, :hover sticks to the last thing tapped */
+  @media (hover:hover){
+    summary:hover:not(:active){color:var(--ink)}
+    .card-link:hover:not(:active){background:var(--btn-bg);color:var(--btn-ink)}
+    .lb button:hover{background:rgba(255,255,255,.22)}
+    .themebar button:not([aria-pressed="true"]):hover{color:var(--accent-text)}
+  }
   @media (pointer:coarse){
     .card-link,summary,.themebar button{min-height:44px}
     .themebar button{min-width:44px}
@@ -479,6 +519,21 @@ __FILTERS__
     else if (e.key === 'ArrowLeft') show(current - 1);
     else if (e.key === 'ArrowRight') show(current + 1);
   });
+
+// Title size: the theme's size is the guide. Shrink only when a single word is wider than the line,
+// one pixel at a time, down to a floor. Runs again when the fonts load and when the window resizes.
+(function(){
+  var h=document.querySelector('h1'); if(!h) return; var FLOOR=24;
+  function fitTitle(){
+    h.style.fontSize=''; h.style.overflowWrap='normal';
+    var size=parseFloat(getComputedStyle(h).fontSize);
+    while(h.scrollWidth>h.clientWidth+0.5 && size>FLOOR){ size-=1; h.style.fontSize=size+'px'; }
+    h.style.overflowWrap='';
+  }
+  fitTitle();
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fitTitle);
+  window.addEventListener('resize',fitTitle);
+})();
 </script>
 </body>
 </html>
