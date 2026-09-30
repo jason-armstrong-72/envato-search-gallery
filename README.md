@@ -17,7 +17,10 @@ Unofficial. Not affiliated with or endorsed by Envato.
 - Click a thumbnail to enlarge it; arrow keys move between images, Escape closes.
 - The filters available for that asset type, and any that were applied, shown as chips.
 - A "View on Envato" link on every card.
-- Light and dark themes, and it holds together at phone width.
+- A Light, Dark and System switch (System follows the display setting, and the choice is
+  remembered), and it holds together at phone width.
+- A theme drives the whole look: colour, type, spacing, corners and the fonts. See
+  [Themes](#themes).
 
 ## Limits
 
@@ -148,8 +151,8 @@ exactly what it does.
   port is taken by another program it uses a free one instead, and an old link may stop working;
   ask the agent to search again.
 - **Old pages are deleted.** Galleries older than 7 days are removed the next time one is
-  built. A three-image gallery is about 100 to 150 KB, so a machine that stops using the plugin keeps only a few small
-  files.
+  built. A three-image gallery is about 250 to 300 KB (about 180 KB of that is the embedded fonts), so a
+  machine that stops using the plugin keeps only a few small files.
 
 The shutdown was tested on 2026-09-30 by starting the server with `--idle 60` and confirming
 it had exited after about a minute and a half with no requests.
@@ -197,6 +200,33 @@ Two ways to make it certain:
 The plugin's commands are namespaced by plugin name, so the command above is the form that has
 been tested. Some setups also accept the short `/envato-search`; try it and see.
 
+## Themes
+
+The page look is not written into the script. It is read from a theme file, and the default is
+[themes/archetype.json](skills/envato-search-gallery/themes/archetype.json): near-monochrome with a
+Forest green accent (coral is kept for errors and warnings), Hanken Grotesk and IBM Plex Mono, light
+and dark.
+
+```bash
+python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme archetype
+python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme path/to/my-theme.json
+```
+
+- `--theme NAME` loads `themes/NAME.json`; `--theme PATH` loads a theme file from anywhere. A
+  missing or incomplete theme stops with a message that names what is missing.
+- The fonts are embedded in each page as base64 (about 180 KB), so a page needs no network and
+  looks the same offline. The latin and latin-extended subsets are included (Western and Central
+  European); other scripts, such as Thai, fall back to the system font.
+- The fonts are under the SIL Open Font Licence. Their licence texts are in
+  [fonts/](skills/envato-search-gallery/fonts/).
+- A theme can carry a brand logo (`brand` in the theme file: a path to an SVG or PNG, its height,
+  above the title or top left, and an optional dark-mode version). No logo is set yet, so pages
+  show none.
+- To design a theme, open [themes/reference/tuner.html](themes/reference/tuner.html) in a browser;
+  [themes/README.md](themes/README.md) explains it.
+- The look before the Archetype theme is kept at the git tag `classic-look`
+  (`git show classic-look:skills/envato-search-gallery/scripts/build_gallery.py`).
+
 ## Layout
 
 ```text
@@ -205,8 +235,11 @@ skills/envato-search-gallery/
   SKILL.md                     what the agent does, step by step
   scripts/build_gallery.py     results JSON in, self-contained HTML out (stdlib only)
   scripts/gallery_server.py    shared local server for the pages, exits when idle
+  themes/archetype.json        the default look: colour, type, spacing, shape, fonts
+  fonts/                       the theme's font files (woff2) and their licences
   references/filters.json      filters per asset type, from the MCP tool schemas
   references/example-input.json
+themes/                        theme reference: README and the tuner page used to design themes
 ```
 
 ## Notes for maintainers

@@ -1,9 +1,9 @@
 {
   "name": "archetype",
-  "version": "0.6.0",
-  "status": "reference, not yet read by build_gallery.py",
+  "version": "1.1.1",
+  "status": "in use: read by skills/envato-search-gallery/scripts/build_gallery.py",
   "locked": "2026-09-30",
-  "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json.",
+  "derived_from": "https://www.archetypeai.io/ (measured in a browser: off-white #f1f1f0, ink #1a1a1a, light headings, small uppercase mono labels, near-square corners). The site has no dark mode; the dark theme is derived. Accent is the house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json. The accent is Forest green (chosen 2026-09-30 from six options). The house coral #ff5c48 from aws_agent docs/image-gen/styles/precision/palettes/light-coral.json is kept for error and warning only.",
   "fonts": {
     "sans": {
       "family": "Hanken Grotesk",
@@ -14,7 +14,9 @@
         500
       ],
       "source": "Google Fonts, SIL OFL",
-      "note": "Free stand-in for PP Neue Montreal (paid), which the reference site uses."
+      "note": "Free stand-in for PP Neue Montreal (paid), which the reference site uses.",
+      "fallback": "\"Helvetica Neue\", Arial, sans-serif",
+      "google_fonts_url": "https://fonts.google.com/specimen/Hanken+Grotesk"
     },
     "mono": {
       "family": "IBM Plex Mono",
@@ -25,8 +27,75 @@
         500
       ],
       "source": "Google Fonts, SIL OFL",
-      "note": "Stand-in for PP Neue Montreal Mono."
-    }
+      "note": "Stand-in for PP Neue Montreal Mono.",
+      "fallback": "ui-monospace, Menlo, Consolas, monospace",
+      "google_fonts_url": "https://fonts.google.com/specimen/IBM+Plex+Mono"
+    },
+    "embed": [
+      {
+        "family": "Hanken Grotesk",
+        "weight": "200 500",
+        "file": "fonts/hanken-grotesk-latin-ext-200-500.woff2",
+        "unicode_range": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF",
+        "licence": "fonts/OFL-Hanken-Grotesk.txt"
+      },
+      {
+        "family": "Hanken Grotesk",
+        "weight": "200 500",
+        "file": "fonts/hanken-grotesk-latin-200-500.woff2",
+        "unicode_range": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+      },
+      {
+        "family": "IBM Plex Mono",
+        "weight": "200",
+        "file": "fonts/ibm-plex-mono-latin-ext-200.woff2",
+        "unicode_range": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF",
+        "licence": "fonts/OFL-IBM-Plex-Mono.txt"
+      },
+      {
+        "family": "IBM Plex Mono",
+        "weight": "200",
+        "file": "fonts/ibm-plex-mono-latin-200.woff2",
+        "unicode_range": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+      },
+      {
+        "family": "IBM Plex Mono",
+        "weight": "300",
+        "file": "fonts/ibm-plex-mono-latin-ext-300.woff2",
+        "unicode_range": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+      },
+      {
+        "family": "IBM Plex Mono",
+        "weight": "300",
+        "file": "fonts/ibm-plex-mono-latin-300.woff2",
+        "unicode_range": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+      },
+      {
+        "family": "IBM Plex Mono",
+        "weight": "400",
+        "file": "fonts/ibm-plex-mono-latin-ext-400.woff2",
+        "unicode_range": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+      },
+      {
+        "family": "IBM Plex Mono",
+        "weight": "400",
+        "file": "fonts/ibm-plex-mono-latin-400.woff2",
+        "unicode_range": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+      },
+      {
+        "family": "IBM Plex Mono",
+        "weight": "500",
+        "file": "fonts/ibm-plex-mono-latin-ext-500.woff2",
+        "unicode_range": "U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF"
+      },
+      {
+        "family": "IBM Plex Mono",
+        "weight": "500",
+        "file": "fonts/ibm-plex-mono-latin-500.woff2",
+        "unicode_range": "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD"
+      }
+    ],
+    "embed_note": "Latin and latin-extended subsets (Western and Central European). Files are paths relative to the skill folder, embedded into each page as base64 with their unicode ranges, so a page needs no network for fonts and the browser uses the right file per character. Characters outside these (for example Thai in an Envato title) fall back to the system font."
   },
   "type": {
     "display": {
@@ -173,20 +242,30 @@
       "dark": "#7a7a7a",
       "usage": "Subtle labels (was #707070 in 0.1.0; darkened for contrast)"
     },
-    "coral": {
-      "light": "#ff5c48",
-      "dark": "#ff5c48",
-      "usage": "Coral for shapes"
+    "accent": {
+      "light": "#0d8a4b",
+      "dark": "#34d399",
+      "usage": "Accent for shapes, bars, borders, arrows (Forest green)"
     },
-    "coraltext": {
-      "light": "#ff5c48",
-      "dark": "#ff5c48",
-      "usage": "Coral for small text"
+    "accenttext": {
+      "light": "#066f33",
+      "dark": "#34d399",
+      "usage": "Accent for small text (deeper in light: 5.6:1 on the page, 5.1:1 on the hover tint, 4.6:1 on the pressed tint)"
     },
     "soft": {
       "light": "#e3e3e3",
-      "dark": "#2b1613",
-      "usage": "Coral tint, hover"
+      "dark": "#082218",
+      "usage": "Accent tint used for the dark-mode hover fill"
+    },
+    "error": {
+      "light": "#ff5c48",
+      "dark": "#ff5c48",
+      "usage": "Error shapes and bars (house coral)"
+    },
+    "warning": {
+      "light": "#ff5c48",
+      "dark": "#ff5c48",
+      "usage": "Warning shapes and bars (house coral; a separate token so it can differ later)"
     },
     "btnbg": {
       "light": "#1a1a1a",
@@ -199,20 +278,15 @@
       "usage": "Button text"
     },
     "btnarrow": {
-      "light": "#ff5c48",
-      "dark": "#ff5c48",
-      "usage": "Button arrow"
+      "light": "#0d8a4b",
+      "dark": "#087f3f",
+      "usage": "Button arrow, readable on both the outlined and the solid button"
     },
     "focus": {
       "light": "#1a1a1a",
-      "dark": "#ff5c48",
+      "dark": "#34d399",
       "usage": "Keyboard focus ring, 2px, 2px offset"
     }
-  },
-  "coral_tint_percent": {
-    "light": 8,
-    "dark": 16,
-    "note": "Chip and pill hover fill. Pressed doubles it, capped at 24% (dark pressed = 24%, light pressed = 16%)."
   },
   "spacing_and_shape": {
     "pagex": {
@@ -346,36 +420,35 @@
       "hover_focus": "solid fill in button colour, text in button-text colour",
       "pressed": "solid fill mixed 82% with page background",
       "disabled": "rest look at 40% opacity, no hover",
-      "arrow": "coral in every state",
-      "focus_ring": "2px focus-colour ring, 2px offset (ink on light, coral on dark)"
+      "arrow": "accent in every state",
+      "focus_ring": "2px focus-colour ring, 2px offset (ink on light, accent on dark)"
     },
     "chip_and_pill": {
       "note": "Static in the gallery. The states apply only to an interactive chip, marked with class is-action. A pill is a chip with class pill (fully round).",
       "rest": "muted text, hairline border",
-      "hover_focus": "coral text and border, coral tint fill",
+      "hover_focus": "accent text and border, accent tint fill",
       "pressed": "as hover with the tint doubled, capped at 24%",
       "selected": "solid fill in button colour, button-text colour",
       "disabled": "40% opacity"
     },
     "toggle": {
-      "rest": "coral text",
+      "rest": "accent text",
       "hover_focus": "ink text",
-      "pressed": "coral text, underlined",
+      "pressed": "accent text, underlined",
       "disabled": "muted text at 40% opacity"
     },
     "theme_bar": {
-      "unselected_hover": "coral text",
+      "unselected_hover": "accent text",
       "selected": "solid, unchanged on hover"
     },
     "motion": "0.14s ease on colour, background and border. None when the visitor prefers reduced motion."
   },
   "accepted_debt": [
-    "Coral text on the light page is 2.7:1, below 4.5:1. Accepted 2026-09-30; coral is used for shapes and interaction cues. A deeper light-mode coral (about #d6402d) was offered and declined.",
     "Subtle text #707070 measures 4.4:1 on light and 4.2:1 on dark, just under 4.5:1. Accepted.",
     "Hairline border is 1.2:1 on light. Decorative, accepted."
   ],
   "open": [
-    "Accessibility: only coral small text on the light page remains, and it is accepted."
+    "Brand logo: support is built, no logo file has been supplied yet (see brand)."
   ],
   "components": {
     "note": "Built from the locked tokens on 2026-09-30. Component states reuse the interaction rules under \"states\".",
@@ -385,9 +458,9 @@
       "radius_px": 1,
       "outline": "1px inside, muted text colour",
       "hover": "outline in ink",
-      "focus": "outline in ink plus a 2px coral ring, 2px offset",
+      "focus": "outline in ink plus a 2px accent ring, 2px offset",
       "filled": "ink text",
-      "error": "outline in coral, plus a 7px coral square and ink help text (no small coral text)",
+      "error": "outline in the error colour, plus a 7px error-colour square and ink help text (no small coloured text)",
       "disabled": "40% opacity",
       "placeholder": "muted text colour at 80%",
       "label": "mono 11px weight 300, uppercase, muted",
@@ -400,14 +473,14 @@
       "header": "mono 11px weight 400, uppercase, 1px ink rule under it",
       "cell": "sans 15px weight 300, hairline rule between rows",
       "numbers": "mono 12px, right-aligned",
-      "row_hover": "coral tint fill",
+      "row_hover": "accent tint fill",
       "overflow": "wrap in a scrolling container on narrow screens"
     },
     "callout": {
       "base": "surface fill, hairline border, 3px ink bar on the left",
       "note": "ink bar",
-      "warning": "coral bar, coral tint fill",
-      "error": "coral bar, doubled coral tint fill",
+      "warning": "warning-colour bar, warning-colour tint fill",
+      "error": "error-colour bar, doubled error-colour tint fill",
       "title": "mono 11px weight 400, uppercase"
     },
     "code": {
@@ -421,11 +494,11 @@
         "dark": "rgba(241,241,240,0.14)",
         "note": "lighter in dark mode so the panel sits on a visible backdrop"
       },
-      "actions": "ghost text button (ink, coral on hover) plus the standard button"
+      "actions": "ghost text button (ink, accent on hover) plus the standard button"
     },
     "empty_and_error": {
       "panel": "1px dashed muted border, centred, 40px 24px padding",
-      "eyebrow": "mono 11px weight 400, uppercase; error adds a 7px coral square",
+      "eyebrow": "mono 11px weight 400, uppercase; error adds a 7px error-colour square",
       "action": "the standard button"
     },
     "loading": {
@@ -440,7 +513,7 @@
       "file upload"
     ],
     "tabs": {
-      "tab": "mono 12px weight 400, uppercase, muted text; hover ink; selected ink with a 2px coral underline; focus 2px coral ring; disabled 40%",
+      "tab": "mono 12px weight 400, uppercase, muted text; hover ink; selected ink with a 2px accent underline; focus 2px accent ring; disabled 40%",
       "list": "1px hairline under the row, scrolls sideways on narrow screens"
     },
     "tooltip": {
@@ -448,29 +521,29 @@
     },
     "toast": {
       "panel": "button-fill background, button-text colour, sans 15px weight 300, 12px 16px padding",
-      "error": "52px coral square flush to the left, top and bottom edges, with a white square-capped cross (18px, 2.4px stroke); replaces the thin coral bar",
-      "action": "mono 12px uppercase, underlined, coral on hover",
+      "error": "52px error-colour square flush to the left, top and bottom edges, with a white square-capped cross (18px, 2.4px stroke); replaces the thin bar",
+      "action": "mono 12px uppercase, underlined, accent on hover",
       "dismiss": "cross at the right",
-      "error_note": "White on coral is 3.05:1, enough for a graphic (3:1), not for text. The message text stays in the button-text colour.",
+      "error_note": "White on the error colour (coral #ff5c48) is 3.05:1, enough for a graphic (3:1), not for text. The message text stays in the button-text colour.",
       "min_height_px": 52
     },
     "pagination": {
       "item": "32px minimum square, mono 12px weight 400 uppercase, hairline box",
-      "hover": "coral box and text with tint fill",
+      "hover": "accent box and text with tint fill",
       "current": "solid button fill",
       "disabled": "40%"
     },
     "navigation": {
       "link": "mono 11px weight 400 uppercase, ink; numbered prefix in subtle grey (_01)",
-      "hover": "coral text",
-      "current": "2px coral underline"
+      "hover": "accent text",
+      "current": "2px accent underline"
     },
     "date_picker": {
       "panel": "surface fill, hairline border, 14px padding",
       "grid": "7 columns of 36px cells, Monday first, weekday row mono 11px weight 300",
       "today": "1px ink ring",
       "selected": "solid button fill",
-      "hover": "coral box with tint fill",
+      "hover": "accent box with tint fill",
       "disabled_and_outside_month": "reduced opacity"
     },
     "interactive_edges": {
@@ -488,7 +561,7 @@
         "system"
       ],
       "default": "system (follows the display setting, and updates live if the display setting changes)",
-      "control": "three icon buttons in one group: sun (Light), moon (Dark), monitor (System). 16px, 1.5px outline icons, 32x30px buttons, 1px radius group. Selected is the solid button fill; unselected hover is coral.",
+      "control": "three icon buttons in one group: sun (Light), moon (Dark), monitor (System). 16px, 1.5px outline icons, 32x30px buttons, 1px radius group. Selected is the solid button fill; unselected hover is accent.",
       "icons_source": "The sun, moon-02 and monitor-01 icons from the Vaultia chat app icon map (aws_agent UI/chat/src/app/shared/icon/icon-map.ts). Their upstream licence has not been checked.",
       "memory": "The chosen mode is remembered in the browser (localStorage, guarded so the page still works if storage is blocked).",
       "accessibility": "Each button has a text label and title; the pressed state is exposed with aria-pressed.",
@@ -571,7 +644,8 @@
     "remaining_after_fixes": {
       "light": "11 text styles, all coral small text on the light page (accepted 2026-09-30)",
       "dark": "none"
-    }
+    },
+    "note": "The measurements and fixes in this section were made with the coral accent (themes 0.1 to 0.6). See accent_audit for the Forest accent that replaced it."
   },
   "spacing_scale": {
     "note": "Spacing values sit on this scale. Named size-N, N in px (the reference site names its own sizes the same way). Locked 2026-09-30.",
@@ -666,5 +740,51 @@
   "decisions_confirmed": [
     "Selected chips and pills use the solid look (confirmed 2026-09-30).",
     "Button pressed fill is an 82% mix of the button fill and the page (confirmed 2026-09-30)."
-  ]
+  ],
+  "tint_percent": {
+    "light": 8,
+    "dark": 16,
+    "note": "Hover fill for chips, pills, pagination and the calendar (accent), and the fill of the error and warning callouts. Pressed doubles it, capped at 24%."
+  },
+  "accent_audit": {
+    "measured": "2026-09-30",
+    "accent": "Forest green",
+    "method": "The same browser audit as above, on the tuner page with the Forest accent, in both modes.",
+    "light": {
+      "text_styles_checked": 87,
+      "active_failures": 0,
+      "detail": "After deepening the light accent text from #087f3f to #066f33, the hover and pressed states on the accent tint all reach 4.5:1. The tuner's \"hover tint options\" row shows deliberately strong tints (12, 16 and 20%) for comparison; its 20% sample is 4.4:1 and is not a real state."
+    },
+    "dark": {
+      "text_styles_checked": 87,
+      "active_failures": 0
+    },
+    "focus_ring": {
+      "light": "ink 15.4:1",
+      "dark": "accent 10.9:1"
+    },
+    "compared_with_coral": "Coral had 11 light failures (all small coral text); Forest has none in a real state.",
+    "presets_audited": [
+      "emerald",
+      "forest",
+      "cobalt",
+      "electric blue",
+      "royal blue"
+    ],
+    "fix_applied": "Light accent text deepened to #066f33 (5.58:1 on the page)."
+  },
+  "brand": {
+    "note": "The owner's personal-brand mark. Support is in the builder; no file yet, so pages show none.",
+    "logo": null,
+    "logo_dark": null,
+    "alt": "",
+    "height_px": 28,
+    "placement": "above",
+    "placement_options": {
+      "above": "above the eyebrow, in the header",
+      "topleft": "fixed at the top left, level with the colour-mode switch"
+    },
+    "invert_in_dark": false,
+    "file_rules": "A path relative to the skill folder (or absolute). SVG preferred, PNG, JPEG and WebP also work. logo_dark is optional; without it, invert_in_dark inverts a black logo."
+  }
 }

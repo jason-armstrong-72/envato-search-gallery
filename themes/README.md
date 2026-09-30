@@ -1,14 +1,16 @@
 # Themes
 
-Design themes for the gallery page. This folder is a **reference**: the values are locked, but
-`skills/envato-search-gallery/scripts/build_gallery.py` does not read them yet. Wiring a `--theme`
-option and embedding the fonts is the next step.
+Design reference for the gallery page's themes. The theme itself lives with the skill, in
+[skills/envato-search-gallery/themes/](../skills/envato-search-gallery/themes/), so it travels when the
+skill folder is copied on its own, and `build_gallery.py` reads it (`--theme NAME|PATH`). This
+folder keeps the tuner page the theme was designed on.
 
 ## archetype
 
-A near-monochrome theme with one coral accent, derived from <https://www.archetypeai.io/>.
+A near-monochrome theme with one Forest green accent, derived from <https://www.archetypeai.io/>.
+The house coral is kept for error and warning only.
 
-- [archetype.json](archetype.json): every locked value (type roles, colour in light and dark,
+- [archetype.json](../skills/envato-search-gallery/themes/archetype.json): every locked value (type roles, colour in light and dark,
   spacing, shape, interaction states, components) plus the accepted trade-offs and what is still open.
 - [reference/tuner.html](reference/tuner.html): the page the theme was designed on. Open it in a
   browser and use **Tune** for controls on every value, with a light and dark switch. **Copy
@@ -22,7 +24,8 @@ A near-monochrome theme with one coral accent, derived from <https://www.archety
 | Sans | Hanken Grotesk, weights 200 to 500 (Google Fonts, SIL OFL) |
 | Mono | IBM Plex Mono, weights 200 to 500 (Google Fonts, SIL OFL) |
 | Ink and page | `#1a1a1a` on `#f1f1f0` (light), `#f1f1f0` on `#000000` (dark) |
-| Accent | coral `#ff5c48` |
+| Accent | Forest green `#0d8a4b` (text `#066f33`) light, `#34d399` dark |
+| Error and warning | coral `#ff5c48`, separate tokens |
 | Corners | 1px |
 
 The reference site uses PP Neue Montreal, which is a paid font. The two Google fonts are close
@@ -41,10 +44,10 @@ and tags anything off it.
 
 ### Interaction states
 
-- **Button:** outlined at rest, solid on hover or keyboard focus, arrow coral throughout.
-- **Chip and pill:** coral border, text and a tint fill on hover (8% light, 16% dark). Static in the
+- **Button:** outlined at rest, solid on hover or keyboard focus, arrow in the accent throughout.
+- **Chip and pill:** accent border, text and a tint fill on hover (8% light, 16% dark). Static in the
   gallery; add class `is-action` to make one interactive, and `pill` for fully round ends.
-- **Toggle:** coral at rest, ink on hover, coral and underlined when pressed.
+- **Toggle:** accent at rest, ink on hover, accent and underlined when pressed.
 
 ### Components
 
@@ -55,12 +58,13 @@ bottom of the tuner page.
 ### Accessibility
 
 Measured in a browser on 2026-09-30 and recorded under `accessibility` in
-[archetype.json](archetype.json). Four fixes are applied (subtle grey, edges of interactive chips and
-pagination, an ink focus ring on light, and 24px/44px control sizes). What remains: coral small text
-on the light page, which is accepted. The tuner's Touch
-switch previews the 44px targets.
+[archetype.json](../skills/envato-search-gallery/themes/archetype.json). Four fixes are applied (subtle grey, edges of interactive chips and
+pagination, an ink focus ring on light, and 24px/44px control sizes). The audit was
+re-run for the Forest accent (see `accent_audit`) and has no failures in a real state, in light or dark.
+The tuner's Touch switch previews the 44px targets.
 
 ### Known trade-offs
 
-Coral small text on the light page is 2.7:1, under the 4.5:1 target. It was accepted, and coral is
-used for shapes and interaction cues. See `accepted_debt` in [archetype.json](archetype.json).
+No accepted contrast debt is recorded for the Forest accent. Coral, used only for error and warning,
+is 2.7:1 as text on the light page, so it is used for shapes and bars, with ink text. See
+`accepted_debt` and `accent_audit` in [archetype.json](../skills/envato-search-gallery/themes/archetype.json).
