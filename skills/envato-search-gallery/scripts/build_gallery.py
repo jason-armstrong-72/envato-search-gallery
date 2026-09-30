@@ -306,6 +306,11 @@ __THEME_VARS__
   details{min-width:0}
   details[open]{flex-basis:100%}
   summary{@role option;cursor:pointer;padding:4px 0;min-height:24px;color:var(--accent-text);transition:color .14s ease}
+  /* our own open/closed arrow: the browser's marker disappears when summary is a flex row (touch sizes) */
+  summary{list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"\25B8";display:inline-block;width:1.2em}
+  details[open]>summary::before{content:"\25BE"}
   summary:focus-visible{color:var(--ink)}
   summary:active{color:var(--accent-text);text-decoration:underline}
   summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
