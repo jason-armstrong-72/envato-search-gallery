@@ -39,7 +39,7 @@ previews in one page, let the user pick, hand back the Envato link.
    a small local server so the page has an `http://localhost` link. It does **not** open a
    browser: a browser stealing focus while the user is in another app is annoying. Add
    `--open` only if the user asks for it. Standard library only, no install step. It prints
-   an `open:` line holding the link. The look comes from `themes/archetype.json`; add
+   an `open:` line holding the link. The look comes from `themes/jason-armstrong.json` (Jason Armstrong's design system); add
    `--theme NAME` (a file in `themes/`) or `--theme PATH` only if the user asks for a different
    look.
 6. **Report** the count and give the gallery as a clickable markdown link built from the

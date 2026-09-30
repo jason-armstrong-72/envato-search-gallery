@@ -203,12 +203,13 @@ been tested. Some setups also accept the short `/envato-search`; try it and see.
 ## Themes
 
 The page look is not written into the script. It is read from a theme file, and the default is
-[themes/archetype.json](skills/envato-search-gallery/themes/archetype.json): near-monochrome with a
-Forest green accent (coral is kept for errors and warnings), Hanken Grotesk and IBM Plex Mono, light
-and dark.
+[themes/jason-armstrong.json](skills/envato-search-gallery/themes/jason-armstrong.json): Jason Armstrong's
+design system (JA). It is near-monochrome with a Forest green accent (coral is kept for errors and
+warnings), Hanken Grotesk and IBM Plex Mono, light and dark. The file is a bundled copy of the master
+theme, so the plugin works when installed alone.
 
 ```bash
-python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme archetype
+python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme jason-armstrong
 python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme path/to/my-theme.json
 ```
 
@@ -220,11 +221,14 @@ python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --the
 - The fonts are under the SIL Open Font Licence. Their licence texts are in
   [fonts/](skills/envato-search-gallery/fonts/).
 - A theme can carry a brand logo (`brand` in the theme file: a path to an SVG or PNG, its height,
-  above the title or top left, and an optional dark-mode version). No logo is set yet, so pages
-  show none.
-- To design a theme, open [themes/reference/tuner.html](themes/reference/tuner.html) in a browser;
-  [themes/README.md](themes/README.md) explains it.
-- The look before the Archetype theme is kept at the git tag `classic-look`
+  above the title or top left, and an optional dark-mode version). The bundled theme sets the JA
+  mark, which shows above the title.
+- A theme must have `schema_version` 2. Any other version stops with a message.
+- The master theme is designed and changed with the
+  [design-system-creator](https://github.com/jason-armstrong-72/design-system-creator) plugin.
+  Check that the bundled copy is up to date with `python3 skills/envato-search-gallery/scripts/check_theme_sync.py`;
+  refresh it with `--update`. [themes/README.md](themes/README.md) has the details.
+- The look before the JA theme is kept at the git tag `classic-look`
   (`git show classic-look:skills/envato-search-gallery/scripts/build_gallery.py`).
 
 ## Layout
@@ -235,11 +239,13 @@ skills/envato-search-gallery/
   SKILL.md                     what the agent does, step by step
   scripts/build_gallery.py     results JSON in, self-contained HTML out (stdlib only)
   scripts/gallery_server.py    shared local server for the pages, exits when idle
-  themes/archetype.json        the default look: colour, type, spacing, shape, fonts
+  scripts/check_theme_sync.py  checks the bundled theme against the master, and refreshes it
+  themes/jason-armstrong.json  the default look: colour, type, spacing, shape, fonts
+  themes/assets/               the JA mark (light and dark)
   fonts/                       the theme's font files (woff2) and their licences
   references/filters.json      filters per asset type, from the MCP tool schemas
   references/example-input.json
-themes/                        theme reference: README and the tuner page used to design themes
+themes/                        theme README: where the look comes from and how to refresh the copy
 ```
 
 ## Notes for maintainers
