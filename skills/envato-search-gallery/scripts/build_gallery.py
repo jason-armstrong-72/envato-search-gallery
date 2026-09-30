@@ -223,7 +223,11 @@ def theme_vars(theme):
     small = small_screen_sizes(theme)
     if small:
         rules = "".join(f"--t-{role}-s:{px}px;" for role, px in small.items())
-        lines.append(f"@media (max-width:{theme['small_screen']['max_width_px']}px){{:root{{{rules}}}}}")
+        # a phone held sideways is wider than max_width_px, so a short touch screen counts as small too
+        width = theme["small_screen"]["max_width_px"]
+        lines.append(
+            f"@media (max-width:{width}px),(pointer:coarse) and (max-height:{width}px){{:root{{{rules}}}}}"
+        )
     return "\n".join(lines)
 
 
@@ -318,6 +322,8 @@ TEMPLATE = r"""<!doctype html>
 __FONT_FACES__
 __THEME_VARS__
   *{box-sizing:border-box}
+  /* stop phones enlarging some text blocks by themselves when held sideways */
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:var(--t-title-w);
        padding:32px var(--sp-pagex) var(--sp-pagebot)}
   header,.filters,.grid,footer{max-width:var(--sp-maxw);margin-inline:auto}
