@@ -95,7 +95,7 @@
  * .is-between : spreads a ds-row to both ends
  * .is-selected : chosen state (chip, tab, table row, day)
  * .is-current : the current item (page, nav link, today)
- * .is-error : error state (field, help, empty panel, toast, callout)
+ * .is-error : error state (field, help, empty panel, toast, callout). A form control also matches aria-invalid="true"
  * .is-warning : warning state (callout)
  * .is-positive, .is-neutral, .is-caution, .is-critical, .is-info : the tone of a ds-status
  * .is-disabled : disabled, the theme's disabled opacity, no hover (also [disabled] and aria-disabled)
@@ -386,7 +386,8 @@ html {
 }
 .ds-input:is(:focus, :focus-visible, .is-focus), .ds-select:is(:focus, :focus-visible, .is-focus),
 .ds-textarea:is(:focus, :focus-visible, .is-focus) { border-color: var(--ink); }
-.ds-input.is-error, .ds-select.is-error, .ds-textarea.is-error { border-color: var(--error); }
+.ds-input:is(.is-error, [aria-invalid="true"]), .ds-select:is(.is-error, [aria-invalid="true"]),
+.ds-textarea:is(.is-error, [aria-invalid="true"]) { border-color: var(--error); }
 .ds-select {
   appearance: none;
   padding-right: calc(var(--sp-btnx) * 2 + 0.7em);
@@ -1044,7 +1045,8 @@ html {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
-.ds-check:is(.is-error) input, .ds-radio:is(.is-error) input, .ds-check input.is-error, .ds-radio input.is-error { border-color: var(--error); }
+.ds-check:is(.is-error) input, .ds-radio:is(.is-error) input, .ds-check input:is(.is-error, [aria-invalid="true"]),
+.ds-radio input:is(.is-error, [aria-invalid="true"]) { border-color: var(--error); }
 .ds-check:is(.is-disabled, :has(input:disabled)), .ds-radio:is(.is-disabled, :has(input:disabled)) {
   opacity: var(--disabled);
   pointer-events: none;
@@ -1096,8 +1098,8 @@ html {
 @media (hover: hover) {
   .ds-switch:hover { --ds-switch-edge: var(--ink); }
 }
-.ds-switch.is-error { --ds-switch-edge: var(--error); }
-.ds-switch[aria-checked="true"], .ds-switch[aria-checked="true"]:is(.is-hover, .is-error) {
+.ds-switch:is(.is-error, [aria-invalid="true"]) { --ds-switch-edge: var(--error); }
+.ds-switch[aria-checked="true"], .ds-switch[aria-checked="true"]:is(.is-hover, .is-error, [aria-invalid="true"]) {
   --ds-switch-edge: var(--btn-bg);
   --ds-switch-fill: var(--btn-bg);
   --ds-switch-thumb: var(--btn-ink);
