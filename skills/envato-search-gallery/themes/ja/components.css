@@ -23,6 +23,7 @@
  *   code, pre and table inside it are styled with no classes, and it stops at the reading width
  * .ds-btn : outlined button, solid on hover and focus, text only
  * .ds-btn-ghost : text-only button, accent text on hover
+ * .ds-muted : secondary text in the muted colour (a results line, a footnote); keeps its type role
  * .ds-chip : small label, static unless is-action (a span or a button)
  * .ds-pill : with ds-chip, fully round ends
  * .ds-status : status tag; is-positive, is-neutral, is-caution, is-critical or is-info picks the tone
@@ -399,6 +400,7 @@ html {
   background-repeat: no-repeat;
 }
 .ds-help { margin: 0; color: var(--muted); }
+.ds-muted { color: var(--muted); }
 .ds-help.is-error { display: flex; align-items: center; gap: 0.5em; color: var(--ink); }
 .ds-help.is-error::before { content: ""; flex: none; width: 0.6em; height: 0.6em; background: var(--error); }
 
