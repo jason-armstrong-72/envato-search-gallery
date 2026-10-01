@@ -213,6 +213,9 @@ python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --the
 python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme path/to/my-theme.json
 ```
 
+- A `NAME.layout.json` beside the theme holds the gallery's own measures, roles and colours, which the
+  theme no longer carries. The builder merges it in; where both have a key, the theme wins and a warning
+  is printed.
 - `--theme NAME` loads `themes/NAME.json`; `--theme PATH` loads a theme file from anywhere. A
   missing or incomplete theme stops with a message that names what is missing.
 - The fonts are embedded in each page as base64 (about 180 KB), so a page needs no network and
@@ -223,7 +226,7 @@ python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --the
 - A theme can carry a brand logo (`brand` in the theme file: a path to an SVG or PNG, its height,
   above the title or top left, and an optional dark-mode version). The bundled theme sets the JA
   mark, which shows above the title.
-- A theme must have `schema_version` 2. Any other version stops with a message.
+- A theme must have `schema_version` 3. Any other version stops with a message.
 - The master theme is designed and changed with the
   [design-system-creator](https://github.com/jason-armstrong-72/design-system-creator) plugin.
   Check that the bundled copy is up to date with `python3 skills/envato-search-gallery/scripts/check_theme_sync.py`;
@@ -241,6 +244,7 @@ skills/envato-search-gallery/
   scripts/gallery_server.py    shared local server for the pages, exits when idle
   scripts/check_theme_sync.py  checks the bundled theme against the master, and refreshes it
   themes/jason-armstrong.json  the default look: colour, type, spacing, shape, fonts
+  themes/jason-armstrong.layout.json  the gallery's own measures, roles and colours (not in the theme)
   themes/assets/               the JA mark (light and dark)
   fonts/                       the theme's font files (woff2) and their licences
   references/filters.json      filters per asset type, from the MCP tool schemas

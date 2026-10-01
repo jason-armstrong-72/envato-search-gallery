@@ -28,9 +28,10 @@ downloaded here and embedded as base64, so the output file opens offline and nee
 network, account or server.
 
 The look comes from a theme file (default: themes/jason-armstrong.json next to this script's
-folder, a bundled copy of Jason Armstrong's master theme, schema version 2). Colours, type,
+folder, a bundled copy of Jason Armstrong's master theme, schema version 3). Colours, type,
 spacing, shape and fonts are all read from it, and the fonts are embedded as base64, so a theme
-needs no network either. When the default theme is used and the master theme is found on this
+needs no network either. The gallery's own measures, roles and colours (the ones the theme no longer
+holds) are in <theme name>.layout.json beside the theme and are merged into it. When the default theme is used and the master theme is found on this
 machine, a one-line warning is printed if the bundled copy is behind it
 (see check_theme_sync.py). Pass --theme NAME for another file in themes/, or
 --theme PATH for a theme file anywhere. The page follows the display's light or dark setting and
@@ -58,7 +59,8 @@ SKILL_DIR = Path(__file__).resolve().parent.parent
 FILTERS_PATH = SKILL_DIR / "references" / "filters.json"
 THEMES_DIR = SKILL_DIR / "themes"
 DEFAULT_THEME = "jason-armstrong"
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
+LAYOUT_SECTIONS = ("colour", "type", "spacing_and_shape")
 USER_AGENT = "Mozilla/5.0 (envato-search-gallery)"
 
 
@@ -126,14 +128,14 @@ def filters_panel(asset_type, applied):
 
 REQUIRED_ROLES = ["display", "title", "eyebrow", "meta", "author", "label", "option", "button"]
 REQUIRED_COLOURS = ["bg", "surface", "border", "ink", "muted", "accent", "accent-text", "error", "warning",
-                    "btn-bg", "btn-ink", "btn-arrow", "focus"]
+                    "btn-bg", "btn-ink", "btn-arrow", "focus", "lb-bg"]
 REQUIRED_SPACING = ["pagex", "pagetop", "pagebot", "maxw", "hgap", "hmb", "fpadx", "fpady", "fgapy",
                     "fgapx", "fmb", "chipgap", "chipx", "chipy", "gridgap", "cardmin", "cpadt", "cpadx",
                     "cpadb", "cgap", "btnx", "btny", "btngap", "footmt", "footpt", "rcard", "rchip", "rbtn"]
 
 
 def available_themes():
-    return sorted(p.stem for p in THEMES_DIR.glob("*.json"))
+    return sorted(p.stem for p in THEMES_DIR.glob("*.json") if not p.name.endswith(".layout.json"))
 
 
 def load_theme(name):
@@ -152,6 +154,7 @@ def load_theme(name):
             f"error: theme {path.name} has schema_version {theme.get('schema_version')!r}; "
             f"this builder reads schema_version {SCHEMA_VERSION}"
         )
+    merge_layout(theme, path)
     missing = (
         [f"type.{r}" for r in REQUIRED_ROLES if r not in theme.get("type", {})]
         + [f"colour.{c}" for c in REQUIRED_COLOURS if c not in theme.get("colour", {})]
@@ -161,6 +164,29 @@ def load_theme(name):
     if missing:
         sys.exit(f"error: theme {path.name} is missing: {', '.join(missing)}")
     return theme
+
+
+def merge_layout(theme, theme_path):
+    """Add the gallery's own values from <theme name>.layout.json beside the theme, if there is one.
+
+    The layout file has the same shapes as the theme's colour, type and spacing_and_shape sections. It
+    only adds keys: where the theme has the same key, the theme wins and a warning is printed.
+    """
+    layout_path = theme_path.with_name(theme_path.stem + ".layout.json")
+    if not layout_path.is_file():
+        return
+    try:
+        layout = json.loads(layout_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        sys.exit(f"error: layout file {layout_path} could not be read: {exc}")
+    for section in LAYOUT_SECTIONS:
+        target = theme.setdefault(section, {})
+        for key, value in (layout.get(section) or {}).items():
+            if key in target:
+                print(f"warning: {layout_path.name} has {section}.{key}, which the theme also has; the theme's value is used",
+                      file=sys.stderr)
+            else:
+                target[key] = value
 
 
 def font_faces(theme, base):
@@ -204,15 +230,14 @@ def theme_vars(theme):
     def colours(mode):
         c = theme["colour"]
         g = lambda k: c[k][mode]
-        # the lightbox has no panel and shows captions straight on the backdrop, so it uses the theme's
-        # dark (light-mode) backdrop in both modes: the light-tinted dark-mode one leaves the page readable behind
-        backdrop = theme.get("components", {}).get("modal", {}).get("backdrop", {}).get("light", "rgba(0,0,0,.92)")
+        # the lightbox has no panel and shows captions straight on the backdrop, so the layout file gives it
+        # the same dark backdrop in both modes
         return (
             f"--bg:{g('bg')};--surface:{g('surface')};--border:{g('border')};--ink:{g('ink')};"
             f"--muted:{g('muted')};--accent:{g('accent')};--accent-text:{g('accent-text')};"
             f"--error:{g('error')};--warning:{g('warning')};"
             f"--btn-bg:{g('btn-bg')};--btn-ink:{g('btn-ink')};--btn-arrow:{g('btn-arrow')};"
-            f"--focus:{g('focus')};--lb-bg:{backdrop};color-scheme:{mode};"
+            f"--focus:{g('focus')};--lb-bg:{g('lb-bg')};color-scheme:{mode};"
         )
 
     light, dark = colours("light"), colours("dark")

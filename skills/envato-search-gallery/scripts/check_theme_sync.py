@@ -12,6 +12,8 @@ $JA_THEME_MASTER if that is set, else ~/.claude/skills/<sync.source>/theme.json.
 The bundled copy keeps a few plugin-local values (the dotted paths in sync.local_keys: the
 embedded fonts, the logo paths and the sync block). Everything else must equal the master.
 
+Only the theme copy is compared. The gallery's own jason-armstrong.layout.json is never read here.
+
 Exit code: 0 when in step or when no master exists (the plugin may be installed alone),
 1 when a master exists and differs. Standard library only.
 """
