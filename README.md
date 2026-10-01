@@ -12,14 +12,14 @@ Unofficial. Not affiliated with or endorsed by Envato.
 
 ## What you get
 
-- A single self-contained HTML file (previews embedded, no account), served on a local
+- A single HTML file (previews embedded, fonts from Google Fonts, no account), served on a local
   `http://localhost` link so the chat can hand you a clickable link.
 - Click a thumbnail to enlarge it; arrow keys move between images, Escape closes.
 - The filters available for that asset type, and any that were applied, shown as chips.
 - A "View on Envato" link on every card.
 - A Light, Dark and System switch (System follows the display setting, and the choice is
   remembered), and it holds together at phone width.
-- A theme drives the whole look: colour, type, spacing, corners and the fonts. See
+- The look is the JA design system: the page inlines its CSS and uses its components. See
   [Themes](#themes).
 
 ## Limits
@@ -152,7 +152,7 @@ exactly what it does.
   ask the agent to search again.
 - **Old pages are deleted.** Galleries older than 7 days are removed the next time one is
   built, and also whenever the local server starts (only pages the gallery builder made; other
-  files in the folder are left alone). A three-image gallery is about 250 to 300 KB (about 180 KB of that is the embedded fonts), so a
+  files in the folder are left alone). A gallery page is about 60 KB plus its images, so a
   machine that stops using the plugin keeps only a few small files.
 
 The shutdown was tested on 2026-09-30 by starting the server with `--idle 60` and confirming
@@ -203,35 +203,21 @@ been tested. Some setups also accept the short `/envato-search`; try it and see.
 
 ## Themes
 
-The page look is not written into the script. It is read from a theme file, and the default is
-[themes/jason-armstrong.json](skills/envato-search-gallery/themes/jason-armstrong.json): Jason Armstrong's
-design system (JA). It is near-monochrome with a Forest green accent (coral is kept for errors and
-warnings), Hanken Grotesk and IBM Plex Mono, light and dark. The file is a bundled copy of the master
-theme, so the plugin works when installed alone.
+The page look is the JA design system (Jason Armstrong's), and the page has no values of its own. It
+inlines the skill's `tokens.css` and `components.css` and is written only in its components, so a change
+to the skill reaches the gallery on the next build.
 
-```bash
-python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme jason-armstrong
-python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --theme path/to/my-theme.json
-```
-
-- A `NAME.layout.json` beside the theme holds the gallery's own measures, roles and colours, which the
-  theme no longer carries. The builder merges it in; where both have a key, the theme wins and a warning
-  is printed.
-- `--theme NAME` loads `themes/NAME.json`; `--theme PATH` loads a theme file from anywhere. A
-  missing or incomplete theme stops with a message that names what is missing.
-- The fonts are embedded in each page as base64 (about 180 KB), so a page needs no network and
-  looks the same offline. The latin and latin-extended subsets are included (Western and Central
-  European); other scripts, such as Thai, fall back to the system font.
-- The fonts are under the SIL Open Font Licence. Their licence texts are in
-  [fonts/](skills/envato-search-gallery/fonts/).
-- A theme can carry a brand logo (`brand` in the theme file: a path to an SVG or PNG, its height,
-  above the title or top left, and an optional dark-mode version). The bundled theme sets the JA
-  mark, which shows above the title.
-- A theme must have `schema_version` 3. Any other version stops with a message.
-- The master theme is designed and changed with the
-  [design-system-creator](https://github.com/jason-armstrong-72/design-system-creator) plugin.
-  Check that the bundled copy is up to date with `python3 skills/envato-search-gallery/scripts/check_theme_sync.py`;
-  refresh it with `--update`. [themes/README.md](themes/README.md) has the details.
+- The skill is read from `$JA_SKILL` if that is set, else `~/.claude/skills/jason-armstrong-design-system`.
+  If that folder or either CSS file is missing, the build uses the bundled copy in
+  [themes/ja/](skills/envato-search-gallery/themes/ja/), so the plugin works when installed alone. Each
+  build prints one line saying which it used.
+- The fonts (Hanken Grotesk and IBM Plex Mono) are linked from Google Fonts, as the skill's recipe does. A
+  page opened offline falls back to the system fonts.
+- The brand logo, its alt text, height and placement come from the skill's `theme.json`. The bundled
+  copy carries the JA mark (light and dark), which shows above the title.
+- Check that the bundled copy is in step with the skill with
+  `python3 skills/envato-search-gallery/scripts/check_theme_sync.py`; refresh it with `--update`.
+  [themes/README.md](themes/README.md) has the details.
 - The look before the JA theme is kept at the git tag `classic-look`
   (`git show classic-look:skills/envato-search-gallery/scripts/build_gallery.py`).
 
@@ -241,27 +227,28 @@ python3 skills/envato-search-gallery/scripts/build_gallery.py results.json --the
 commands/envato-search.md      the /envato-search-gallery:envato-search command
 skills/envato-search-gallery/
   SKILL.md                     what the agent does, step by step
-  scripts/build_gallery.py     results JSON in, self-contained HTML out (stdlib only)
+  scripts/build_gallery.py     results JSON in, one HTML file out (stdlib only)
   scripts/gallery_server.py    shared local server for the pages, exits when idle
-  scripts/check_theme_sync.py  checks the bundled theme against the master, and refreshes it
-  themes/jason-armstrong.json  the default look: colour, type, spacing, shape, fonts
-  themes/jason-armstrong.layout.json  the gallery's own measures, roles and colours (not in the theme)
-  themes/assets/               the JA mark (light and dark)
-  fonts/                       the theme's font files (woff2) and their licences
+  scripts/check_theme_sync.py  checks the bundled JA copy against the installed skill, and refreshes it
+  themes/ja/                   the bundled fallback copy of the JA skill: tokens.css, components.css,
+                               GENERATED, theme.json and the logo files (no values of its own)
   references/filters.json      filters per asset type, from the MCP tool schemas
   references/example-input.json   the input shape, with a placeholder signature (cannot build)
   references/offline-input.json    a working input that uses local placeholder images, no network
   references/offline-images/       plain grey SVGs for the offline input
 tests/                         unit tests (python3 -m unittest discover -s tests)
-themes/                        theme README: where the look comes from and how to refresh the copy
+themes/                        theme README: where the look comes from and how to refresh the bundled copy
 ```
 
 ## Notes for maintainers
 
 - Tests: `python3 -m unittest discover -s tests` from the repo root. They build a gallery from
   `references/offline-input.json` (local placeholder images, so no network or Envato account) and check
-  the title, one card per item, the theme's colours and fonts, and that the page writes only the type and
-  spacing custom properties its own CSS reads. An `img` that is a local path or `file://` URL is read from
+  the title, one card per item, that the page inlines the JA skill's `tokens.css` and `components.css`
+  verbatim, uses the media and lightbox components, links the two fonts and carries no CSS of its own
+  beyond the recipe's body rules and two justified rules, and that the bundled fallback works when
+  `$JA_SKILL` points at a missing folder. Run them with `JA_SKILL` set to a real skill and again with it
+  pointing nowhere. An `img` that is a local path or `file://` URL is read from
   disk; a relative path is taken from the input file's folder.
 - Preview URLs are signed. Truncating one (dropping the trailing `&s=` token) makes the CDN
   answer "Wrong signature"; the script reports that case in plain words.

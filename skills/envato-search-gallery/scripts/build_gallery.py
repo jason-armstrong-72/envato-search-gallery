@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Build a self-contained HTML gallery from Envato MCP search results.
+"""Build an HTML gallery from Envato MCP search results, styled by the JA design system skill.
 
 Usage:
-    build_gallery.py results.json [--out PATH] [--theme NAME|PATH] [--open] [--no-serve]
+    build_gallery.py results.json [--out PATH] [--open] [--no-serve]
     build_gallery.py - < results.json
 
 By default the page is written to ~/.cache/envato-gallery and served by a small local server
@@ -24,19 +24,17 @@ Input JSON:
 
 Each `img` must be the FULL signed URL from the search result, including the trailing
 `&s=` signature. A truncated URL makes the CDN answer "Wrong signature". Previews are
-downloaded here and embedded as base64, so the output file opens offline and needs no
-network, account or server. An `img` that is a local path (relative to the input file) or a file://
-URL is read from disk instead, which is how references/offline-input.json builds with no network.
+downloaded here and embedded as base64, so the page needs no server once it is built. An `img` that is a
+local path (relative to the input file) or a file:// URL is read from disk instead, which is how
+references/offline-input.json builds with no network.
 
-The look comes from a theme file (default: themes/jason-armstrong.json next to this script's
-folder, a bundled copy of Jason Armstrong's master theme, schema version 3). Colours, type,
-spacing, shape and fonts are all read from it, and the fonts are embedded as base64, so a theme
-needs no network either. The gallery's own measures, roles and colours (the ones the theme no longer
-holds) are in <theme name>.layout.json beside the theme and are merged into it. When the default theme is used and the master theme is found on this
-machine, a one-line warning is printed if the bundled copy is behind it
-(see check_theme_sync.py). Pass --theme NAME for another file in themes/, or
---theme PATH for a theme file anywhere. The page follows the display's light or dark setting and
-has a Light, Dark and System switch.
+The look is the JA design system and nothing else: the page inlines the skill's tokens.css and
+components.css and is written in its components (ds-page, ds-media-grid, ds-lightbox and so on). The
+skill is read from $JA_SKILL if that is set, else ~/.claude/skills/jason-armstrong-design-system. If that
+folder or either CSS file is missing, the bundled copy in themes/ja/ is used instead (see
+check_theme_sync.py), and the build prints one line saying which. The two Google Fonts links, the brand
+logo, its alt text, height and placement come from the same folder's theme.json. The page follows the
+display's light or dark setting and has a Light, Dark and System switch.
 
 Standard library only.
 """
@@ -46,23 +44,22 @@ import html
 import json
 import re
 import sys
-import time
 import urllib.error
 import urllib.request
 import webbrowser
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import check_theme_sync
 import gallery_server
 
 KEEP_DAYS = 7
 SKILL_DIR = Path(__file__).resolve().parent.parent
 FILTERS_PATH = SKILL_DIR / "references" / "filters.json"
-THEMES_DIR = SKILL_DIR / "themes"
-DEFAULT_THEME = "jason-armstrong"
-SCHEMA_VERSION = 3
-LAYOUT_SECTIONS = ("colour", "type", "spacing_and_shape")
+BUNDLED_DIR = check_theme_sync.BUNDLED
 USER_AGENT = "Mozilla/5.0 (envato-search-gallery)"
+MIME = {".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
+        ".webp": "image/webp"}
 
 
 def read_local_image(url, base):
@@ -116,6 +113,7 @@ def load_filters(asset_type):
 
 
 def filters_panel(asset_type, applied):
+    """The filters available for the asset type, as a ds-card holding a ds-accordion of details."""
     available = load_filters(asset_type)
     if not available:
         return ""
@@ -124,473 +122,218 @@ def filters_panel(asset_type, applied):
         is_applied = name in applied
         if isinstance(values, list):
             chips = "".join(
-                '<span class="chip{}">{}</span>'.format(
-                    " on" if is_applied and str(applied[name]) == v else "", html.escape(v)
+                '<span class="ds-chip{}">{}</span>'.format(
+                    " is-selected" if is_applied and str(applied[name]) == v else "", html.escape(v)
                 )
                 for v in values
             )
-            body = f'<div class="chips">{chips}</div>'
+            body = f'<div class="ds-row">{chips}</div>'
         else:
-            body = f'<div class="note">{html.escape(str(values))}</div>'
+            body = f'<p class="ds-help">{html.escape(str(values))}</p>'
         mark = " &middot; applied" if is_applied else ""
         rows.append(
             f'<details{" open" if is_applied else ""}><summary>{html.escape(name)}{mark}</summary>{body}</details>'
         )
     return (
-        '<section class="filters"><h2>Filters available for {}</h2>{}</section>'.format(
-            html.escape(asset_type), "".join(rows)
-        )
+        '<section class="ds-section"><div class="ds-card"><h2>Filters available for {}</h2>'
+        '<div class="ds-accordion">{}</div></div></section>'.format(html.escape(asset_type), "".join(rows))
     )
 
 
+# ---- the JA design system ---------------------------------------------------------------------
 
-# ---- theme ------------------------------------------------------------------------------------
+def resolve_source():
+    """Pick where the design system is read from. Returns (folder, one line saying which).
 
-REQUIRED_ROLES = ["display", "title", "eyebrow", "meta", "author", "label", "option", "button"]
-REQUIRED_COLOURS = ["bg", "surface", "border", "ink", "muted", "accent", "accent-text", "error", "warning",
-                    "btn-bg", "btn-ink", "btn-arrow", "focus", "lb-bg"]
-REQUIRED_SPACING = ["pagex", "pagetop", "pagebot", "maxw", "hgap", "hmb", "fpadx", "fpady", "fgapy",
-                    "fgapx", "fmb", "chipgap", "chipx", "chipy", "gridgap", "cardmin", "cpadt", "cpadx",
-                    "cpadb", "cgap", "btnx", "btny", "btngap", "footmt", "footpt", "rcard", "rchip", "rbtn"]
-
-
-def available_themes():
-    return sorted(p.stem for p in THEMES_DIR.glob("*.json") if not p.name.endswith(".layout.json"))
-
-
-def load_theme(name):
-    """Load a theme by name (a file in themes/) or by path, and check it has what the page needs."""
-    path = Path(name)
-    if not (path.suffix == ".json" or "/" in name or "\\" in name):
-        path = THEMES_DIR / f"{name}.json"
-    try:
-        theme = json.loads(path.read_text(encoding="utf-8"))
-    except OSError:
-        sys.exit(f"error: theme not found: {path}\navailable themes: {', '.join(available_themes()) or 'none'}")
-    except ValueError as exc:
-        sys.exit(f"error: theme {path} is not valid JSON: {exc}")
-    if theme.get("schema_version") != SCHEMA_VERSION:
-        sys.exit(
-            f"error: theme {path.name} has schema_version {theme.get('schema_version')!r}; "
-            f"this builder reads schema_version {SCHEMA_VERSION}"
-        )
-    merge_layout(theme, path)
-    missing = (
-        [f"type.{r}" for r in REQUIRED_ROLES if r not in theme.get("type", {})]
-        + [f"colour.{c}" for c in REQUIRED_COLOURS if c not in theme.get("colour", {})]
-        + [f"spacing_and_shape.{k}" for k in REQUIRED_SPACING if k not in theme.get("spacing_and_shape", {})]
-        + [k for k in ("sans", "mono") if k not in theme.get("fonts", {})]
-    )
-    if missing:
-        sys.exit(f"error: theme {path.name} is missing: {', '.join(missing)}")
-    return theme
-
-
-def merge_layout(theme, theme_path):
-    """Add the gallery's own values from <theme name>.layout.json beside the theme, if there is one.
-
-    The layout file has the same shapes as the theme's colour, type and spacing_and_shape sections. It
-    only adds keys: where the theme has the same key, the theme wins and a warning is printed.
+    The live skill ($JA_SKILL, else ~/.claude/skills/jason-armstrong-design-system) is used when both
+    tokens.css and components.css are there. Otherwise the bundled copy in themes/ja/ is.
     """
-    layout_path = theme_path.with_name(theme_path.stem + ".layout.json")
-    if not layout_path.is_file():
-        return
-    try:
-        layout = json.loads(layout_path.read_text(encoding="utf-8"))
-    except (OSError, ValueError) as exc:
-        sys.exit(f"error: layout file {layout_path} could not be read: {exc}")
-    for section in LAYOUT_SECTIONS:
-        target = theme.setdefault(section, {})
-        for key, value in (layout.get(section) or {}).items():
-            if key in target:
-                print(f"warning: {layout_path.name} has {section}.{key}, which the theme also has; the theme's value is used",
-                      file=sys.stderr)
-            else:
-                target[key] = value
+    live = check_theme_sync.live_dir()
+    if check_theme_sync.live_usable(live):
+        ver = check_theme_sync.version_of(live)
+        return live, f"theme: JA skill at {live}" + (f" ({ver})" if ver else "")
+    if not check_theme_sync.live_usable(BUNDLED_DIR):
+        sys.exit(f"error: no tokens.css and components.css in the JA skill ({live}) or the bundled copy ({BUNDLED_DIR})")
+    ver = check_theme_sync.version_of(BUNDLED_DIR)
+    return BUNDLED_DIR, (f"theme: bundled copy in themes/ja" + (f" ({ver})" if ver else "")
+                         + f", because the JA skill is not usable at {live}")
 
 
-def font_faces(theme, base):
-    """@font-face rules with each listed file embedded as base64. A missing file is skipped."""
-    faces, notes = [], []
-    for entry in theme["fonts"].get("embed", []):
-        file = Path(base) / entry["file"]
+def read_theme_json(source):
+    """theme.json from the source folder, else from the bundled copy, else {}. Read for fonts and brand only."""
+    for folder in (source, BUNDLED_DIR):
         try:
-            data = base64.b64encode(file.read_bytes()).decode("ascii")
-        except OSError:
-            notes.append(f"font file not found, using the fallback font: {file}")
+            return json.loads((Path(folder) / "theme.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError):
             continue
-        rng = f'unicode-range:{entry["unicode_range"]};' if entry.get("unicode_range") else ""
-        faces.append(
-            '@font-face{font-family:"%s";font-style:normal;font-weight:%s;font-display:swap;%s'
-            'src:url(data:font/woff2;base64,%s) format("woff2")}' % (entry["family"], entry["weight"], rng, data)
-        )
-    return "\n".join(faces), notes
+    return {}
 
 
-def used_vars(css):
-    """The type properties and spacing keys the page's CSS actually reads.
-
-    `css` is the page template with its `@role` lines already expanded. Returns ({role: {"s", "w", ...}},
-    {spacing keys}), found by scanning for var(--t-<role>-<prop>) and var(--sp-<key>), so a new rule in the
-    template is picked up without a second list to keep in step.
-    """
-    type_props = {}
-    for role, prop in re.findall(r"var\(--t-(\w+)-(s|w|tr|lh)\)", css):
-        type_props.setdefault(role, set()).add(prop)
-    return type_props, set(re.findall(r"var\(--sp-(\w+)\)", css))
+def font_links(theme):
+    """The two Google Fonts <link> tags, from theme.json fonts.*.css_url, as the JA recipe has them."""
+    urls = [(theme.get("fonts") or {}).get(k, {}).get("css_url") for k in ("sans", "mono")]
+    return "\n".join(f'<link rel="stylesheet" href="{html.escape(u, quote=True)}">' for u in urls if u)
 
 
-def used_colours(css):
-    """The custom property names the page reads through var(--name), colours included.
-
-    `css` is the page template with its `@role` lines already expanded (the same input as used_vars()).
-    theme_vars() keeps only the colour variables whose names are in this set.
-    """
-    return set(re.findall(r"var\(--([\w-]+)", css))
-
-
-def theme_vars(theme, used=None, read=None):
-    """CSS custom properties for type, spacing, shape and both colour modes.
-
-    `used` is the result of used_vars(): only the type properties and spacing keys in it are written.
-    `read` is the result of used_colours(): only the colour variables in it (or reached from one that is,
-    through a var() in its value) are written. With no `used` or no `read`, everything in the theme is written.
-    """
-    used_type, used_sp = used if used is not None else (None, None)
-    fonts = theme["fonts"]
-    lines = [
-        ':root{--font:"%s",%s;--mono:"%s",%s;'
-        % (fonts["sans"]["family"], fonts["sans"].get("fallback", "sans-serif"),
-           fonts["mono"]["family"], fonts["mono"].get("fallback", "monospace"))
-    ]
-    for role, v in theme["type"].items():
-        decls = {"s": f'{v["size_px"]}px', "w": str(v["weight"]), "tr": f'{v["tracking_em"]}em',
-                 "lh": str(v["line_height"])}
-        text = "".join(f"--t-{role}-{p}:{x};" for p, x in decls.items()
-                       if used_type is None or p in used_type.get(role, ()))
-        if text:
-            lines.append(text)
-    for key, v in theme["spacing_and_shape"].items():
-        if used_sp is None or key in used_sp:
-            lines.append(f"--sp-{key}:{v['px']}px;")
-    c = theme["colour"]
-    names = ["bg", "surface", "border", "ink", "muted", "accent", "accent-text", "error", "warning",
-             "btn-bg", "btn-ink", "btn-arrow", "focus", "lb-bg"]
-    # the lightbox is dark in both modes, so its link, ink and muted use the dark-mode value in either
-    on_dark = {"accent-on-dark": "accent", "ink-on-dark": "ink", "muted-on-dark": "muted"}
-    keep = None
-    if read is not None:
-        keep = set(read)
-        grew = True
-        while grew:  # a value that is itself var(--other) keeps that one too
-            grew = False
-            for n in list(keep):
-                for mode in ("light", "dark"):
-                    for dep in re.findall(r"var\(--([\w-]+)", str(c.get(on_dark.get(n, n), {}).get(mode, ""))):
-                        if dep not in keep:
-                            keep.add(dep)
-                            grew = True
-    wanted = lambda n: keep is None or n in keep
-    for name, src in on_dark.items():
-        if wanted(name):
-            lines.append(f"--{name}:{c[src]['dark']};")
-    lines.append("}")
-
-    def colours(mode):
-        # the lightbox has no panel and shows captions straight on the backdrop, so the layout file gives it
-        # the same dark backdrop in both modes
-        return "".join(f"--{n}:{c[n][mode]};" for n in names if wanted(n)) + f"color-scheme:{mode};"
-
-    light, dark = colours("light"), colours("dark")
-    lines.append(f':root,:root[data-theme="light"]{{{light}}}')
-    lines.append(f':root[data-theme="dark"]{{{dark}}}')
-    # without JavaScript the page still follows the display setting
-    lines.append(f"@media (prefers-color-scheme:dark){{:root:not([data-theme]){{{dark}}}}}")
-    small = small_screen_sizes(theme)
-    if used_type is not None:
-        small = {role: px for role, px in small.items() if "s" in used_type.get(role, ())}
-    if small:
-        rules = "".join(f"--t-{role}-s:{px}px;" for role, px in small.items())
-        # a phone held sideways is wider than max_width_px, so a short touch screen counts as small too
-        width = theme["small_screen"]["max_width_px"]
-        lines.append(
-            f"@media (max-width:{width}px),(pointer:coarse) and (max-height:{width}px){{:root{{{rules}}}}}"
-        )
-    return "\n".join(lines)
-
-
-def small_screen_sizes(theme):
-    """Type sizes that change on a narrow screen: small ones grow, the largest come down to a cap.
-
-    The same two rules as the design-system-creator (its spec, section 3.8). A role listed under
-    small_screen.roles is set outright. Returns {role: px} for the roles that change.
-    """
-    ss = theme.get("small_screen")
-    if not ss:
-        return {}
-    out = {}
-    for role, spec in theme["type"].items():
-        size = spec["size_px"]
-        if size < ss["grow_below_px"]:
-            new = size + ss["grow_by_px"]
-        elif size > ss["cap_px"]:
-            new = ss["cap_px"]
-        else:
-            new = size
-        new = ss.get("roles", {}).get(role, {}).get("size_px", new)
-        if new != size:
-            out[role] = new
-    return out
-
-
-def expand_roles(css, theme):
-    """Turn `@role name;` into that type role's declarations. Mono roles are uppercase, except code."""
-    def one(match):
-        role = match.group(1)
-        spec = theme["type"][role]
-        family = "var(--mono)" if spec.get("family") == "mono" else "var(--font)"
-        out = (
-            f"font-family:{family};font-size:var(--t-{role}-s);font-weight:var(--t-{role}-w);"
-            f"letter-spacing:var(--t-{role}-tr);line-height:var(--t-{role}-lh);"
-        )
-        if spec.get("family") == "mono" and role != "code":
-            out += "text-transform:uppercase;"
-        return out
-
-    return re.sub(r"@role (\w+);", one, css)
-
-
-
-MIME = {".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
-        ".webp": "image/webp"}
-
-
-def brand_parts(theme, base):
-    """The brand mark for the page, or nothing. Returns (html, css_vars, notes). The logo files are
-    embedded as base64, like the fonts. A theme with no logo, or a missing file, shows no mark."""
-    brand = theme.get("brand") or {}
-    notes = []
-
-    def data_uri(name):
-        if not name:
-            return None
-        path = Path(name)
-        path = path if path.is_absolute() else Path(base) / path
-        mime = MIME.get(path.suffix.lower())
+def logo_uri(rel, source):
+    """A logo file as a data URI, from the source folder, else the bundled copy. None when not found."""
+    if not rel:
+        return None
+    mime = MIME.get(Path(rel).suffix.lower())
+    if not mime:
+        return None
+    for folder in (source, BUNDLED_DIR):
         try:
-            if not mime:
-                raise ValueError(f"unsupported logo type {path.suffix or '(none)'}")
-            return f"data:{mime};base64,{base64.b64encode(path.read_bytes()).decode('ascii')}"
-        except (OSError, ValueError) as exc:
-            notes.append(f"logo not used: {exc} ({name})")
-            return None
+            return f"data:{mime};base64,{base64.b64encode((Path(folder) / rel).read_bytes()).decode('ascii')}"
+        except OSError:
+            continue
+    return None
 
-    light = data_uri(brand.get("logo"))
+
+def brand_parts(theme, source):
+    """The brand mark as (html, placement), or ("", "above") when there is none.
+
+    Markup is the recipe's ds-brand with a light and a dark image; alt text, height and placement
+    ("above" or "topleft") come from theme.json brand.
+    """
+    brand = theme.get("brand") or {}
+    light = logo_uri(brand.get("logo"), source)
     if not light:
-        return "", "", notes
-    dark = data_uri(brand.get("logo_dark"))
-    place = brand.get("placement", "above")
-    place = place if place in ("above", "topleft") else "above"
+        return "", "above"
+    dark = logo_uri(brand.get("logo_dark"), source)
     alt = html.escape(brand.get("alt", ""), quote=True)
-    classes = f"brand {place}" + (" has-dark" if dark else "") + (" inv" if brand.get("invert_in_dark") else "")
-    imgs = f'<img class="lg lg-light" src="{light}" alt="{alt}">'
-    if dark:
-        imgs += f'<img class="lg lg-dark" src="{dark}" alt="{alt}">'
     height = int(brand.get("height_px", 28))
-    return f'<div class="{classes}">{imgs}</div>', f":root{{--brand-h:{height}px}}", notes
+    imgs = f'<img class="ds-brand-light" src="{light}" alt="{alt}" height="{height}">'
+    if dark:
+        imgs += f'<img class="ds-brand-dark" src="{dark}" alt="{alt}" height="{height}">'
+    place = brand.get("placement", "above")
+    return f'<span class="ds-brand">{imgs}</span>', place if place in ("above", "topleft") else "above"
 
 
+# The recipe's body rules, then two rules JA cannot express: it has no muted-text class, so the
+# header line and the footer take --muted this way, and the <strong> counts go back to ink.
+PAGE_CSS = """body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--t-body-f);
+  font-size: var(--t-body-s);
+  font-weight: var(--t-body-w);
+  line-height: var(--t-body-lh);
+}
+h1, h2, h3, h4, p { margin: 0; }
+.t-display, .ds-prose h1 { overflow-wrap: anywhere; }
+/* JA has no muted-text class: the results line and the footer use the muted token */
+.gallery-muted { color: var(--muted); }
+.gallery-muted strong { color: var(--ink); font-weight: inherit; }
+"""
+
+# A section's content starts at the page padding: nothing here sets a width, gap or size.
 TEMPLATE = r"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Envato results: __TITLE__</title>
-<style>
-__FONT_FACES__
-__THEME_VARS__
-  *{box-sizing:border-box}
-  /* stop phones enlarging some text blocks by themselves when held sideways */
-  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-weight:var(--t-title-w);
-       padding:32px var(--sp-pagex) var(--sp-pagebot)}
-  header,.filters,.grid,footer{max-width:var(--sp-maxw);margin-inline:auto}
-  header{display:flex;flex-direction:column;gap:var(--sp-hgap);margin-bottom:var(--sp-hmb);padding-top:var(--sp-pagetop)}
-  .eyebrow{@role eyebrow;color:var(--accent-text)}
-  .eyebrow::before{content:"_01 "}
-  /* the theme sets the size (desktop and small screen); fitTitle() below only shrinks it when one word
-     is too long for the line, and a word may break only if it still cannot fit at the smallest size */
-  h1{margin:0;@role display;max-width:16ch;text-wrap:balance;overflow-wrap:anywhere;color:var(--ink)}
-  .meta{@role meta;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 14px}
-  .meta strong{color:var(--ink);font-weight:inherit}
-  .filters{background:var(--surface);border:1px solid var(--border);border-radius:var(--sp-rcard);
-           padding:var(--sp-fpady) var(--sp-fpadx);margin-bottom:var(--sp-fmb);display:flex;flex-wrap:wrap;
-           gap:var(--sp-fgapy) var(--sp-fgapx)}
-  .filters h2{flex-basis:100%;margin:0 0 4px;@role label;color:var(--muted)}
-  details{min-width:0}
-  details[open]{flex-basis:100%}
-  summary{@role option;cursor:pointer;padding:4px 0;min-height:24px;color:var(--accent-text);transition:color .14s ease}
-  /* our own open/closed arrow: the browser's marker disappears when summary is a flex row (touch sizes) */
-  summary{list-style:none}
-  summary::-webkit-details-marker{display:none}
-  summary::before{content:"\25B8";display:inline-block;width:1.2em}
-  details[open]>summary::before{content:"\25BE"}
-  summary:focus-visible{color:var(--ink)}
-  summary:active{color:var(--accent-text);text-decoration:underline}
-  summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-  .chips{display:flex;flex-wrap:wrap;gap:var(--sp-chipgap);padding:4px 0 10px}
-  .chip{@role label;padding:var(--sp-chipy) var(--sp-chipx);border:1px solid var(--border);
-        border-radius:var(--sp-rchip);color:var(--muted)}
-  .chip.on{background:var(--btn-bg);border-color:var(--btn-bg);color:var(--btn-ink)}
-  .note{@role label;color:var(--muted);padding:2px 0 10px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--sp-cardmin),1fr));gap:var(--sp-gridgap)}
-  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--sp-rcard);overflow:hidden;
-        display:flex;flex-direction:column;min-width:0}
-  .thumb{all:unset;display:block;cursor:zoom-in;position:relative}
-  .thumb:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
-  .thumb img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--border)}
-  .card-body{padding:var(--sp-cpadt) var(--sp-cpadx) var(--sp-cpadb);display:flex;flex-direction:column;
-             gap:var(--sp-cgap);flex:1}
-  .card-title{@role title;color:var(--ink);overflow-wrap:anywhere}
-  .card-author{@role author;color:var(--muted)}
-  .card-link,.lb-link{@role button;display:flex;align-items:center;justify-content:space-between;gap:var(--sp-btngap);
-       text-decoration:none;transition:background-color .14s ease,color .14s ease}
-  .card-link{margin-top:auto;align-self:stretch;padding:var(--sp-btny) var(--sp-btnx);border-radius:var(--sp-rbtn);
-       background:transparent;color:var(--btn-bg);box-shadow:inset 0 0 0 1px var(--btn-bg)}
-  .card-link::after,.lb-link::after{content:"\2197";color:var(--btn-arrow)}
-  .card-link:focus-visible{background:var(--btn-bg);color:var(--btn-ink)}
-  .card-link:active{background:color-mix(in srgb,var(--btn-bg) 82%,var(--bg));color:var(--btn-ink)}
-  .card-link:focus-visible,.lb-link:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-  .lb{position:fixed;inset:0;background:var(--lb-bg);display:none;align-items:center;justify-content:center;
-      flex-direction:column;gap:14px;padding:24px 16px;z-index:10}
-  .lb[data-open="true"]{display:flex}
-  .lb img{max-width:min(96vw,1200px);max-height:74vh;border-radius:var(--sp-rcard);background:var(--border)}
-  .lb-cap{color:var(--ink-on-dark);text-align:center;max-width:720px;display:flex;flex-direction:column;gap:6px;align-items:center}
-  .lb-title{@role title;color:var(--ink-on-dark)}
-  .lb-author{@role author;color:var(--muted-on-dark)}
-  .lb-link{color:var(--accent-on-dark);margin:0;gap:8px}
-  .lb button{all:unset;cursor:pointer;color:var(--ink-on-dark);font-size:28px;line-height:1;padding:10px 14px;
-             border-radius:var(--sp-rbtn);background:rgba(255,255,255,.1);position:absolute;min-width:44px;min-height:44px;
-             display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box}
-  .lb button:focus-visible{outline:2px solid var(--ink-on-dark);outline-offset:2px}
-  .lb .lb-close{top:14px;right:14px}
-  .lb .lb-prev{left:12px;top:50%;transform:translateY(-50%)}
-  .lb .lb-next{right:12px;top:50%;transform:translateY(-50%)}
-  footer{@role label;color:var(--muted);margin-top:var(--sp-footmt);padding-top:var(--sp-footpt);border-top:1px solid var(--border)}
-  .brand{display:flex;align-items:center}
-  .brand img{height:var(--brand-h);width:auto;display:block}
-  .brand.above{margin-bottom:8px}
-  .brand.topleft{position:fixed;z-index:5;left:var(--sp-pagex);top:calc(14px + (38px - var(--brand-h)) / 2)}
-  .brand .lg-dark{display:none}
-  :root[data-theme="dark"] .brand.has-dark .lg-light{display:none}
-  :root[data-theme="dark"] .brand.has-dark .lg-dark{display:block}
-  :root[data-theme="dark"] .brand.inv .lg-light{filter:invert(1)}
-  .themebar{position:fixed;top:14px;right:20px;z-index:5;display:flex;gap:2px;padding:3px;background:var(--bg);
-            border:1px solid var(--border);border-radius:var(--sp-rbtn)}
-  .themebar button{all:unset;box-sizing:border-box;cursor:pointer;width:32px;height:30px;display:inline-flex;
-                   align-items:center;justify-content:center;color:var(--muted);border-radius:var(--sp-rbtn);
-                   transition:color .14s ease}
-  .themebar button svg{width:16px;height:16px;display:block}
-  .themebar button[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-ink)}
-  .themebar button:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
-  /* hover styles only where the device can hover: on touch, :hover sticks to the last thing tapped */
-  @media (hover:hover){
-    summary:hover:not(:active){color:var(--ink)}
-    .card-link:hover:not(:active){background:var(--btn-bg);color:var(--btn-ink)}
-    .lb button:hover{background:rgba(255,255,255,.22)}
-    .themebar button:not([aria-pressed="true"]):hover{color:var(--accent-text)}
-  }
-  @media (pointer:coarse){
-    .card-link,summary,.themebar button{min-height:44px}
-    .themebar button{min-width:44px}
-    summary{display:flex;align-items:center}
-  }
-  @media (prefers-reduced-motion:no-preference){.lb[data-open="true"]{animation:fade .12s ease-out}}
-  @keyframes fade{from{opacity:0}}
-</style>
-<script>
-  (function () {
-    var mode = 'system';
-    try { var saved = localStorage.getItem('gallery-mode'); if (saved === 'light' || saved === 'dark' || saved === 'system') mode = saved; } catch (e) {}
-    var root = document.documentElement;
-    root.dataset.mode = mode;
-    root.dataset.theme = mode === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : mode;
-  })();
-</script>
+__FONT_LINKS__
+<style>__CSS__</style>
 </head>
 <body>
-<div class="themebar" role="group" aria-label="Colour mode">
-  <button type="button" data-mode="light" aria-pressed="false" aria-label="Light" title="Light"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12,2v2M12,20v2M4,12h-2M6.3,6.3l-1.4-1.4M17.7,6.3l1.4-1.4M6.3,17.7l-1.4,1.4M17.7,17.7l1.4,1.4M22,12h-2M17,12c0,2.8-2.2,5-5,5s-5-2.2-5-5,2.2-5,5-5,5,2.2,5,5Z"/></svg></button>
-  <button type="button" data-mode="dark" aria-pressed="false" aria-label="Dark" title="Dark"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.5" d="M22,13c-1.4,2.4-4,4-7,4-4.4,0-8-3.6-8-8s1.6-5.6,4-7C6,2.5,2,6.8,2,12s4.5,10,10,10,9.5-4,10-9Z"/></svg></button>
-  <button type="button" data-mode="system" aria-pressed="false" aria-label="System, follow the display setting" title="System"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 21H16M12 17V21M4 5C4 4.06812 4 3.60218 4.15224 3.23463C4.35523 2.74458 4.74458 2.35523 5.23463 2.15224C5.60218 2 6.06812 2 7 2H17C17.9319 2 18.3978 2 18.7654 2.15224C19.2554 2.35523 19.6448 2.74458 19.8478 3.23463C20 3.60218 20 4.06812 20 5V13C20 13.9319 20 14.3978 19.8478 14.7654C19.6448 15.2554 19.2554 15.6448 18.7654 15.8478C18.3978 16 17.9319 16 17 16H7C6.06812 16 5.60218 16 5.23463 15.8478C4.74458 15.6448 4.35523 15.2554 4.15224 14.7654C4 14.3978 4 13.9319 4 13V5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-</div>
-<header>
-__BRAND__
-  <div class="eyebrow">Envato Elements &middot; __ASSET_TYPE__</div>
-  <h1>&ldquo;__QUERY__&rdquo;</h1>
-  <div class="meta">
-    <span><strong>__COUNT__</strong> results</span>
-    <span>sorted by <strong>__SORT__</strong></span>
-    <span>__APPLIED__</span>
-  </div>
-</header>
-__FILTERS__
-<div class="grid" id="grid"></div>
-<footer>
-  Watermarked previews for review only. Click an image to enlarge it, then use &ldquo;View on Envato&rdquo;
-  to license and download the original on elements.envato.com. Unofficial tool; not affiliated with Envato.
-</footer>
+<main class="ds-page ds-stack is-loose">
+  <header class="ds-row is-between">
+    __BRAND_TOPLEFT__<div class="ds-theme-switch" role="group" aria-label="Colour mode">
+      <button type="button" data-mode="light" aria-pressed="false" aria-label="Light" title="Light"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.05 1.05M11.9 11.9l1.05 1.05M12.95 3.05L11.9 4.1M4.1 11.9l-1.05 1.05"/></svg></button>
+      <button type="button" data-mode="dark" aria-pressed="false" aria-label="Dark" title="Dark"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 9.5A5.5 5.5 0 0 1 6.5 2.5a5.5 5.5 0 1 0 7 7z"/></svg></button>
+      <button type="button" data-mode="system" aria-pressed="true" aria-label="System" title="System"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.75" y="2.5" width="12.5" height="8.5" rx="1"/><path d="M8 11v2.5M5 13.5h6"/></svg></button>
+    </div>
+  </header>
+  <section class="ds-section ds-stack is-loose">
+    __BRAND_ABOVE__<div class="ds-stack is-tight">
+      <p class="t-eyebrow">Envato Elements &middot; __ASSET_TYPE__</p>
+      <h1 class="t-display">&ldquo;__QUERY__&rdquo;</h1>
+      <div class="ds-row t-label gallery-muted">
+        <span><strong>__COUNT__</strong> results</span>
+        <span>sorted by <strong>__SORT__</strong></span>
+        <span>__APPLIED__</span>
+      </div>
+    </div>
+  </section>
+  __FILTERS__
+  <section class="ds-section">
+    <div class="ds-media-grid" id="grid"></div>
+  </section>
+  <footer class="ds-section">
+    <p class="t-caption gallery-muted">Watermarked previews for review only. Click an image to enlarge it, then use &ldquo;View on Envato&rdquo;
+    to license and download the original on elements.envato.com. Unofficial tool; not affiliated with Envato.</p>
+  </footer>
+</main>
 
-<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image preview" data-open="false">
-  <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
-  <button class="lb-prev" id="lbPrev" aria-label="Previous image">&lsaquo;</button>
-  <img id="lbImg" alt="">
-  <div class="lb-cap">
-    <div class="lb-title" id="lbTitle"></div>
-    <div class="lb-author" id="lbAuthor"></div>
-    <a class="lb-link" id="lbLink" target="_blank" rel="noopener">View on Envato</a>
-  </div>
-  <button class="lb-next" id="lbNext" aria-label="Next image">&rsaquo;</button>
+<div class="ds-lightbox" id="lb" role="dialog" aria-modal="true" aria-label="Image preview">
+  <button type="button" class="ds-icon-btn ds-lightbox-close" id="lbClose" aria-label="Close"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+  <button type="button" class="ds-icon-btn ds-lightbox-prev" id="lbPrev" aria-label="Previous image"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.5L5.5 8l4.5 4.5"/></svg></button>
+  <figure class="ds-lightbox-figure">
+    <img id="lbImg" alt="">
+    <figcaption>
+      <p class="ds-media-title" id="lbTitle"></p>
+      <p class="ds-media-meta" id="lbAuthor"></p>
+      <a class="ds-btn" id="lbLink" target="_blank" rel="noopener">View on Envato</a>
+    </figcaption>
+  </figure>
+  <button type="button" class="ds-icon-btn ds-lightbox-next" id="lbNext" aria-label="Next image"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg></button>
 </div>
 
 <script type="application/json" id="data">__DATA__</script>
 <script>
   (function () {
-    var root = document.documentElement, mq = matchMedia('(prefers-color-scheme: dark)');
-    var buttons = document.querySelectorAll('.themebar button');
-    function apply() {
-      var mode = root.dataset.mode;
-      root.dataset.theme = mode === 'system' ? (mq.matches ? 'dark' : 'light') : mode;
-      buttons.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.mode === mode); });
+    var root = document.documentElement;
+    var buttons = document.querySelectorAll(".ds-theme-switch button");
+    function apply(mode) {
+      if (mode === "light" || mode === "dark") {
+        root.setAttribute("data-theme", mode);
+      } else {
+        root.removeAttribute("data-theme");
+      }
+      Array.prototype.forEach.call(buttons, function (b) {
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-mode") === mode));
+      });
     }
-    buttons.forEach(function (b) {
-      b.addEventListener('click', function () {
-        root.dataset.mode = b.dataset.mode;
-        try { localStorage.setItem('gallery-mode', b.dataset.mode); } catch (e) {}
-        apply();
+    var saved = "system";
+    try { saved = localStorage.getItem("theme") || "system"; } catch (e) {}
+    apply(saved);
+    Array.prototype.forEach.call(buttons, function (b) {
+      b.addEventListener("click", function () {
+        var mode = b.getAttribute("data-mode");
+        apply(mode);
+        try { localStorage.setItem("theme", mode); } catch (e) {}
       });
     });
-    if (mq.addEventListener) mq.addEventListener('change', function () { if (root.dataset.mode === 'system') apply(); });
-    apply();
   })();
+</script>
+<script>
   var items = JSON.parse(document.getElementById('data').textContent);
   var grid = document.getElementById('grid');
   var lb = document.getElementById('lb'), lbImg = document.getElementById('lbImg');
   var current = -1, opener = null;
 
   items.forEach(function (it, i) {
-    var card = document.createElement('div'); card.className = 'card';
-    var thumb = document.createElement('button'); thumb.className = 'thumb'; thumb.type = 'button';
+    var card = document.createElement('figure'); card.className = 'ds-media-card';
+    var thumb = document.createElement('button'); thumb.className = 'ds-media-thumb'; thumb.type = 'button';
     thumb.setAttribute('aria-label', 'Enlarge: ' + it.title);
     var img = document.createElement('img'); img.src = it.src; img.alt = it.title; img.loading = 'lazy';
     thumb.appendChild(img);
     thumb.addEventListener('click', function () { openAt(i, thumb); });
-    var body = document.createElement('div'); body.className = 'card-body';
-    var t = document.createElement('div'); t.className = 'card-title'; t.textContent = it.title;
-    var a = document.createElement('div'); a.className = 'card-author'; a.textContent = it.author ? 'by ' + it.author : '';
-    var l = document.createElement('a'); l.className = 'card-link'; l.href = it.link; l.target = '_blank';
+    var cap = document.createElement('figcaption');
+    var t = document.createElement('p'); t.className = 'ds-media-title'; t.textContent = it.title;
+    cap.appendChild(t);
+    if (it.author) {
+      var a = document.createElement('p'); a.className = 'ds-media-meta'; a.textContent = 'By ' + it.author;
+      cap.appendChild(a);
+    }
+    var row = document.createElement('div'); row.className = 'ds-row';
+    var l = document.createElement('a'); l.className = 'ds-btn'; l.href = it.link; l.target = '_blank';
     l.rel = 'noopener'; l.textContent = 'View on Envato';
-    body.append(t, a, l); card.append(thumb, body); grid.appendChild(card);
+    row.appendChild(l); cap.appendChild(row);
+    card.append(thumb, cap); grid.appendChild(card);
   });
 
   function show(i) {
@@ -598,40 +341,54 @@ __FILTERS__
     var it = items[current];
     lbImg.src = it.src; lbImg.alt = it.title;
     document.getElementById('lbTitle').textContent = it.title;
-    document.getElementById('lbAuthor').textContent = it.author ? 'by ' + it.author : '';
+    var author = document.getElementById('lbAuthor');
+    author.textContent = it.author ? 'By ' + it.author : '';
+    author.hidden = !it.author;
     document.getElementById('lbLink').href = it.link;
   }
-  function openAt(i, from) { opener = from; show(i); lb.dataset.open = 'true'; document.getElementById('lbClose').focus(); }
-  function closeLb() { lb.dataset.open = 'false'; if (opener) opener.focus(); }
+  function isOpen() { return lb.classList.contains('is-open'); }
+  function openAt(i, from) { opener = from; show(i); lb.classList.add('is-open'); document.getElementById('lbClose').focus(); }
+  function closeLb() { lb.classList.remove('is-open'); if (opener) opener.focus(); }
   document.getElementById('lbClose').addEventListener('click', closeLb);
   document.getElementById('lbPrev').addEventListener('click', function () { show(current - 1); });
   document.getElementById('lbNext').addEventListener('click', function () { show(current + 1); });
   lb.addEventListener('click', function (e) { if (e.target === lb) closeLb(); });
   document.addEventListener('keydown', function (e) {
-    if (lb.dataset.open !== 'true') return;
+    if (!isOpen()) return;
     if (e.key === 'Escape') closeLb();
     else if (e.key === 'ArrowLeft') show(current - 1);
     else if (e.key === 'ArrowRight') show(current + 1);
   });
-
-// Title size: the theme's size is the guide. Shrink only when a single word is wider than the line,
-// one pixel at a time, down to a floor. Runs again when the fonts load and when the window resizes.
-(function(){
-  var h=document.querySelector('h1'); if(!h) return; var FLOOR=24;
-  function fitTitle(){
-    h.style.fontSize=''; h.style.overflowWrap='normal';
-    var size=parseFloat(getComputedStyle(h).fontSize);
-    while(h.scrollWidth>h.clientWidth+0.5 && size>FLOOR){ size-=1; h.style.fontSize=size+'px'; }
-    h.style.overflowWrap='';
-  }
-  fitTitle();
-  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fitTitle);
-  window.addEventListener('resize',fitTitle);
-})();
+</script>
+<script>
+  (function () {
+    var FLOOR = 24;
+    var titles = document.querySelectorAll(".t-display, .ds-prose h1");
+    function fit() {
+      Array.prototype.forEach.call(titles, function (h) {
+        h.style.fontSize = "";
+        h.style.overflowWrap = "normal";
+        var size = parseFloat(getComputedStyle(h).fontSize);
+        while (h.scrollWidth > h.clientWidth + 0.5 && size > FLOOR) {
+          size -= 1;
+          h.style.fontSize = size + "px";
+        }
+        h.style.overflowWrap = "";
+      });
+    }
+    fit();
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fit); }
+    window.addEventListener("resize", fit);
+  })();
 </script>
 </body>
 </html>
 """
+
+
+def fill(template, values):
+    """Replace each __NAME__ once, in one pass, so inserted text is never scanned for more names."""
+    return re.sub(r"__([A-Z_]+)__", lambda m: values.get(m.group(1), m.group(0)), template)
 
 
 def slug(text):
@@ -642,20 +399,18 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("input", help="results JSON file, or - for stdin")
     ap.add_argument("--out", help="output HTML path (default: the gallery cache folder, served locally)")
-    ap.add_argument("--theme", default=DEFAULT_THEME,
-                    help=f"look of the page: a name in themes/ ({', '.join(available_themes()) or 'none'}) "
-                         f"or a path to a theme .json (default: {DEFAULT_THEME})")
     ap.add_argument("--open", action="store_true", help="also open the page in the default browser")
     ap.add_argument("--no-serve", action="store_true", help="do not start the local server; print a file:// link")
     ap.add_argument("--no-open", action="store_true", help=argparse.SUPPRESS)  # old flag, now the default
     args = ap.parse_args()
 
-    theme = load_theme(args.theme)
-    if args.theme == DEFAULT_THEME:
-        import check_theme_sync  # quick local file compare; silent when there is no master
-        note = check_theme_sync.behind_note(THEMES_DIR / f"{DEFAULT_THEME}.json")
+    source, source_line = resolve_source()
+    print(source_line)
+    if source == BUNDLED_DIR:
+        # the live skill is not usable, but a partly present one can still be compared
+        note = check_theme_sync.behind_note()
         if note:
-            print(note, file=sys.stderr)
+            print(f"warning: {note}", file=sys.stderr)
     raw = sys.stdin.read() if args.input == "-" else Path(args.input).read_text()
     spec = json.loads(raw)
     input_base = Path.cwd() if args.input == "-" else Path(args.input).resolve().parent
@@ -694,30 +449,25 @@ def main():
     # "</" inside inline JSON would end the script tag early
     data_json = json.dumps(items, ensure_ascii=False).replace("</", "<\\/")
 
-    faces, font_notes = font_faces(theme, SKILL_DIR)
-    for note in font_notes:
-        print(f"note: {note}")
-    brand_html, brand_vars, brand_notes = brand_parts(theme, SKILL_DIR)
-    for note in brand_notes:
-        print(f"note: {note}")
-    # write only the custom properties the page's own CSS reads (the template, before any theme values go in)
-    page_css = expand_roles(TEMPLATE, theme)
-    used = used_vars(page_css)
-    template = (
-        TEMPLATE.replace("__FONT_FACES__", faces)
-        .replace("__THEME_VARS__", theme_vars(theme, used, used_colours(page_css)) + brand_vars)
-        .replace("__BRAND__", brand_html)
-    )
-    page = (
-        expand_roles(template, theme).replace("__TITLE__", html.escape(spec.get("query", "search")))
-        .replace("__QUERY__", html.escape(spec.get("query", "search")))
-        .replace("__ASSET_TYPE__", html.escape(asset_type))
-        .replace("__COUNT__", str(len(items)))
-        .replace("__SORT__", html.escape(spec.get("sort", "popular")))
-        .replace("__APPLIED__", html.escape(applied_text))
-        .replace("__FILTERS__", filters_panel(asset_type, applied))
-        .replace("__DATA__", data_json)
-    )
+    theme = read_theme_json(source)
+    brand_html, place = brand_parts(theme, source)
+    tokens = (source / "tokens.css").read_text(encoding="utf-8")
+    components = (source / "components.css").read_text(encoding="utf-8")
+    query = html.escape(spec.get("query", "search"))
+    page = fill(TEMPLATE, {
+        "TITLE": query,
+        "FONT_LINKS": font_links(theme),
+        "CSS": "\n" + tokens + "\n" + components + "\n" + PAGE_CSS,
+        "BRAND_TOPLEFT": brand_html if place == "topleft" else "",
+        "BRAND_ABOVE": brand_html if place == "above" else "",
+        "QUERY": query,
+        "ASSET_TYPE": html.escape(asset_type),
+        "COUNT": str(len(items)),
+        "SORT": html.escape(spec.get("sort", "popular")),
+        "APPLIED": html.escape(applied_text),
+        "FILTERS": filters_panel(asset_type, applied),
+        "DATA": data_json,
+    })
 
     cache = gallery_server.DEFAULT_DIR
     out = Path(args.out) if args.out else cache / f"{slug(spec.get('query', 'results'))}.html"
@@ -752,6 +502,7 @@ def prune(folder):
     files served from the same folder (option pages, for instance) are left alone.
     """
     return gallery_server.prune(folder)
+
 
 if __name__ == "__main__":
     main()

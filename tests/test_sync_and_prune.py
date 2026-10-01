@@ -1,7 +1,7 @@
-"""Tests for the theme sync check (logo files) and the server's start-up pruning.
+"""Tests for the JA copy sync check and the server's start-up pruning.
 
 Run from the repo root: python3 -m unittest discover -s tests
-Uses temporary folders only. It never touches ~/.cache/envato-gallery or the real master theme.
+Uses temporary folders only. It never touches ~/.cache/envato-gallery or the real JA skill.
 """
 import contextlib
 import io
@@ -23,100 +23,112 @@ import gallery_server  # noqa: E402
 DAY = 86400
 
 
-def theme(logo="themes/assets/mark.svg", logo_dark="themes/assets/mark-dark.svg", **brand):
-    return {
-        "name": "T", "version": "2.0.0", "colours": {"ink": "#000"},
-        "brand": dict({"logo": logo, "logo_dark": logo_dark}, **brand),
-        "sync": {"source": "x", "local_keys": ["sync", "brand.logo", "brand.logo_dark"]},
-    }
+def theme_json(logo="assets/m.svg", logo_dark="assets/md.svg"):
+    return json.dumps({"name": "T", "brand": {"logo": logo, "logo_dark": logo_dark}})
 
 
-class SyncLogos(unittest.TestCase):
+FILES = {
+    "tokens.css": ":root{--a:1}", "components.css": ".ds-x{color:var(--a)}",
+    "GENERATED": "generator: t\ntheme: t 1.0.0\n", "assets/m.svg": "<svg>m</svg>", "assets/md.svg": "<svg>md</svg>",
+}
+
+
+def write_skill(folder, files=FILES, **brand):
+    folder = Path(folder)
+    for rel, text in files.items():
+        (folder / rel).parent.mkdir(parents=True, exist_ok=True)
+        (folder / rel).write_text(text)
+    (folder / "theme.json").write_text(theme_json(**brand))
+
+
+class SyncFiles(unittest.TestCase):
+    """check_theme_sync compares themes/ja with the live skill, byte for byte."""
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         root = Path(self.tmp.name)
-        self.skill = root / "skill"
-        (self.skill / "themes" / "assets").mkdir(parents=True)
-        self.master_dir = root / "master"
-        (self.master_dir / "assets").mkdir(parents=True)
-        self.master = self.master_dir / "theme.json"
-        self.master.write_text(json.dumps(theme("assets/m.svg", "assets/md.svg")))
-        self.bundled = self.skill / "themes" / "jason-armstrong.json"
-        self.bundled.write_text(json.dumps(theme()))
-        for d, name in ((self.master_dir / "assets", "m.svg"), (self.master_dir / "assets", "md.svg")):
-            (d / name).write_text(f"<svg>{name}</svg>")
-        (self.skill / "themes" / "assets" / "mark.svg").write_text("<svg>m.svg</svg>")
-        (self.skill / "themes" / "assets" / "mark-dark.svg").write_text("<svg>md.svg</svg>")
-        self.old_skill = check_theme_sync.SKILL_DIR
-        check_theme_sync.SKILL_DIR = self.skill
-        self.old_env = os.environ.get("JA_THEME_MASTER")
-        os.environ["JA_THEME_MASTER"] = str(self.master)
+        self.live = root / "live"
+        self.bundled = root / "bundled"
+        write_skill(self.live)
+        write_skill(self.bundled)
+        self.old_env = os.environ.get("JA_SKILL")
+        os.environ["JA_SKILL"] = str(self.live)
 
     def tearDown(self):
-        check_theme_sync.SKILL_DIR = self.old_skill
         if self.old_env is None:
-            os.environ.pop("JA_THEME_MASTER", None)
+            os.environ.pop("JA_SKILL", None)
         else:
-            os.environ["JA_THEME_MASTER"] = self.old_env
+            os.environ["JA_SKILL"] = self.old_env
         self.tmp.cleanup()
 
     def run_main(self, *extra):
         out = io.StringIO()
-        argv = sys.argv
-        sys.argv = ["check_theme_sync.py", "--theme-file", str(self.bundled), *extra]
-        try:
-            with contextlib.redirect_stdout(out):
-                code = check_theme_sync.main()
-        finally:
-            sys.argv = argv
+        with contextlib.redirect_stdout(out):
+            code = check_theme_sync.main(["--bundled", str(self.bundled), *extra])
         return code, out.getvalue()
 
-    def test_identical_logos_in_step(self):
+    def test_identical_is_in_step(self):
         code, out = self.run_main()
         self.assertEqual(code, 0)
         self.assertIn("in step", out)
 
-    def test_differing_logo_is_behind_and_names_the_file(self):
-        (self.master_dir / "assets" / "md.svg").write_text("<svg>changed</svg>")
+    def test_each_differing_file_is_named_and_exits_1(self):
+        for rel in ("tokens.css", "components.css", "GENERATED", "theme.json", "assets/md.svg"):
+            with self.subTest(rel=rel):
+                write_skill(self.bundled)
+                (self.bundled / rel).write_text("changed")
+                code, out = self.run_main()
+                self.assertEqual(code, 1)
+                self.assertIn("behind", out)
+                self.assertIn(f"  {rel}\n", out)
+                self.assertEqual(out.count("\n  "), 1, "only that file is listed")
+
+    def test_missing_bundled_file_is_behind(self):
+        (self.bundled / "assets" / "m.svg").unlink()
         code, out = self.run_main()
         self.assertEqual(code, 1)
-        self.assertIn("behind", out)
-        self.assertIn("mark-dark.svg", out)
-        self.assertNotIn("mark.svg\n", out.replace("mark-dark.svg", ""))
+        self.assertIn("assets/m.svg", out)
 
-    def test_missing_bundled_logo_is_behind(self):
-        (self.skill / "themes" / "assets" / "mark.svg").unlink()
-        code, out = self.run_main()
-        self.assertEqual(code, 1)
-        self.assertIn("mark.svg", out)
-
-    def test_update_copies_the_logo(self):
-        (self.master_dir / "assets" / "m.svg").write_text("<svg>new</svg>")
+    def test_update_copies_the_files(self):
+        (self.live / "tokens.css").write_text(":root{--a:2}")
+        (self.live / "assets" / "m.svg").write_text("<svg>new</svg>")
         code, out = self.run_main("--update")
         self.assertEqual(code, 0)
-        self.assertIn("mark.svg", out)
-        self.assertEqual((self.skill / "themes" / "assets" / "mark.svg").read_text(), "<svg>new</svg>")
+        self.assertEqual((self.bundled / "tokens.css").read_text(), ":root{--a:2}")
+        self.assertEqual((self.bundled / "assets" / "m.svg").read_text(), "<svg>new</svg>")
         code, out = self.run_main()
         self.assertEqual(code, 0)
         self.assertIn("in step", out)
 
-    def test_behind_note_reports_logo_only_change(self):
-        (self.master_dir / "assets" / "m.svg").write_text("<svg>new</svg>")
-        self.assertIsNotNone(check_theme_sync.behind_note(self.bundled))
-
-    def test_null_master_logo_compares_nothing(self):
-        self.master.write_text(json.dumps(theme(None, None)))
-        code, out = self.run_main()
+    def test_update_into_an_empty_folder_creates_everything(self):
+        empty = Path(self.tmp.name) / "fresh"
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = check_theme_sync.main(["--bundled", str(empty), "--update"])
         self.assertEqual(code, 0)
-        self.assertIn("in step", out)
-        code, _ = self.run_main("--update")
-        self.assertEqual(code, 0)
+        for rel in list(FILES) + ["theme.json"]:
+            self.assertTrue((empty / rel).is_file(), rel)
 
-    def test_null_logo_in_one_field_only(self):
-        self.master.write_text(json.dumps(theme("assets/m.svg", None)))
-        (self.skill / "themes" / "assets" / "mark-dark.svg").write_text("anything")
+    def test_null_logo_field_compares_nothing(self):
+        write_skill(self.live, logo=None, logo_dark=None)
+        write_skill(self.bundled, logo=None, logo_dark=None)
+        (self.bundled / "assets" / "m.svg").write_text("anything")
         code, _ = self.run_main()
         self.assertEqual(code, 0)
+
+    def test_no_live_skill_exits_0_and_says_so(self):
+        os.environ["JA_SKILL"] = str(Path(self.tmp.name) / "nope")
+        code, out = self.run_main()
+        self.assertEqual(code, 0)
+        self.assertIn("nothing to compare", out)
+        code, out = self.run_main("--update")
+        self.assertEqual(code, 0)
+
+    def test_behind_note(self):
+        self.assertIsNone(check_theme_sync.behind_note(self.live, self.bundled))
+        (self.live / "assets" / "md.svg").write_text("new")
+        self.assertIsNotNone(check_theme_sync.behind_note(self.live, self.bundled))
+        self.assertIsNone(check_theme_sync.behind_note(Path(self.tmp.name) / "nope", self.bundled))
 
 
 def page(title="cats"):

@@ -1,52 +1,51 @@
 # Themes
 
-The gallery's look is Jason Armstrong's design system (display name JA). It started from measurements
-of <https://www.archetypeai.io/>.
+The gallery's look is Jason Armstrong's design system (display name JA), and nothing else. The page
+holds no colours, sizes, fonts or spacing of its own. It inlines the skill's `tokens.css` and
+`components.css` and is written in the skill's components (`ds-page`, `ds-media-grid`, `ds-media-card`,
+`ds-lightbox` and so on). The skill is designed and changed with the
+[design-system-creator](https://github.com/jason-armstrong-72/design-system-creator) plugin. Do not edit
+its values in this repo.
 
-The master theme lives in the `jason-armstrong-design-system` skill (`theme.json`). It is designed and
-changed with the [design-system-creator](https://github.com/jason-armstrong-72/design-system-creator)
-plugin. Do not edit the values in this repo.
+## Where the build reads it from
 
-This plugin carries a bundled copy at
-[skills/envato-search-gallery/themes/jason-armstrong.json](../skills/envato-search-gallery/themes/jason-armstrong.json),
-so it works when installed alone. The copy has its own embedded fonts, its own logo paths and a `sync`
-block. Those are the only parts that differ from the master.
+1. The installed skill: `$JA_SKILL` if that is set, else `~/.claude/skills/jason-armstrong-design-system`.
+   It is used when both `tokens.css` and `components.css` are there.
+2. Otherwise the bundled copy in
+   [skills/envato-search-gallery/themes/ja/](../skills/envato-search-gallery/themes/ja/), so the plugin
+   works when installed alone.
 
-Beside it, `jason-armstrong.layout.json` holds the gallery's own measures, roles and colours (the
-card padding, the author and meta type, the button arrow colour and the like). Schema 3 themes do not
-carry them, so the gallery keeps them here. `build_gallery.py` merges the file into the theme, and the
-sync check never looks at it.
+Every build prints one line saying which it used, for example `theme: JA skill at ... (jason-armstrong 2.0.1)`
+or `theme: bundled copy in themes/ja ..., because the JA skill is not usable at ...`.
 
-## Check and refresh the copy
+The same folder's `theme.json` is read for three things only: the two Google Fonts links
+(`fonts.*.css_url`), and the brand logo's alt text, height and placement. The logo files are embedded in
+the page.
+
+The bundled copy is a fallback and has no values of its own. It holds `tokens.css`, `components.css`,
+`GENERATED`, `theme.json` and the two logo files (`assets/mark.svg`, `assets/mark-dark.svg`), all copied
+byte for byte from the skill.
+
+## Fonts
+
+The page links Hanken Grotesk and IBM Plex Mono from Google Fonts, exactly as the skill's HTML recipe
+does. A page opened offline falls back to the system fonts.
+
+## Check and refresh the bundled copy
 
 ```bash
 python3 skills/envato-search-gallery/scripts/check_theme_sync.py            # is the copy in step?
-python3 skills/envato-search-gallery/scripts/check_theme_sync.py --update   # refresh it from the master
+python3 skills/envato-search-gallery/scripts/check_theme_sync.py --update   # copy the skill's files in
 ```
 
-- The check finds the master at `$JA_THEME_MASTER`, or else at
-  `~/.claude/skills/jason-armstrong-design-system/theme.json`.
-- It compares the bundled `mark.svg` and `mark-dark.svg` byte for byte with the master's logo files
-  (the paths in the master's `brand.logo` and `brand.logo_dark`, relative to its `theme.json`). A
-  null logo field has nothing to compare.
-- It prints `in step`, or `behind` with each value or logo file that differs. It exits 1 only when a master exists
-  and differs. With no master it says so and exits 0.
-- `--update` keeps the plugin-local values (`sync.local_keys`), copies the master's logo files and sets
-  `sync.source_version`.
-- `build_gallery.py` prints one warning line when the copy is behind the master. It never stops a build.
+- It compares `tokens.css`, `components.css`, `GENERATED`, `theme.json` and the logo files that the
+  skill's `theme.json` brand points at, byte for byte, and respects `$JA_SKILL`.
+- It prints `in step`, or `behind` with each file that differs. It exits 1 only when a live skill exists
+  and differs. With no live skill it says so and exits 0.
+- `--update` copies the differing files into `themes/ja/`.
+- When the build has to use the bundled copy and a partly present skill differs from it, it prints one
+  warning line. It never stops a build.
 
-The original look is at git tag `classic-look`.
+Run `--update` whenever the skill changes, and commit the result.
 
-## At a glance
-
-| | |
-| --- | --- |
-| Sans | Hanken Grotesk, weights 200 to 500 (Google Fonts, SIL OFL) |
-| Mono | IBM Plex Mono, weights 200 to 500 (Google Fonts, SIL OFL) |
-| Ink and page | `#1a1a1a` on `#f1f1f0` (light), `#f1f1f0` on `#000000` (dark) |
-| Accent | Forest green `#0d8a4b` (text `#066f33`) light, `#34d399` dark |
-| Error | coral `#f4503b` light, `#ff5c48` dark (in the theme; the gallery page does not use it) |
-| Warning | deep amber `#b45309` light, `#fbbf24` dark (in the theme; the gallery page does not use it) |
-| Corners | 1px |
-
-The page has a Light, Dark and System switch. System is the default and follows the display setting.
+The look before the JA theme is at git tag `classic-look`.
