@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build a self-contained HTML gallery from Envato MCP search results.
+"""Build an HTML gallery from Envato MCP search results, styled by the JA design system skill.
 
 Usage:
     build_gallery.py results.json [--out PATH] [--open] [--no-serve]
