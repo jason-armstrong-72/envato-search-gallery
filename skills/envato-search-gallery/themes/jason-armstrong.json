@@ -2,7 +2,7 @@
   "schema_version": 3,
   "name": "jason-armstrong",
   "display_name": "JA",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "owner": "Jason Armstrong",
   "derived_from": "Started from measurements of https://www.archetypeai.io/ (off-white page, near-black ink, light headings, small uppercase mono labels, near-square corners), then changed: Forest green accent, a derived dark theme, house coral kept for error and warning only.",
   "fonts": {
@@ -226,7 +226,7 @@
     "accent": {
       "light": "#0d8a4b",
       "dark": "#34d399",
-      "usage": "Accent for shapes, bars, borders, arrows (Forest green)"
+      "usage": "Accent for shapes, bars and borders (Forest green)"
     },
     "accent-text": {
       "light": "#066f33",
@@ -510,7 +510,7 @@
   },
   "sync": {
     "source": "jason-armstrong-design-system",
-    "source_version": "2.0.0",
+    "source_version": "2.0.1",
     "local_keys": [
       "sync",
       "fonts.embed",
