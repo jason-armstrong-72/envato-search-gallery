@@ -2,6 +2,7 @@
 the page. Run from the repo root:  python3 -m unittest discover -s tests
 """
 import json
+import os
 import re
 import subprocess
 import sys
@@ -13,17 +14,23 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILL = ROOT / "skills" / "envato-search-gallery"
 SCRIPTS = SKILL / "scripts"
 INPUT = SKILL / "references" / "offline-input.json"
-THEME = json.loads((SKILL / "themes" / "jason-armstrong.json").read_text(encoding="utf-8"))
 
 sys.path.insert(0, str(SCRIPTS))
-import build_gallery  # noqa: E402
+import check_theme_sync  # noqa: E402
 
 
-def build(out_dir, input_path=INPUT):
+def source_dir():
+    """Where a build reads the design system from: the live skill if usable, else the bundled copy."""
+    live = check_theme_sync.live_dir()
+    return live if check_theme_sync.live_usable(live) else check_theme_sync.BUNDLED
+
+
+def build(out_dir, input_path=INPUT, env=None):
+    """Run the builder. `env` adds to or replaces variables of this process's environment."""
     out = Path(out_dir) / "gallery.html"
     proc = subprocess.run(
         [sys.executable, str(SCRIPTS / "build_gallery.py"), str(input_path), "--out", str(out), "--no-serve"],
-        capture_output=True, text=True, timeout=60,
+        capture_output=True, text=True, timeout=60, env={**os.environ, **(env or {})},
     )
     return proc, out
 
@@ -58,34 +65,8 @@ class OfflineBuild(unittest.TestCase):
             self.assertTrue(item["src"].startswith("data:image/svg+xml;base64,"))
         self.assertIn(f"<strong>{len(items)}</strong> results", self.page)
 
-    def test_theme_colours(self):
-        for name, modes in THEME["colour"].items():
-            if name not in build_gallery.REQUIRED_COLOURS:
-                continue
-            if f"var(--{name})" not in self.page:
-                continue  # #30: colours the page never reads are not written
-            for mode in ("light", "dark"):
-                self.assertIn(f"--{name}:{modes[mode]};", self.page, f"{name} ({mode})")
-
-    def test_theme_fonts(self):
-        for role in ("sans", "mono"):
-            self.assertIn(THEME["fonts"][role]["family"], self.page)
-        self.assertIn("@font-face", self.page)
-        self.assertIn("data:font/woff2;base64,", self.page)
-
-    def test_only_used_properties_are_written(self):
-        css = re.search(r"<style>(.*?)</style>", self.page, re.S).group(1)
-        css = re.sub(r"@font-face\{[^}]*\}", "", css)
-        defined = set(re.findall(r"(--(?:t|sp)-[\w-]+):", css))
-        used = set(re.findall(r"var\((--(?:t|sp)-[\w-]+)\)", css))
-        self.assertEqual(defined - used, set(), "custom properties written but never read")
-        self.assertEqual(used - defined, set(), "custom properties read but never written")
-
-    def test_unused_roles_are_left_out(self):
-        self.assertNotIn("--t-h2-s", self.page)
-        self.assertNotIn("--sp-gap:", self.page)
-        self.assertIn("--t-display-s", self.page)
-        self.assertIn("--sp-cardmin", self.page)
+    def test_prints_which_source_was_used(self):
+        self.assertRegex(self.proc.stdout, r"(?m)^theme: (JA skill at|bundled copy in themes/ja)")
 
 
 class ExampleInput(unittest.TestCase):
@@ -96,13 +77,6 @@ class ExampleInput(unittest.TestCase):
         data = json.loads(example.read_text(encoding="utf-8"))
         for item in data["results"]:
             self.assertNotRegex(item["img"], r"[\s<>]", "placeholder URL must be a legal URL")
-
-
-class UsedVars(unittest.TestCase):
-    def test_scan(self):
-        type_props, spacing = build_gallery.used_vars("a{font-size:var(--t-meta-s);gap:var(--sp-gridgap)}")
-        self.assertEqual(type_props, {"meta": {"s"}})
-        self.assertEqual(spacing, {"gridgap"})
 
 
 if __name__ == "__main__":

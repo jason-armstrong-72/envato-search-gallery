@@ -35,13 +35,14 @@ previews in one page, let the user pick, hand back the Envato link.
    ```
 
    The path is relative to this skill's folder. The script downloads the previews, embeds
-   them in one self-contained HTML file in `~/.cache/envato-gallery`, and starts (or reuses)
+   them in one HTML file (fonts load from Google Fonts) in `~/.cache/envato-gallery`, and starts (or reuses)
    a small local server so the page has an `http://localhost` link. It does **not** open a
    browser: a browser stealing focus while the user is in another app is annoying. Add
    `--open` only if the user asks for it. Standard library only, no install step. It prints
-   an `open:` line holding the link. The look comes from `themes/jason-armstrong.json` (Jason Armstrong's design system); add
-   `--theme NAME` (a file in `themes/`) or `--theme PATH` only if the user asks for a different
-   look.
+   an `open:` line holding the link. The look is Jason Armstrong's design system: the page inlines the installed skill's
+   `tokens.css` and `components.css` (`$JA_SKILL`, else `~/.claude/skills/jason-armstrong-design-system`),
+   and falls back to the bundled copy in `themes/ja/` when the skill is missing. The build prints one
+   line saying which it used.
 6. **Report** the count and give the gallery as a clickable markdown link built from the
    `open:` line, for example `[Open the gallery](http://localhost:53012/x.html)`. In VS Code
    the click opens the page in a side panel. If the `open:` line is a `file://` link, the
@@ -79,7 +80,7 @@ the search and rebuilds the page.
 
 The page has a Light, Dark and System switch (three icon buttons, top right). System is the
 default and follows the display setting; the choice is remembered in the browser. The fonts are
-embedded, so the page looks the same offline.
+linked from Google Fonts, so a page opened offline uses the system fonts.
 
 ## Notes
 

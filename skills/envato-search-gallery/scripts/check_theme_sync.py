@@ -1,30 +1,22 @@
 #!/usr/bin/env python3
-"""Check that the bundled theme is in step with the master theme, and refresh it.
+"""Check that the bundled copy of the JA design system is in step with the installed skill, and refresh it.
 
 Usage:
     check_theme_sync.py                 compare and report
-    check_theme_sync.py --update        rewrite the bundled theme from the master
-    check_theme_sync.py --theme-file P  work on another copy of the bundled theme (for testing)
+    check_theme_sync.py --update        copy the live skill's files over the bundled copy
+    check_theme_sync.py --bundled DIR   work on another bundled folder (for testing)
 
-The master is the theme.json in the jason-armstrong-design-system skill. Find it at
-$JA_THEME_MASTER if that is set, else ~/.claude/skills/<sync.source>/theme.json.
+The live skill is the jason-armstrong-design-system folder: $JA_SKILL if that is set, else
+~/.claude/skills/jason-armstrong-design-system. The bundled copy is themes/ja/ in this plugin.
 
-The bundled copy keeps a few plugin-local values (the dotted paths in sync.local_keys: the
-embedded fonts, the logo paths and the sync block). Everything else must equal the master.
+These files are compared byte for byte: tokens.css, components.css, GENERATED, theme.json and the logo
+files that the live theme.json brand points at (brand.logo and brand.logo_dark, relative to the skill
+folder, kept at the same path under themes/ja/). A logo field that is null has nothing to compare.
 
-The bundled logo files (brand.logo and brand.logo_dark, under themes/assets) are also compared byte
-for byte with the master's files of the same fields (paths relative to the master theme file). A
-difference counts as behind and --update copies them. A null logo field in the master has nothing to
-compare.
-
-Only the theme copy and the logos are compared. The gallery's own jason-armstrong.layout.json is
-never read here.
-
-Exit code: 0 when in step or when no master exists (the plugin may be installed alone),
-1 when a master exists and differs. Standard library only.
+Exit code: 0 when in step or when there is no live skill (the plugin may be installed alone),
+1 when a live skill exists and differs. Standard library only.
 """
 import argparse
-import copy
 import json
 import os
 import shutil
@@ -32,198 +24,112 @@ import sys
 from pathlib import Path
 
 SKILL_DIR = Path(__file__).resolve().parent.parent
-BUNDLED = SKILL_DIR / "themes" / "jason-armstrong.json"
-SHORT = 80
+BUNDLED = SKILL_DIR / "themes" / "ja"
+SKILL_NAME = "jason-armstrong-design-system"
+BASE_FILES = ("tokens.css", "components.css", "GENERATED", "theme.json")
+REQUIRED = ("tokens.css", "components.css")
 
 
-def load(path):
-    return json.loads(Path(path).read_text(encoding="utf-8"))
-
-
-def master_path(bundled):
-    env = os.environ.get("JA_THEME_MASTER")
+def live_dir():
+    """The folder of the installed JA skill: $JA_SKILL if set, else ~/.claude/skills/<name>."""
+    env = os.environ.get("JA_SKILL")
     if env:
         return Path(env).expanduser()
-    source = (bundled.get("sync") or {}).get("source", "jason-armstrong-design-system")
-    return Path.home() / ".claude" / "skills" / source / "theme.json"
+    return Path.home() / ".claude" / "skills" / SKILL_NAME
 
 
-def flatten(value, prefix=""):
-    """Leaf values by dotted path. Lists count as one leaf."""
-    if isinstance(value, dict) and value:
-        out = {}
-        for k, v in value.items():
-            out.update(flatten(v, f"{prefix}.{k}" if prefix else k))
-        return out
-    return {prefix: value}
+def live_usable(live):
+    """True when the folder holds both CSS files the page is built from."""
+    return all((Path(live) / name).is_file() for name in REQUIRED)
 
 
-def ignored(path, local_keys):
-    return any(path == k or path.startswith(k + ".") for k in local_keys)
+def logo_paths(theme_json):
+    """The relative paths of the logo files a theme.json names, light first. Never raises."""
+    try:
+        brand = json.loads(Path(theme_json).read_text(encoding="utf-8")).get("brand") or {}
+    except (OSError, ValueError, AttributeError):
+        return []
+    return [p for p in (brand.get("logo"), brand.get("logo_dark")) if isinstance(p, str) and p]
 
 
-def differences(bundled, master, local_keys):
-    """List of (path, bundled value, master value) outside the local keys."""
-    a, b = flatten(bundled), flatten(master)
-    missing = object()
+def file_list(live):
+    """Relative paths to compare: the base files, then the live theme.json's logo files."""
+    return list(BASE_FILES) + logo_paths(Path(live) / "theme.json")
+
+
+def differences(live, bundled=BUNDLED):
+    """Relative paths whose bytes differ, or that are missing from the bundled copy.
+
+    A file the live skill does not have is skipped (nothing to compare).
+    """
     out = []
-    for path in sorted(set(a) | set(b)):
-        if ignored(path, local_keys):
+    for rel in file_list(live):
+        src = Path(live) / rel
+        if not src.is_file():
             continue
-        va, vb = a.get(path, missing), b.get(path, missing)
-        if va != vb:
-            out.append((path, "(absent)" if va is missing else va, "(absent)" if vb is missing else vb))
+        dest = Path(bundled) / rel
+        if not dest.is_file() or dest.read_bytes() != src.read_bytes():
+            out.append(rel)
     return out
 
 
-def short(value):
-    text = value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)
-    return text if len(text) <= SHORT else text[: SHORT - 3] + "..."
-
-
-def set_path(tree, dotted, value):
-    keys = dotted.split(".")
-    for k in keys[:-1]:
-        tree = tree.setdefault(k, {})
-    tree[keys[-1]] = value
-
-
-def get_path(tree, dotted):
-    for k in dotted.split("."):
-        if not isinstance(tree, dict) or k not in tree:
-            return False, None
-        tree = tree[k]
-    return True, tree
-
-
-def rebuilt(bundled, master):
-    """The master's content with the bundled theme's local values put back."""
-    new = copy.deepcopy(master)
-    sync = bundled.get("sync") or {}
-    for key in sync.get("local_keys", []):
-        found, value = get_path(bundled, key)
-        if found:
-            set_path(new, key, copy.deepcopy(value))
-    new["sync"] = copy.deepcopy(sync)
-    new["sync"]["source_version"] = master.get("version")
-    return new
-
-
-def behind_note(bundled_path=BUNDLED):
-    """A one-line reason the bundled theme is behind the master, or None. Never raises."""
+def behind_note(live=None, bundled=BUNDLED):
+    """A one-line reason the bundled copy is behind the live skill, or None. Never raises."""
     try:
-        bundled = load(bundled_path)
-        mp = master_path(bundled)
-        if not mp.is_file():
+        live = live_dir() if live is None else Path(live)
+        if not live.is_dir():
             return None
-        master = load(mp)
-        if differences(bundled, master, (bundled.get("sync") or {}).get("local_keys", [])) or logo_differences(
-            bundled, master, mp
-        ):
-            return "theme copy is behind the master: run scripts/check_theme_sync.py"
+        if differences(live, bundled):
+            return "bundled copy in themes/ja is behind the JA skill: run scripts/check_theme_sync.py --update"
     except Exception:
         return None
     return None
 
 
-def logo_pairs(bundled, master, mp):
-    """(field, master file, bundled file or None, note) for each logo the master names.
-
-    A null or empty field in the master is skipped (nothing to compare). A master file that does not
-    exist is skipped with a note. The bundled path comes from the bundled theme's own brand field,
-    else themes/assets/<master file name>, relative to the skill folder.
-    """
-    out = []
-    for field in ("logo", "logo_dark"):
-        src_name = (master.get("brand") or {}).get(field)
-        if not src_name:
-            continue
-        src = Path(src_name)
-        src = src if src.is_absolute() else mp.parent / src
-        local = (bundled.get("brand") or {}).get(field) or f"themes/assets/{Path(src_name).name}"
-        dest = Path(local)
-        dest = dest if dest.is_absolute() else SKILL_DIR / dest
-        out.append((field, src, dest))
-    return out
-
-
-def logo_differences(bundled, master, mp):
-    """List of (bundled file label, master file) whose bytes differ or whose bundled file is missing."""
-    out = []
-    for field, src, dest in logo_pairs(bundled, master, mp):
-        if not src.is_file():
-            continue
-        if not dest.is_file() or dest.read_bytes() != src.read_bytes():
-            out.append((label(dest), src))
-    return out
-
-
-def label(path):
+def version_of(folder):
+    """The theme line of a GENERATED file, for messages. Empty when there is none."""
     try:
-        return str(path.relative_to(SKILL_DIR))
-    except ValueError:
-        return str(path)
+        for line in (Path(folder) / "GENERATED").read_text(encoding="utf-8").splitlines():
+            if line.startswith("theme:"):
+                return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
+    return ""
 
 
-def copy_logos(bundled, new, master, mp):
-    """Copy the master's logo files over the bundled ones where they differ. Returns notes."""
-    notes = []
-    for field, src, dest in logo_pairs(new, master, mp):
-        if not src.is_file():
-            notes.append(f"logo not found in the master, left alone: {src}")
-            continue
-        if dest.is_file() and dest.read_bytes() == src.read_bytes():
-            continue
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(src, dest)
-        notes.append(f"copied {src.name} to {label(dest)}")
-    return notes
-
-
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--update", action="store_true", help="rewrite the bundled theme from the master")
-    ap.add_argument("--theme-file", default=str(BUNDLED), help="the bundled theme to check or rewrite")
-    args = ap.parse_args()
+    ap.add_argument("--update", action="store_true", help="copy the live skill's files over the bundled copy")
+    ap.add_argument("--bundled", default=str(BUNDLED), help="the bundled folder to check or rewrite")
+    args = ap.parse_args(argv)
 
-    tf = Path(args.theme_file)
-    bundled = load(tf)
-    mp = master_path(bundled)
-    if not mp.is_file():
-        print(f"master not found at {mp}: nothing to compare")
+    bundled = Path(args.bundled)
+    live = live_dir()
+    if not live_usable(live):
+        print(f"JA skill not found at {live}: nothing to compare")
         return 0
-    master = load(mp)
-    local_keys = (bundled.get("sync") or {}).get("local_keys", [])
-    diffs = differences(bundled, master, local_keys)
-    logo_diffs = logo_differences(bundled, master, mp)
-    name, mver, bver = master.get("name", "?"), master.get("version", "?"), bundled.get("version", "?")
+    diffs = differences(live, bundled)
+    ver = version_of(live) or "?"
 
     if not args.update:
-        if not diffs and not logo_diffs:
-            print(f"in step: {name} {mver}")
+        if not diffs:
+            print(f"in step: {ver}")
             return 0
-        print(f"behind: bundled {bver}, master {mver}")
-        for path, old, new in diffs:
-            print(f"{path}\n  bundled: {short(old)}\n  master:  {short(new)}")
-        for bundled_file, master_file in logo_diffs:
-            print(f"logo file {bundled_file}\n  differs from the master's {master_file}")
+        print(f"behind: bundled {version_of(bundled) or '?'}, JA skill {ver}")
+        for rel in diffs:
+            print(f"  {rel}")
         return 1
 
-    new = rebuilt(bundled, master)
-    notes = copy_logos(bundled, new, master, mp)
-    text = json.dumps(new, indent=2, ensure_ascii=False) + "\n"
-    changed = text != tf.read_text(encoding="utf-8")
-    if changed:
-        tf.write_text(text, encoding="utf-8")
-    if not diffs and not logo_diffs and not notes and not changed:
-        print(f"already in step: {name} {mver}")
+    if not diffs:
+        print(f"already in step: {ver}")
         return 0
-    print(f"updated {tf}: {bver} -> {mver}, {len(diffs)} value(s) changed, {len(logo_diffs)} logo file(s) differed")
-    for path, old, newv in diffs:
-        print(f"  {path}: {short(old)} -> {short(newv)}")
-    for n in notes:
-        print(f"  {n}")
-    print("local values kept: " + ", ".join(local_keys))
+    for rel in diffs:
+        dest = bundled / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(live / rel, dest)
+    print(f"updated {bundled}: {version_of(bundled) or '?'}, {len(diffs)} file(s) copied")
+    for rel in diffs:
+        print(f"  {rel}")
     return 0
 
 
