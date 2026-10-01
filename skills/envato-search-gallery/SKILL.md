@@ -45,9 +45,9 @@ previews in one page, let the user pick, hand back the Envato link.
 6. **Report** the count and give the gallery as a clickable markdown link built from the
    `open:` line, for example `[Open the gallery](http://localhost:53012/x.html)`. In VS Code
    the click opens the page in a side panel. If the `open:` line is a `file://` link, the
-   server could not start: give the link and say it may need copying into a browser. Pages
-   older than 7 days are deleted on each build. Skipped previews are listed by the script;
-   mention them.
+   server could not start: give the link and say it may need copying into a browser. Gallery
+   pages older than 7 days are deleted on each build and when the server starts; other files in
+   that folder are left alone. Skipped previews are listed by the script; mention them.
 7. **When the user picks**, give the Envato item link(s) as clickable URLs. Licensing and
    download happen on elements.envato.com, and that needs an active Elements subscription.
    Do not try to fetch the full-size image.
