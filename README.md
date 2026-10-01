@@ -249,12 +249,20 @@ skills/envato-search-gallery/
   themes/assets/               the JA mark (light and dark)
   fonts/                       the theme's font files (woff2) and their licences
   references/filters.json      filters per asset type, from the MCP tool schemas
-  references/example-input.json
+  references/example-input.json   the input shape, with a placeholder signature (cannot build)
+  references/offline-input.json    a working input that uses local placeholder images, no network
+  references/offline-images/       plain grey SVGs for the offline input
+tests/                         unit tests (python3 -m unittest discover -s tests)
 themes/                        theme README: where the look comes from and how to refresh the copy
 ```
 
 ## Notes for maintainers
 
+- Tests: `python3 -m unittest discover -s tests` from the repo root. They build a gallery from
+  `references/offline-input.json` (local placeholder images, so no network or Envato account) and check
+  the title, one card per item, the theme's colours and fonts, and that the page writes only the type and
+  spacing custom properties its own CSS reads. An `img` that is a local path or `file://` URL is read from
+  disk; a relative path is taken from the input file's folder.
 - Preview URLs are signed. Truncating one (dropping the trailing `&s=` token) makes the CDN
   answer "Wrong signature"; the script reports that case in plain words.
 - `references/filters.json` was written from the tool schemas on 2026-09-30. Envato may add
