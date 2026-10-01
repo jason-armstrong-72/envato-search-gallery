@@ -240,11 +240,21 @@ def used_vars(css):
     return type_props, set(re.findall(r"var\(--sp-(\w+)\)", css))
 
 
-def theme_vars(theme, used=None):
+def used_colours(css):
+    """The custom property names the page reads through var(--name), colours included.
+
+    `css` is the page template with its `@role` lines already expanded (the same input as used_vars()).
+    theme_vars() keeps only the colour variables whose names are in this set.
+    """
+    return set(re.findall(r"var\(--([\w-]+)", css))
+
+
+def theme_vars(theme, used=None, read=None):
     """CSS custom properties for type, spacing, shape and both colour modes.
 
     `used` is the result of used_vars(): only the type properties and spacing keys in it are written.
-    With no `used`, every role and key in the theme is written.
+    `read` is the result of used_colours(): only the colour variables in it (or reached from one that is,
+    through a var() in its value) are written. With no `used` or no `read`, everything in the theme is written.
     """
     used_type, used_sp = used if used is not None else (None, None)
     fonts = theme["fonts"]
@@ -263,23 +273,33 @@ def theme_vars(theme, used=None):
     for key, v in theme["spacing_and_shape"].items():
         if used_sp is None or key in used_sp:
             lines.append(f"--sp-{key}:{v['px']}px;")
-    # the lightbox is dark in both modes, so its link uses the accent as it is in dark mode
-    lines.append(f"--accent-on-dark:{theme['colour']['accent']['dark']};")
-    lines.append(f"--ink-on-dark:{theme['colour']['ink']['dark']};--muted-on-dark:{theme['colour']['muted']['dark']};")
+    c = theme["colour"]
+    names = ["bg", "surface", "border", "ink", "muted", "accent", "accent-text", "error", "warning",
+             "btn-bg", "btn-ink", "btn-arrow", "focus", "lb-bg"]
+    # the lightbox is dark in both modes, so its link, ink and muted use the dark-mode value in either
+    on_dark = {"accent-on-dark": "accent", "ink-on-dark": "ink", "muted-on-dark": "muted"}
+    keep = None
+    if read is not None:
+        keep = set(read)
+        grew = True
+        while grew:  # a value that is itself var(--other) keeps that one too
+            grew = False
+            for n in list(keep):
+                for mode in ("light", "dark"):
+                    for dep in re.findall(r"var\(--([\w-]+)", str(c.get(on_dark.get(n, n), {}).get(mode, ""))):
+                        if dep not in keep:
+                            keep.add(dep)
+                            grew = True
+    wanted = lambda n: keep is None or n in keep
+    for name, src in on_dark.items():
+        if wanted(name):
+            lines.append(f"--{name}:{c[src]['dark']};")
     lines.append("}")
 
     def colours(mode):
-        c = theme["colour"]
-        g = lambda k: c[k][mode]
         # the lightbox has no panel and shows captions straight on the backdrop, so the layout file gives it
         # the same dark backdrop in both modes
-        return (
-            f"--bg:{g('bg')};--surface:{g('surface')};--border:{g('border')};--ink:{g('ink')};"
-            f"--muted:{g('muted')};--accent:{g('accent')};--accent-text:{g('accent-text')};"
-            f"--error:{g('error')};--warning:{g('warning')};"
-            f"--btn-bg:{g('btn-bg')};--btn-ink:{g('btn-ink')};--btn-arrow:{g('btn-arrow')};"
-            f"--focus:{g('focus')};--lb-bg:{g('lb-bg')};color-scheme:{mode};"
-        )
+        return "".join(f"--{n}:{c[n][mode]};" for n in names if wanted(n)) + f"color-scheme:{mode};"
 
     light, dark = colours("light"), colours("dark")
     lines.append(f':root,:root[data-theme="light"]{{{light}}}')
@@ -681,10 +701,11 @@ def main():
     for note in brand_notes:
         print(f"note: {note}")
     # write only the custom properties the page's own CSS reads (the template, before any theme values go in)
-    used = used_vars(expand_roles(TEMPLATE, theme))
+    page_css = expand_roles(TEMPLATE, theme)
+    used = used_vars(page_css)
     template = (
         TEMPLATE.replace("__FONT_FACES__", faces)
-        .replace("__THEME_VARS__", theme_vars(theme, used) + brand_vars)
+        .replace("__THEME_VARS__", theme_vars(theme, used, used_colours(page_css)) + brand_vars)
         .replace("__BRAND__", brand_html)
     )
     page = (

@@ -45,7 +45,8 @@ The original look is at git tag `classic-look`.
 | Mono | IBM Plex Mono, weights 200 to 500 (Google Fonts, SIL OFL) |
 | Ink and page | `#1a1a1a` on `#f1f1f0` (light), `#f1f1f0` on `#000000` (dark) |
 | Accent | Forest green `#0d8a4b` (text `#066f33`) light, `#34d399` dark |
-| Error and warning | coral `#f4503b` light, `#ff5c48` dark, separate tokens |
+| Error | coral `#f4503b` light, `#ff5c48` dark (in the theme; the gallery page does not use it) |
+| Warning | deep amber `#b45309` light, `#fbbf24` dark (in the theme; the gallery page does not use it) |
 | Corners | 1px |
 
 The page has a Light, Dark and System switch. System is the default and follows the display setting.
