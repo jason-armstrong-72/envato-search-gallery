@@ -25,7 +25,8 @@ Input JSON:
 Each `img` must be the FULL signed URL from the search result, including the trailing
 `&s=` signature. A truncated URL makes the CDN answer "Wrong signature". Previews are
 downloaded here and embedded as base64, so the output file opens offline and needs no
-network, account or server.
+network, account or server. An `img` that is a local path (relative to the input file) or a file://
+URL is read from disk instead, which is how references/offline-input.json builds with no network.
 
 The look comes from a theme file (default: themes/jason-armstrong.json next to this script's
 folder, a bundled copy of Jason Armstrong's master theme, schema version 3). Colours, type,
@@ -64,11 +65,30 @@ LAYOUT_SECTIONS = ("colour", "type", "spacing_and_shape")
 USER_AGENT = "Mozilla/5.0 (envato-search-gallery)"
 
 
-def fetch_preview(item):
-    """Download one preview and return it as a data URI, or raise with a clear reason."""
+def read_local_image(url, base):
+    """Read an image from disk and return it as a data URI. A relative path is taken from `base`."""
+    path = Path(url[len("file://"):] if url.startswith("file://") else url)
+    path = path if path.is_absolute() else Path(base) / path
+    mime = MIME.get(path.suffix.lower())
+    if not mime:
+        raise ValueError(f"unsupported image type {path.suffix or '(none)'}: {path}")
+    try:
+        return f"data:{mime};base64,{base64.b64encode(path.read_bytes()).decode('ascii')}"
+    except OSError as exc:
+        raise ValueError(f"image file not readable: {exc}")
+
+
+def fetch_preview(item, base="."):
+    """Download one preview and return it as a data URI, or raise with a clear reason.
+
+    An `img` that is not an http(s) URL is read from disk (a relative path from `base`), which lets
+    references/offline-input.json build without a network.
+    """
     url = item.get("img", "")
     if not url:
         raise ValueError("no img url")
+    if not url.startswith(("http://", "https://")):
+        return read_local_image(url, base)
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
@@ -207,8 +227,26 @@ def font_faces(theme, base):
     return "\n".join(faces), notes
 
 
-def theme_vars(theme):
-    """CSS custom properties for type, spacing, shape and both colour modes."""
+def used_vars(css):
+    """The type properties and spacing keys the page's CSS actually reads.
+
+    `css` is the page template with its `@role` lines already expanded. Returns ({role: {"s", "w", ...}},
+    {spacing keys}), found by scanning for var(--t-<role>-<prop>) and var(--sp-<key>), so a new rule in the
+    template is picked up without a second list to keep in step.
+    """
+    type_props = {}
+    for role, prop in re.findall(r"var\(--t-(\w+)-(s|w|tr|lh)\)", css):
+        type_props.setdefault(role, set()).add(prop)
+    return type_props, set(re.findall(r"var\(--sp-(\w+)\)", css))
+
+
+def theme_vars(theme, used=None):
+    """CSS custom properties for type, spacing, shape and both colour modes.
+
+    `used` is the result of used_vars(): only the type properties and spacing keys in it are written.
+    With no `used`, every role and key in the theme is written.
+    """
+    used_type, used_sp = used if used is not None else (None, None)
     fonts = theme["fonts"]
     lines = [
         ':root{--font:"%s",%s;--mono:"%s",%s;'
@@ -216,12 +254,15 @@ def theme_vars(theme):
            fonts["mono"]["family"], fonts["mono"].get("fallback", "monospace"))
     ]
     for role, v in theme["type"].items():
-        lines.append(
-            f'--t-{role}-s:{v["size_px"]}px;--t-{role}-w:{v["weight"]};'
-            f'--t-{role}-tr:{v["tracking_em"]}em;--t-{role}-lh:{v["line_height"]};'
-        )
+        decls = {"s": f'{v["size_px"]}px', "w": str(v["weight"]), "tr": f'{v["tracking_em"]}em',
+                 "lh": str(v["line_height"])}
+        text = "".join(f"--t-{role}-{p}:{x};" for p, x in decls.items()
+                       if used_type is None or p in used_type.get(role, ()))
+        if text:
+            lines.append(text)
     for key, v in theme["spacing_and_shape"].items():
-        lines.append(f"--sp-{key}:{v['px']}px;")
+        if used_sp is None or key in used_sp:
+            lines.append(f"--sp-{key}:{v['px']}px;")
     # the lightbox is dark in both modes, so its link uses the accent as it is in dark mode
     lines.append(f"--accent-on-dark:{theme['colour']['accent']['dark']};")
     lines.append(f"--ink-on-dark:{theme['colour']['ink']['dark']};--muted-on-dark:{theme['colour']['muted']['dark']};")
@@ -246,6 +287,8 @@ def theme_vars(theme):
     # without JavaScript the page still follows the display setting
     lines.append(f"@media (prefers-color-scheme:dark){{:root:not([data-theme]){{{dark}}}}}")
     small = small_screen_sizes(theme)
+    if used_type is not None:
+        small = {role: px for role, px in small.items() if "s" in used_type.get(role, ())}
     if small:
         rules = "".join(f"--t-{role}-s:{px}px;" for role, px in small.items())
         # a phone held sideways is wider than max_width_px, so a short touch screen counts as small too
@@ -595,13 +638,14 @@ def main():
             print(note, file=sys.stderr)
     raw = sys.stdin.read() if args.input == "-" else Path(args.input).read_text()
     spec = json.loads(raw)
+    input_base = Path.cwd() if args.input == "-" else Path(args.input).resolve().parent
     results = spec.get("results") or []
     if not results:
         sys.exit("error: no results in input")
 
     def safe_fetch(item):
         try:
-            return fetch_preview(item), None
+            return fetch_preview(item, input_base), None
         except Exception as exc:  # report every failure, not just the first
             return None, str(exc)
 
@@ -636,9 +680,11 @@ def main():
     brand_html, brand_vars, brand_notes = brand_parts(theme, SKILL_DIR)
     for note in brand_notes:
         print(f"note: {note}")
+    # write only the custom properties the page's own CSS reads (the template, before any theme values go in)
+    used = used_vars(expand_roles(TEMPLATE, theme))
     template = (
         TEMPLATE.replace("__FONT_FACES__", faces)
-        .replace("__THEME_VARS__", theme_vars(theme) + brand_vars)
+        .replace("__THEME_VARS__", theme_vars(theme, used) + brand_vars)
         .replace("__BRAND__", brand_html)
     )
     page = (

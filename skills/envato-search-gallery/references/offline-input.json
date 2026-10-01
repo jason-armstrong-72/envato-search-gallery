@@ -1,0 +1,34 @@
+{
+  "query": "offline test",
+  "asset_type": "photos",
+  "sort": "popular",
+  "filters": {
+    "orientation": "landscape"
+  },
+  "results": [
+    {
+      "title": "Placeholder one: a very long title that wraps onto several lines to exercise the card layout",
+      "author": "Placeholder Author A",
+      "link": "https://example.com/placeholder-1",
+      "img": "offline-images/placeholder-1.svg"
+    },
+    {
+      "title": "Placeholder two",
+      "author": "Placeholder Author B",
+      "link": "https://example.com/placeholder-2",
+      "img": "offline-images/placeholder-2.svg"
+    },
+    {
+      "title": "Placeholder three",
+      "author": "Placeholder Author C",
+      "link": "https://example.com/placeholder-3",
+      "img": "offline-images/placeholder-3.svg"
+    },
+    {
+      "title": "Placeholder four",
+      "author": "",
+      "link": "https://example.com/placeholder-4",
+      "img": "offline-images/placeholder-4.svg"
+    }
+  ]
+}
