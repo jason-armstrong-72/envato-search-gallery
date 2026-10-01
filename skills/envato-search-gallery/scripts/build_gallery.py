@@ -223,9 +223,6 @@ PAGE_CSS = """body {
 }
 h1, h2, h3, h4, p { margin: 0; }
 .t-display, .ds-prose h1 { overflow-wrap: anywhere; }
-/* JA has no muted-text class: the results line and the footer use the muted token */
-.gallery-muted { color: var(--muted); }
-.gallery-muted strong { color: var(--ink); font-weight: inherit; }
 """
 
 # A section's content starts at the page padding: nothing here sets a width, gap or size.
@@ -251,7 +248,7 @@ __FONT_LINKS__
     __BRAND_ABOVE__<div class="ds-stack is-tight">
       <p class="t-eyebrow">Envato Elements &middot; __ASSET_TYPE__</p>
       <h1 class="t-display">&ldquo;__QUERY__&rdquo;</h1>
-      <div class="ds-row t-label gallery-muted">
+      <div class="ds-row t-label ds-muted">
         <span><strong>__COUNT__</strong> results</span>
         <span>sorted by <strong>__SORT__</strong></span>
         <span>__APPLIED__</span>
@@ -263,7 +260,7 @@ __FONT_LINKS__
     <div class="ds-media-grid" id="grid"></div>
   </section>
   <footer class="ds-section">
-    <p class="t-caption gallery-muted">Watermarked previews for review only. Click an image to enlarge it, then use &ldquo;View on Envato&rdquo;
+    <p class="t-caption ds-muted">Watermarked previews for review only. Click an image to enlarge it, then use &ldquo;View on Envato&rdquo;
     to license and download the original on elements.envato.com. Unofficial tool; not affiliated with Envato.</p>
   </footer>
 </main>

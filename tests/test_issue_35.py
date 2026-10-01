@@ -47,13 +47,13 @@ class BuiltPage(unittest.TestCase):
         own = re.sub(r"/\*.*?\*/", "", own, flags=re.S)
         selectors = sorted(s.strip() for s in re.findall(r"([^{}]+)\{", own))
         self.assertEqual(selectors, sorted([
-            "body", "h1, h2, h3, h4, p", ".t-display, .ds-prose h1", ".gallery-muted", ".gallery-muted strong",
+            "body", "h1, h2, h3, h4, p", ".t-display, .ds-prose h1",
         ]))
         self.assertNotRegex(own, r"#[0-9a-fA-F]{3,8}\b", "no literal colour")
         self.assertNotRegex(own, r"\d\s*(px|em|rem)\b", "no literal size")
         self.assertNotRegex(own, r"font-family:[ \t]*(?!var\(|[ \t])\S", "no literal font")
         self.assertNotIn("rgba(", own)
-        for gone in ("btn-arrow", "lb-bg", "-on-dark", "themebar", "data-open", "@font-face"):
+        for gone in ("gallery-muted", "btn-arrow", "lb-bg", "-on-dark", "themebar", "data-open", "@font-face"):
             self.assertNotIn(gone, self.page.replace(self.tokens, "").replace(self.components, ""))
 
     def test_uses_the_media_and_lightbox_components(self):
