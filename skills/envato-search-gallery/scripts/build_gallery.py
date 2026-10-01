@@ -679,14 +679,12 @@ def main():
 
 
 def prune(folder):
-    """Delete gallery pages older than KEEP_DAYS so the cache folder does not grow."""
-    cutoff = time.time() - KEEP_DAYS * 86400
-    for page in folder.glob("*.html"):
-        try:
-            if page.stat().st_mtime < cutoff:
-                page.unlink()
-        except OSError:
-            pass
+    """Delete gallery pages older than KEEP_DAYS so the cache folder does not grow.
+
+    One rule, kept in gallery_server.prune(): only pages this builder made are removed, so other
+    files served from the same folder (option pages, for instance) are left alone.
+    """
+    return gallery_server.prune(folder)
 
 if __name__ == "__main__":
     main()

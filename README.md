@@ -151,7 +151,8 @@ exactly what it does.
   port is taken by another program it uses a free one instead, and an old link may stop working;
   ask the agent to search again.
 - **Old pages are deleted.** Galleries older than 7 days are removed the next time one is
-  built. A three-image gallery is about 250 to 300 KB (about 180 KB of that is the embedded fonts), so a
+  built, and also whenever the local server starts (only pages the gallery builder made; other
+  files in the folder are left alone). A three-image gallery is about 250 to 300 KB (about 180 KB of that is the embedded fonts), so a
   machine that stops using the plugin keeps only a few small files.
 
 The shutdown was tested on 2026-09-30 by starting the server with `--idle 60` and confirming
