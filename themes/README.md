@@ -12,6 +12,11 @@ This plugin carries a bundled copy at
 so it works when installed alone. The copy has its own embedded fonts, its own logo paths and a `sync`
 block. Those are the only parts that differ from the master.
 
+Beside it, `jason-armstrong.layout.json` holds the gallery's own measures, roles and colours (the
+card padding, the author and meta type, the button arrow colour and the like). Schema 3 themes do not
+carry them, so the gallery keeps them here. `build_gallery.py` merges the file into the theme, and the
+sync check never looks at it.
+
 ## Check and refresh the copy
 
 ```bash
