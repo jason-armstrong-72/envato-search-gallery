@@ -62,6 +62,8 @@ class OfflineBuild(unittest.TestCase):
         for name, modes in THEME["colour"].items():
             if name not in build_gallery.REQUIRED_COLOURS:
                 continue
+            if f"var(--{name})" not in self.page:
+                continue  # #30: colours the page never reads are not written
             for mode in ("light", "dark"):
                 self.assertIn(f"--{name}:{modes[mode]};", self.page, f"{name} ({mode})")
 
