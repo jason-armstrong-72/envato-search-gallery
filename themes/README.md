@@ -26,7 +26,10 @@ python3 skills/envato-search-gallery/scripts/check_theme_sync.py --update   # re
 
 - The check finds the master at `$JA_THEME_MASTER`, or else at
   `~/.claude/skills/jason-armstrong-design-system/theme.json`.
-- It prints `in step`, or `behind` with each value that differs. It exits 1 only when a master exists
+- It compares the bundled `mark.svg` and `mark-dark.svg` byte for byte with the master's logo files
+  (the paths in the master's `brand.logo` and `brand.logo_dark`, relative to its `theme.json`). A
+  null logo field has nothing to compare.
+- It prints `in step`, or `behind` with each value or logo file that differs. It exits 1 only when a master exists
   and differs. With no master it says so and exits 0.
 - `--update` keeps the plugin-local values (`sync.local_keys`), copies the master's logo files and sets
   `sync.source_version`.

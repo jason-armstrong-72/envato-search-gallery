@@ -15,11 +15,15 @@ The port is 47615 unless ENVATO_GALLERY_PORT says otherwise, so a link and the b
 settings for a page (such as the light or dark choice) survive the server restarting. If that port
 is taken by something else, the OS picks a free one instead.
 
+When it starts it also deletes gallery pages in DIR that are older than 7 days (only pages the
+builder made; any other file is left alone).
+
 Standard library only.
 """
 import argparse
 import json
 import os
+import re
 import signal
 import subprocess
 import sys
@@ -33,6 +37,11 @@ DEFAULT_DIR = Path.home() / ".cache" / "envato-gallery"
 DEFAULT_IDLE = 3600
 STATE_NAME = ".server.json"
 DEFAULT_PORT = 47615
+KEEP_DAYS = 7  # the age rule for gallery pages; build_gallery.prune() uses it through prune()
+# What build_gallery.py writes: <slug>.html, whose <title> starts with this text. The file name alone
+# is not enough (an option page such as ja-tuner.html has the same shape), so both must match.
+PAGE_NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\.html")
+PAGE_SIGNATURE = b"<title>Envato results: "
 
 
 def preferred_port():
@@ -42,6 +51,35 @@ def preferred_port():
     except ValueError:
         return DEFAULT_PORT
     return port if 1 <= port <= 65535 else DEFAULT_PORT
+
+
+def prune(folder):
+    """Delete gallery pages older than KEEP_DAYS from the cache folder. Returns how many.
+
+    The only pruning rule: build_gallery.prune() calls this. Only a file the builder made is
+    removed, judged by its name and by the title near the top of the page. Other files, such as
+    option pages, are left alone.
+    """
+    cutoff = time.time() - KEEP_DAYS * 86400
+    removed = 0
+    try:
+        pages = list(folder.glob("*.html"))
+    except OSError:
+        return 0
+    for page in pages:
+        try:
+            if not PAGE_NAME.fullmatch(page.name) or not page.is_file() or page.is_symlink():
+                continue
+            if page.stat().st_mtime >= cutoff:
+                continue
+            with page.open("rb") as fh:
+                if PAGE_SIGNATURE not in fh.read(1024):
+                    continue
+            page.unlink()
+            removed += 1
+        except OSError:
+            pass
+    return removed
 
 
 def running_port(directory):
@@ -86,6 +124,7 @@ def ensure(directory, idle):
 
 def run(directory, idle):
     directory.mkdir(parents=True, exist_ok=True)
+    prune(directory)
     last_request = [time.time()]
 
     class Handler(SimpleHTTPRequestHandler):

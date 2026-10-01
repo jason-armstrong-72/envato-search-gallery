@@ -12,7 +12,13 @@ $JA_THEME_MASTER if that is set, else ~/.claude/skills/<sync.source>/theme.json.
 The bundled copy keeps a few plugin-local values (the dotted paths in sync.local_keys: the
 embedded fonts, the logo paths and the sync block). Everything else must equal the master.
 
-Only the theme copy is compared. The gallery's own jason-armstrong.layout.json is never read here.
+The bundled logo files (brand.logo and brand.logo_dark, under themes/assets) are also compared byte
+for byte with the master's files of the same fields (paths relative to the master theme file). A
+difference counts as behind and --update copies them. A null logo field in the master has nothing to
+compare.
+
+Only the theme copy and the logos are compared. The gallery's own jason-armstrong.layout.json is
+never read here.
 
 Exit code: 0 when in step or when no master exists (the plugin may be installed alone),
 1 when a master exists and differs. Standard library only.
@@ -111,24 +117,58 @@ def behind_note(bundled_path=BUNDLED):
         if not mp.is_file():
             return None
         master = load(mp)
-        if differences(bundled, master, (bundled.get("sync") or {}).get("local_keys", [])):
+        if differences(bundled, master, (bundled.get("sync") or {}).get("local_keys", [])) or logo_differences(
+            bundled, master, mp
+        ):
             return "theme copy is behind the master: run scripts/check_theme_sync.py"
     except Exception:
         return None
     return None
 
 
-def copy_logos(bundled, new, master, mp):
-    """Copy the master's logo files into the bundled theme's asset paths. Returns notes."""
-    notes = []
+def logo_pairs(bundled, master, mp):
+    """(field, master file, bundled file or None, note) for each logo the master names.
+
+    A null or empty field in the master is skipped (nothing to compare). A master file that does not
+    exist is skipped with a note. The bundled path comes from the bundled theme's own brand field,
+    else themes/assets/<master file name>, relative to the skill folder.
+    """
+    out = []
     for field in ("logo", "logo_dark"):
         src_name = (master.get("brand") or {}).get(field)
         if not src_name:
             continue
         src = Path(src_name)
         src = src if src.is_absolute() else mp.parent / src
-        local = (new.get("brand") or {}).get(field) or f"themes/assets/{Path(src_name).name}"
-        dest = SKILL_DIR / local
+        local = (bundled.get("brand") or {}).get(field) or f"themes/assets/{Path(src_name).name}"
+        dest = Path(local)
+        dest = dest if dest.is_absolute() else SKILL_DIR / dest
+        out.append((field, src, dest))
+    return out
+
+
+def logo_differences(bundled, master, mp):
+    """List of (bundled file label, master file) whose bytes differ or whose bundled file is missing."""
+    out = []
+    for field, src, dest in logo_pairs(bundled, master, mp):
+        if not src.is_file():
+            continue
+        if not dest.is_file() or dest.read_bytes() != src.read_bytes():
+            out.append((label(dest), src))
+    return out
+
+
+def label(path):
+    try:
+        return str(path.relative_to(SKILL_DIR))
+    except ValueError:
+        return str(path)
+
+
+def copy_logos(bundled, new, master, mp):
+    """Copy the master's logo files over the bundled ones where they differ. Returns notes."""
+    notes = []
+    for field, src, dest in logo_pairs(new, master, mp):
         if not src.is_file():
             notes.append(f"logo not found in the master, left alone: {src}")
             continue
@@ -136,7 +176,7 @@ def copy_logos(bundled, new, master, mp):
             continue
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(src, dest)
-        notes.append(f"copied {src.name} to {dest.relative_to(SKILL_DIR)}")
+        notes.append(f"copied {src.name} to {label(dest)}")
     return notes
 
 
@@ -155,15 +195,18 @@ def main():
     master = load(mp)
     local_keys = (bundled.get("sync") or {}).get("local_keys", [])
     diffs = differences(bundled, master, local_keys)
+    logo_diffs = logo_differences(bundled, master, mp)
     name, mver, bver = master.get("name", "?"), master.get("version", "?"), bundled.get("version", "?")
 
     if not args.update:
-        if not diffs:
+        if not diffs and not logo_diffs:
             print(f"in step: {name} {mver}")
             return 0
         print(f"behind: bundled {bver}, master {mver}")
         for path, old, new in diffs:
             print(f"{path}\n  bundled: {short(old)}\n  master:  {short(new)}")
+        for bundled_file, master_file in logo_diffs:
+            print(f"logo file {bundled_file}\n  differs from the master's {master_file}")
         return 1
 
     new = rebuilt(bundled, master)
@@ -172,10 +215,10 @@ def main():
     changed = text != tf.read_text(encoding="utf-8")
     if changed:
         tf.write_text(text, encoding="utf-8")
-    if not diffs and not notes and not changed:
+    if not diffs and not logo_diffs and not notes and not changed:
         print(f"already in step: {name} {mver}")
         return 0
-    print(f"updated {tf}: {bver} -> {mver}, {len(diffs)} value(s) changed")
+    print(f"updated {tf}: {bver} -> {mver}, {len(diffs)} value(s) changed, {len(logo_diffs)} logo file(s) differed")
     for path, old, newv in diffs:
         print(f"  {path}: {short(old)} -> {short(newv)}")
     for n in notes:
