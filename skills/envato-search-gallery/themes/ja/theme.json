@@ -2,7 +2,7 @@
   "schema_version": 3,
   "name": "jason-armstrong",
   "display_name": "JA",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "owner": "Jason Armstrong",
   "derived_from": "Started from measurements of https://www.archetypeai.io/ (off-white page, near-black ink, light headings, small uppercase mono labels, near-square corners), then changed: Forest green accent, a derived dark theme, house coral kept for error and warning only.",
   "fonts": {
@@ -131,6 +131,30 @@
       "tracking_em": 0,
       "line_height": 1.5,
       "usage": "Text in inputs, selects, table cells and toasts"
+    },
+    "panel-title": {
+      "family": "sans",
+      "size_px": 15,
+      "weight": 500,
+      "tracking_em": -0.01,
+      "line_height": 1.3,
+      "usage": "Panel section title"
+    },
+    "panel-label": {
+      "family": "sans",
+      "size_px": 13,
+      "weight": 400,
+      "tracking_em": 0,
+      "line_height": 1.35,
+      "usage": "Panel row label"
+    },
+    "panel-note": {
+      "family": "sans",
+      "size_px": 12,
+      "weight": 300,
+      "tracking_em": 0,
+      "line_height": 1.4,
+      "usage": "Panel note"
     }
   },
   "colour": {
