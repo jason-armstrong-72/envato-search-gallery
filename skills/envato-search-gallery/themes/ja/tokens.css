@@ -74,6 +74,24 @@
   --t-data-lh: 1.5;
   --t-data-f: var(--font);
   --t-data-tt: none;
+  --t-panel-title-s: 15px;
+  --t-panel-title-w: 500;
+  --t-panel-title-tr: -0.01em;
+  --t-panel-title-lh: 1.3;
+  --t-panel-title-f: var(--font);
+  --t-panel-title-tt: none;
+  --t-panel-label-s: 13px;
+  --t-panel-label-w: 400;
+  --t-panel-label-tr: 0em;
+  --t-panel-label-lh: 1.35;
+  --t-panel-label-f: var(--font);
+  --t-panel-label-tt: none;
+  --t-panel-note-s: 12px;
+  --t-panel-note-w: 300;
+  --t-panel-note-tr: 0em;
+  --t-panel-note-lh: 1.4;
+  --t-panel-note-f: var(--font);
+  --t-panel-note-tt: none;
   --sp-pagex: 20px;
   --sp-pagetop: 32px;
   --sp-pagebot: 40px;
@@ -220,6 +238,9 @@
 .t-button { font-family: var(--t-button-f); font-size: var(--t-button-s); font-weight: var(--t-button-w); letter-spacing: var(--t-button-tr); line-height: var(--t-button-lh); text-transform: var(--t-button-tt); }
 .t-code { font-family: var(--t-code-f); font-size: var(--t-code-s); font-weight: var(--t-code-w); letter-spacing: var(--t-code-tr); line-height: var(--t-code-lh); text-transform: var(--t-code-tt); }
 .t-data { font-family: var(--t-data-f); font-size: var(--t-data-s); font-weight: var(--t-data-w); letter-spacing: var(--t-data-tr); line-height: var(--t-data-lh); text-transform: var(--t-data-tt); }
+.t-panel-title { font-family: var(--t-panel-title-f); font-size: var(--t-panel-title-s); font-weight: var(--t-panel-title-w); letter-spacing: var(--t-panel-title-tr); line-height: var(--t-panel-title-lh); text-transform: var(--t-panel-title-tt); }
+.t-panel-label { font-family: var(--t-panel-label-f); font-size: var(--t-panel-label-s); font-weight: var(--t-panel-label-w); letter-spacing: var(--t-panel-label-tr); line-height: var(--t-panel-label-lh); text-transform: var(--t-panel-label-tt); }
+.t-panel-note { font-family: var(--t-panel-note-f); font-size: var(--t-panel-note-s); font-weight: var(--t-panel-note-w); letter-spacing: var(--t-panel-note-tr); line-height: var(--t-panel-note-lh); text-transform: var(--t-panel-note-tt); }
 @media (max-width: 600px), (pointer: coarse) and (max-height: 600px) {
   :root {
     --t-display-s: 48px;
@@ -232,6 +253,9 @@
     --t-button-s: 14px;
     --t-code-s: 15px;
     --t-data-s: 17px;
+    --t-panel-title-s: 17px;
+    --t-panel-label-s: 15px;
+    --t-panel-note-s: 14px;
   }
 }
 :root.ds-small {
@@ -245,4 +269,7 @@
   --t-button-s: 14px;
   --t-code-s: 15px;
   --t-data-s: 17px;
+  --t-panel-title-s: 17px;
+  --t-panel-label-s: 15px;
+  --t-panel-note-s: 14px;
 }

@@ -68,6 +68,12 @@
  * .ds-weekday : weekday heading
  * .ds-day : one day button
  * .ds-theme-switch : three icon buttons: Light, Dark, System (aria-pressed)
+ * .ds-segmented : two to five text buttons in a row, one pressed (aria-pressed), in the theme switch's look
+ * .ds-panel-heading : a section title for a tool or settings panel, with a hairline under it
+ * .ds-panel-heading-aside : the end slot of a panel heading (a count, a reset button, a collapse button)
+ * .ds-field-row : one row of a panel: a ds-label, the control, and an optional ds-help note
+ * .ds-range : slider, a native range input with an accent fill (--ds-range-fill, a percentage the page sets)
+ * .ds-range-value : the figure a ds-range shows, an output beside it
  * .ds-card : surface panel, fills its container, its heading is the first h2, h3 or h4
  * .ds-accordion : stack of native details and summary items, hairline between them, no script
  * .ds-stat : figure tile
@@ -93,7 +99,7 @@
  * .is-action : makes a ds-chip interactive
  * .is-tight, .is-loose : smaller or larger gap on ds-stack
  * .is-between : spreads a ds-row to both ends
- * .is-selected : chosen state (chip, tab, table row, day)
+ * .is-selected : chosen state (chip, tab, table row, day, segmented button)
  * .is-current : the current item (page, nav link, today)
  * .is-error : error state (field, help, empty panel, toast, callout). A form control also matches aria-invalid="true"
  * .is-warning : warning state (callout)
@@ -141,13 +147,13 @@ html {
 .ds-stack.is-loose > .ds-section + .ds-section { margin-top: calc(var(--sp-gapsection) - var(--sp-gaploose)); }
 /* controls keep their own width in a stack; the stack's default stretch would make them full width.
    Fields, inputs, cards, tables, callouts, prose, progress and accordions still fill the stack. */
-.ds-stack > :is(.ds-btn, .ds-btn-ghost, .ds-chip, .ds-toggle, .ds-icon-btn, .ds-theme-switch, .ds-switch, .ds-status, .ds-check, .ds-radio, .ds-brand) { align-self: flex-start; }
+.ds-stack > :is(.ds-btn, .ds-btn-ghost, .ds-chip, .ds-toggle, .ds-icon-btn, .ds-theme-switch, .ds-segmented, .ds-switch, .ds-status, .ds-check, .ds-radio, .ds-brand) { align-self: flex-start; }
 /* long text stops at the reading width, while the page itself can be as wide as maxw */
 :where(.ds-page) :where(p, ul, ol, blockquote):not(.ds-toast-text) { max-width: var(--measure); }
 
 /* ---- type: each component takes a whole role from the variables (zero specificity, so a
    .t-<role> class on plain text and a page's own rules still win) ---- */
-:where(.ds-btn, .ds-btn-ghost, .ds-toggle, .ds-tab, .ds-page-item, .ds-toast-action) {
+:where(.ds-btn, .ds-btn-ghost, .ds-toggle, .ds-tab, .ds-page-item, .ds-toast-action, .ds-segmented button) {
   font-family: var(--t-button-f);
   font-size: var(--t-button-s);
   font-weight: var(--t-button-w);
@@ -187,6 +193,31 @@ html {
   letter-spacing: var(--t-data-tr, var(--t-body-tr));
   line-height: var(--t-data-lh, var(--t-body-lh));
   text-transform: var(--t-data-tt, var(--t-body-tt));
+}
+/* optional roles for a panel (spec 3.18): title, label and note fall back to title and caption */
+:where(.ds-panel-heading) {
+  font-family: var(--t-panel-title-f, var(--t-title-f));
+  font-size: var(--t-panel-title-s, var(--t-title-s));
+  font-weight: var(--t-panel-title-w, var(--t-title-w));
+  letter-spacing: var(--t-panel-title-tr, var(--t-title-tr));
+  line-height: var(--t-panel-title-lh, var(--t-title-lh));
+  text-transform: var(--t-panel-title-tt, var(--t-title-tt));
+}
+:where(.ds-field-row > .ds-label) {
+  font-family: var(--t-panel-label-f, var(--t-caption-f));
+  font-size: var(--t-panel-label-s, var(--t-caption-s));
+  font-weight: var(--t-panel-label-w, var(--t-caption-w));
+  letter-spacing: var(--t-panel-label-tr, var(--t-caption-tr));
+  line-height: var(--t-panel-label-lh, var(--t-caption-lh));
+  text-transform: var(--t-panel-label-tt, var(--t-caption-tt));
+}
+:where(.ds-range-value, .ds-panel-heading-aside, .ds-field-row > .ds-help) {
+  font-family: var(--t-panel-note-f, var(--t-caption-f));
+  font-size: var(--t-panel-note-s, var(--t-caption-s));
+  font-weight: var(--t-panel-note-w, var(--t-caption-w));
+  letter-spacing: var(--t-panel-note-tr, var(--t-caption-tr));
+  line-height: var(--t-panel-note-lh, var(--t-caption-lh));
+  text-transform: var(--t-panel-note-tt, var(--t-caption-tt));
 }
 :where(.ds-table td.ds-num, .ds-code, .ds-code-inline, .ds-prose code, .ds-prose pre) {
   font-family: var(--t-code-f);
@@ -241,7 +272,7 @@ html {
 
 /* ---- shared structure for every interactive control (zero specificity) ---- */
 :where(.ds-btn, .ds-btn-ghost, .ds-toggle, .ds-chip.is-action, .ds-tab, .ds-page-item, .ds-nav-link,
-  .ds-day, .ds-icon-btn, .ds-theme-switch button, .ds-toast-action) {
+  .ds-day, .ds-icon-btn, .ds-theme-switch button, .ds-segmented button, .ds-toast-action) {
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
@@ -256,15 +287,16 @@ html {
 
 /* ---- focus ring ---- */
 :where(.ds-btn, .ds-btn-ghost, .ds-toggle, .ds-chip.is-action, .ds-input, .ds-select, .ds-textarea, .ds-tab,
-  .ds-page-item, .ds-nav-link, .ds-day, .ds-icon-btn, .ds-theme-switch button, .ds-toast-action,
-  .ds-switch, .ds-accordion summary):is(:focus-visible, .is-focus) {
+  .ds-page-item, .ds-nav-link, .ds-day, .ds-icon-btn, .ds-theme-switch button, .ds-segmented button, .ds-toast-action,
+  .ds-switch, .ds-range, .ds-accordion summary):is(:focus-visible, .is-focus) {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
 /* ---- disabled ---- */
 :is(.ds-btn, .ds-btn-ghost, .ds-toggle, .ds-chip, .ds-input, .ds-select, .ds-textarea, .ds-tab, .ds-page-item,
-  .ds-nav-link, .ds-day, .ds-icon-btn, .ds-theme-switch button, .ds-toast-action, .ds-switch):is(.is-disabled, [disabled], [aria-disabled="true"]) {
+  .ds-nav-link, .ds-day, .ds-icon-btn, .ds-theme-switch button, .ds-segmented, .ds-segmented button, .ds-toast-action, .ds-switch,
+  .ds-range):is(.is-disabled, [disabled], [aria-disabled="true"]) {
   opacity: var(--disabled);
   pointer-events: none;
   cursor: not-allowed;
@@ -551,14 +583,14 @@ html {
   .ds-icon-btn:hover { color: var(--accent-text); }
 }
 .ds-icon-btn:is(:active, .is-pressed) { color: var(--accent-text); background: color-mix(in srgb, var(--accent) var(--tint), transparent); }
-.ds-icon-btn svg, .ds-theme-switch svg {
+.ds-icon-btn svg, .ds-theme-switch svg, .ds-segmented svg {
   display: block;
   width: var(--icon-s);
   height: var(--icon-s);
   stroke-width: var(--icon-stroke);
 }
 /* the stroke is the theme's pixel weight at any icon size or viewBox */
-.ds-icon-btn svg *, .ds-theme-switch svg * { vector-effect: non-scaling-stroke; }
+.ds-icon-btn svg *, .ds-theme-switch svg *, .ds-segmented svg * { vector-effect: non-scaling-stroke; }
 
 /* ---- empty and error panel, skeleton ---- */
 .ds-empty {
@@ -774,28 +806,31 @@ html {
   }
 }
 
-/* ---- theme switch ---- */
-.ds-theme-switch { display: inline-flex; border: 1px solid var(--muted); border-radius: var(--sp-rbtn); }
-.ds-theme-switch button {
+/* ---- theme switch, and the segmented control that shares its look (icons there, text buttons here) ---- */
+.ds-theme-switch, .ds-segmented { display: inline-flex; box-sizing: border-box; max-width: 100%; border: 1px solid var(--muted); border-radius: var(--sp-rbtn); }
+.ds-theme-switch button, .ds-segmented button {
   padding: 0 var(--sp-chipx);
+  white-space: nowrap;
   border: 0;
   border-radius: 0;
   background: transparent;
   color: var(--ink);
 }
-.ds-theme-switch button:first-child { border-radius: calc(var(--sp-rbtn) - 1px) 0 0 calc(var(--sp-rbtn) - 1px); }
-.ds-theme-switch button:last-child { border-radius: 0 calc(var(--sp-rbtn) - 1px) calc(var(--sp-rbtn) - 1px) 0; }
-.ds-theme-switch button:is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed) { color: var(--accent-text); }
+.ds-theme-switch button:first-child, .ds-segmented button:first-child { border-radius: calc(var(--sp-rbtn) - 1px) 0 0 calc(var(--sp-rbtn) - 1px); }
+.ds-theme-switch button:last-child, .ds-segmented button:last-child { border-radius: 0 calc(var(--sp-rbtn) - 1px) calc(var(--sp-rbtn) - 1px) 0; }
+.ds-theme-switch button:is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed),
+.ds-segmented button:is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed) { color: var(--accent-text); }
 @media (hover: hover) {
-  .ds-theme-switch button:hover { color: var(--accent-text); }
+  .ds-theme-switch button:hover, .ds-segmented button:hover { color: var(--accent-text); }
 }
-.ds-theme-switch button[aria-pressed="true"],
-.ds-theme-switch button[aria-pressed="true"]:is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed) {
+.ds-theme-switch button[aria-pressed="true"], .ds-segmented button:is([aria-pressed="true"], .is-selected),
+.ds-theme-switch button[aria-pressed="true"]:is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed),
+.ds-segmented button:is([aria-pressed="true"], .is-selected):is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed) {
   background: var(--btn-bg);
   color: var(--btn-ink);
 }
 @media (hover: hover) {
-  .ds-theme-switch button[aria-pressed="true"]:hover {
+  .ds-theme-switch button[aria-pressed="true"]:hover, .ds-segmented button:is([aria-pressed="true"], .is-selected):hover {
     background: var(--btn-bg);
     color: var(--btn-ink);
   }
@@ -1135,6 +1170,145 @@ html {
 .ds-progress::-webkit-progress-value { background: var(--accent); }
 .ds-progress::-moz-progress-bar { background: var(--accent); }
 
+/* ---- panel parts (spec 3.18): heading, field row, range and segmented control. ds-segmented shares the
+   theme switch's rules above. ---- */
+.ds-panel-heading {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-gaptight);
+  margin: 0 0 var(--sp-gaptight);
+  padding: 0 0 calc(var(--sp-gaptight) / 2);
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+}
+/* a heading after other content stands apart from it: gaploose, less the gap a ds-stack already adds */
+.ds-panel-heading:not(:first-child) { margin-top: var(--sp-gaploose); }
+.ds-stack > .ds-panel-heading:not(:first-child) { margin-top: calc(var(--sp-gaploose) - var(--sp-gap)); }
+.ds-stack.is-tight > .ds-panel-heading:not(:first-child) { margin-top: calc(var(--sp-gaploose) - var(--sp-gaptight)); }
+.ds-stack.is-loose > .ds-panel-heading:not(:first-child) { margin-top: 0; }
+/* a heading element inside takes the heading's type, not the browser's */
+.ds-panel-heading > :is(h2, h3, h4) {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-transform: inherit;
+}
+.ds-panel-heading-aside {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-gaptight);
+  margin-inline-start: auto;
+  color: var(--muted);
+}
+
+/* a row wraps by its own width, so it stacks on a narrow panel without a viewport query: the label,
+   then the control (a bare div holds several parts, such as a ds-range and its figure), then the note */
+.ds-field-row {
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: var(--sp-gaptight);
+  row-gap: calc(var(--sp-gaptight) / 2);
+  min-width: 0;
+}
+.ds-field-row > .ds-label { flex: 0 1 auto; margin: 0; color: var(--ink); }
+.ds-field-row > .ds-help { flex: 1 0 100%; margin: 0; }
+:where(.ds-field-row) > :where(div:not([class*="ds-"])) {
+  display: flex;
+  flex: 1 1 10em;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--sp-gaptight);
+  min-width: 0;
+}
+.ds-field-row > :is(.ds-input, .ds-select) { flex: 1 1 10em; min-width: 0; }
+
+/* range: a native input. The track is drawn from the border colour and, up to the thumb, the accent
+   colour (the page sets --ds-range-fill to a percentage; unset, the track is plain). The thumb's box is
+   the control's target size with a clear ring, so it is never smaller than a coarse pointer needs. */
+.ds-range {
+  --ds-range-dot: var(--btn-bg);
+  --ds-range-d: 1.25em;
+  --ds-range-t: max(1.5em, var(--ds-target));
+  --ds-range-h: 0.375em;
+  --ds-range-bg:
+    linear-gradient(to right, var(--accent) var(--ds-range-fill, 0%), transparent 0) calc(var(--ds-range-t) / 2) 0 / calc(100% - var(--ds-range-t)) 100% no-repeat,
+    linear-gradient(var(--accent), var(--accent)) 0 0 / min(calc(var(--ds-range-fill, 0%) * 1000), calc(var(--ds-range-t) / 2)) 100% no-repeat,
+    linear-gradient(var(--border), var(--border));
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  display: block;
+  flex: 1 1 6em;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--ds-target);
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: var(--t-panel-label-s, var(--t-caption-s));
+}
+.ds-range::-webkit-slider-runnable-track {
+  box-sizing: border-box;
+  height: var(--ds-range-h);
+  border: 0;
+  border-radius: var(--sp-rchip);
+  background: var(--ds-range-bg);
+}
+.ds-range::-moz-range-track {
+  box-sizing: border-box;
+  height: var(--ds-range-h);
+  border: 0;
+  border-radius: var(--sp-rchip);
+  background: var(--ds-range-bg);
+}
+.ds-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: var(--ds-range-t);
+  height: var(--ds-range-t);
+  margin-top: calc((var(--ds-range-h) - var(--ds-range-t)) / 2);
+  border: calc((var(--ds-range-t) - var(--ds-range-d)) / 2) solid transparent;
+  border-radius: 50%;
+  background-color: var(--ds-range-dot);
+  background-clip: padding-box;
+}
+.ds-range::-moz-range-thumb {
+  box-sizing: border-box;
+  width: var(--ds-range-t);
+  height: var(--ds-range-t);
+  border: calc((var(--ds-range-t) - var(--ds-range-d)) / 2) solid transparent;
+  border-radius: 50%;
+  background-color: var(--ds-range-dot);
+  background-clip: padding-box;
+}
+.ds-range.is-hover { --ds-range-dot: var(--accent-text); }
+@media (hover: hover) {
+  .ds-range:hover { --ds-range-dot: var(--accent-text); }
+}
+.ds-range:is(:active, .is-pressed) {
+  --ds-range-d: 1.5em;
+  --ds-range-dot: color-mix(in srgb, var(--accent-text) 82%, var(--bg));
+}
+.ds-range:is(.is-disabled, :disabled) ~ .ds-range-value { opacity: var(--disabled); }
+.ds-range-value {
+  flex: none;
+  min-width: 3.5ch;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+/* a disabled group fades once, as a whole, whatever its buttons carry */
+.ds-segmented.is-disabled button { opacity: 1; }
+
 /* ---- accordion: native details and summary, no script ---- */
 .ds-accordion { display: block; color: var(--ink); }
 .ds-accordion > details + details { border-top: 1px solid var(--border); }
@@ -1186,21 +1360,58 @@ html {
 /* ---- motion ---- */
 @media (prefers-reduced-motion: no-preference) {
   .ds-btn, .ds-btn-ghost, .ds-chip, .ds-toggle, .ds-input, .ds-select, .ds-textarea, .ds-tab, .ds-page-item,
-  .ds-nav-link, .ds-day, .ds-icon-btn, .ds-theme-switch button, .ds-toast-action, .ds-table tbody tr,
+  .ds-nav-link, .ds-day, .ds-icon-btn, .ds-theme-switch button, .ds-segmented button, .ds-toast-action, .ds-table tbody tr,
   .ds-check input, .ds-radio input, .ds-switch::before, .ds-accordion summary {
     transition: background-color var(--motion), color var(--motion), border-color var(--motion), box-shadow var(--motion), opacity var(--motion);
   }
   .ds-check input::before, .ds-radio input::before, .ds-accordion summary::after { transition: transform var(--motion); }
   .ds-switch::after { transition: left var(--motion), background-color var(--motion); }
+  .ds-range::-webkit-slider-thumb, .ds-range::-moz-range-thumb { transition: background-color var(--motion), border-width var(--motion); }
   .ds-page a:not([class*="ds-"]), .ds-prose a:not([class*="ds-"]) { transition: color var(--motion); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ds-btn, .ds-btn-ghost, .ds-chip, .ds-toggle, .ds-input, .ds-select, .ds-textarea, .ds-tab, .ds-page-item,
-  .ds-nav-link, .ds-day, .ds-icon-btn, .ds-theme-switch button, .ds-toast-action, .ds-table tbody tr, .ds-skeleton,
+  .ds-nav-link, .ds-day, .ds-icon-btn, .ds-theme-switch button, .ds-segmented button, .ds-toast-action, .ds-table tbody tr, .ds-skeleton,
   .ds-check input, .ds-radio input, .ds-check input::before, .ds-radio input::before, .ds-switch::before,
   .ds-switch::after, .ds-accordion summary, .ds-accordion summary::after,
+  .ds-range::-webkit-slider-thumb, .ds-range::-moz-range-thumb,
   .ds-page a:not([class*="ds-"]), .ds-prose a:not([class*="ds-"]) {
     transition: none;
     animation: none;
+  }
+}
+/* Forced colours: an on state may not rely on a shadow or a tint, which the browser removes. The state
+   selectors repeat so that hover, press and focus on an on item keep it highlighted. */
+@media (forced-colors: active) {
+  :is(.ds-chip.is-selected, .ds-chip.is-action.is-selected, .ds-chip[aria-pressed="true"], .ds-chip.is-action[aria-pressed="true"], .ds-toggle[aria-pressed="true"],
+  .ds-tab.is-selected, .ds-tab[aria-selected="true"], .ds-nav-link.is-current, .ds-page-item.is-current,
+  .ds-day.is-selected, .ds-theme-switch button[aria-pressed="true"], .ds-segmented button[aria-pressed="true"], .ds-segmented button.is-selected),
+  :is(.ds-chip.is-selected, .ds-chip.is-action.is-selected, .ds-chip[aria-pressed="true"], .ds-chip.is-action[aria-pressed="true"], .ds-toggle[aria-pressed="true"],
+  .ds-tab.is-selected, .ds-tab[aria-selected="true"], .ds-nav-link.is-current, .ds-page-item.is-current,
+  .ds-day.is-selected, .ds-theme-switch button[aria-pressed="true"], .ds-segmented button[aria-pressed="true"], .ds-segmented button.is-selected):is(:active, :focus-visible, .is-hover, .is-pressed, .is-focus),
+  .ds-table tbody tr.is-selected > * {
+    background: Highlight;
+    color: HighlightText;
+    forced-color-adjust: none;
+  }
+  @media (hover: hover) {
+    :is(.ds-chip.is-selected, .ds-chip.is-action.is-selected, .ds-chip[aria-pressed="true"], .ds-chip.is-action[aria-pressed="true"], .ds-toggle[aria-pressed="true"],
+  .ds-tab.is-selected, .ds-tab[aria-selected="true"], .ds-nav-link.is-current, .ds-page-item.is-current,
+  .ds-day.is-selected, .ds-theme-switch button[aria-pressed="true"], .ds-segmented button[aria-pressed="true"], .ds-segmented button.is-selected):hover {
+      background: Highlight;
+      color: HighlightText;
+      forced-color-adjust: none;
+    }
+  }
+}
+/* Forced colours: the range's track and fill are gradients and its thumb is a background, which the browser
+   replaces, so the range goes back to the browser's own slider here, drawn in system colours: a visible track,
+   a Highlight fill up to the thumb. */
+@media (forced-colors: active) {
+  .ds-range {
+    appearance: auto;
+    -webkit-appearance: auto;
+    accent-color: Highlight;
+    background: transparent;
   }
 }
