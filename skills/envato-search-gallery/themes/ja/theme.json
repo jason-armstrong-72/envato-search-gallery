@@ -1,12 +1,12 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "name": "jason-armstrong",
   "display_name": "JA",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "owner": "Jason Armstrong",
   "derived_from": "Started from measurements of https://www.archetypeai.io/ (off-white page, near-black ink, light headings, small uppercase mono labels, near-square corners), then changed: Forest green accent, a derived dark theme, house coral kept for error and warning only.",
   "fonts": {
-    "sans": {
+    "body": {
       "family": "Hanken Grotesk",
       "weights": [
         200,
@@ -37,7 +37,8 @@
   },
   "type": {
     "display": {
-      "family": "sans",
+      "family": "heading",
+      "case": "none",
       "size_px": 64,
       "weight": 300,
       "tracking_em": -0.035,
@@ -45,7 +46,8 @@
       "usage": "Page title"
     },
     "h2": {
-      "family": "sans",
+      "family": "heading",
+      "case": "none",
       "size_px": 36,
       "weight": 200,
       "tracking_em": -0.03,
@@ -53,7 +55,8 @@
       "usage": "Heading 2"
     },
     "h3": {
-      "family": "sans",
+      "family": "heading",
+      "case": "none",
       "size_px": 22,
       "weight": 200,
       "tracking_em": -0.02,
@@ -61,7 +64,8 @@
       "usage": "Heading 3"
     },
     "lead": {
-      "family": "sans",
+      "family": "body",
+      "case": "none",
       "size_px": 18,
       "weight": 200,
       "tracking_em": -0.01,
@@ -69,7 +73,8 @@
       "usage": "Lead paragraph"
     },
     "title": {
-      "family": "sans",
+      "family": "body",
+      "case": "none",
       "size_px": 15,
       "weight": 200,
       "tracking_em": -0.01,
@@ -77,7 +82,8 @@
       "usage": "Card title"
     },
     "body": {
-      "family": "sans",
+      "family": "body",
+      "case": "none",
       "size_px": 15,
       "weight": 200,
       "tracking_em": 0,
@@ -85,7 +91,8 @@
       "usage": "Body copy"
     },
     "caption": {
-      "family": "sans",
+      "family": "body",
+      "case": "none",
       "size_px": 13,
       "weight": 200,
       "tracking_em": 0,
@@ -94,6 +101,7 @@
     },
     "eyebrow": {
       "family": "mono",
+      "case": "upper",
       "size_px": 11,
       "weight": 400,
       "tracking_em": 0.04,
@@ -102,6 +110,7 @@
     },
     "label": {
       "family": "mono",
+      "case": "upper",
       "size_px": 11,
       "weight": 300,
       "tracking_em": 0.04,
@@ -110,6 +119,7 @@
     },
     "button": {
       "family": "mono",
+      "case": "upper",
       "size_px": 12,
       "weight": 400,
       "tracking_em": 0.04,
@@ -118,6 +128,7 @@
     },
     "code": {
       "family": "mono",
+      "case": "none",
       "size_px": 13,
       "weight": 300,
       "tracking_em": 0,
@@ -125,7 +136,8 @@
       "usage": "Code"
     },
     "data": {
-      "family": "sans",
+      "family": "body",
+      "case": "none",
       "size_px": 15,
       "weight": 300,
       "tracking_em": 0,
@@ -133,7 +145,8 @@
       "usage": "Text in inputs, selects, table cells and toasts"
     },
     "panel-title": {
-      "family": "sans",
+      "family": "body",
+      "case": "none",
       "size_px": 15,
       "weight": 500,
       "tracking_em": -0.01,
@@ -141,7 +154,8 @@
       "usage": "Panel section title"
     },
     "panel-label": {
-      "family": "sans",
+      "family": "body",
+      "case": "none",
       "size_px": 13,
       "weight": 400,
       "tracking_em": 0,
@@ -149,7 +163,8 @@
       "usage": "Panel row label"
     },
     "panel-note": {
-      "family": "sans",
+      "family": "body",
+      "case": "none",
       "size_px": 12,
       "weight": 300,
       "tracking_em": 0,

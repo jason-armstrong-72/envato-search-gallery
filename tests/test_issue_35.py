@@ -66,12 +66,13 @@ class BuiltPage(unittest.TestCase):
         self.assertIn('class="ds-theme-switch"', self.page)
         self.assertIn('<main class="ds-page ds-stack is-loose">', self.page)
 
-    def test_links_the_two_fonts_from_theme_json(self):
+    def test_links_the_fonts_from_theme_json(self):
         theme = json.loads((self.src / "theme.json").read_text(encoding="utf-8"))
-        for role in ("sans", "mono"):
-            url = theme["fonts"][role]["css_url"]
+        urls = {f["css_url"] for k, f in theme["fonts"].items() if k in ("heading", "body", "sans", "mono")}
+        self.assertTrue({"body", "mono"} <= set(theme["fonts"]) or {"sans", "mono"} <= set(theme["fonts"]))
+        for url in urls:
             self.assertIn(f'<link rel="stylesheet" href="{html.escape(url, quote=True)}">', self.page)
-        self.assertEqual(self.page.count('<link rel="stylesheet"'), 2)
+        self.assertEqual(self.page.count('<link rel="stylesheet"'), len(urls))
 
     def test_brand_has_a_light_and_a_dark_logo(self):
         self.assertIn('class="ds-brand-light"', self.page)
