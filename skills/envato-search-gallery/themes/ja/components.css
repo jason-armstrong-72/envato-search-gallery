@@ -98,7 +98,8 @@
  * Modifiers
  * .is-action : makes a ds-chip interactive
  * .is-tight, .is-loose : smaller or larger gap on ds-stack
- * .is-between : spreads a ds-row to both ends
+ * .is-between : spreads a ds-row to both ends. A lone child goes to the end (margin-left: auto), so removing a row's
+ *   second child moves the first to the right
  * .is-selected : chosen state (chip, tab, table row, day, segmented button)
  * .is-current : the current item (page, nav link, today)
  * .is-error : error state (field, help, empty panel, toast, callout). A form control also matches aria-invalid="true"
@@ -1403,6 +1404,18 @@ html {
       forced-color-adjust: none;
     }
   }
+}
+/* Forced colours: the switch's track fill and thumb are backgrounds, which the browser removes, so the thumb
+   would vanish and on would look like off. Both are drawn in system colours here: an outlined track with a
+   ButtonText thumb when off, a Highlight track with a HighlightText thumb when on. */
+@media (forced-colors: active) {
+  .ds-switch::before, .ds-switch::after { forced-color-adjust: none; }
+  .ds-switch::before { border-color: ButtonText; background: Canvas; }
+  .ds-switch::after { background: ButtonText; }
+  .ds-switch[aria-checked="true"]::before { border-color: Highlight; background: Highlight; }
+  .ds-switch[aria-checked="true"]::after { background: HighlightText; }
+  .ds-switch:is(:disabled, .is-disabled, [aria-disabled="true"])::before { border-color: GrayText; }
+  .ds-switch:is(:disabled, .is-disabled, [aria-disabled="true"])::after { background: GrayText; }
 }
 /* Forced colours: the range's track and fill are gradients and its thumb is a background, which the browser
    replaces, so the range goes back to the browser's own slider here, drawn in system colours: a visible track,
