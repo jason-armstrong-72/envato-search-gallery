@@ -170,9 +170,16 @@ def read_theme_json(source):
 
 
 def font_links(theme):
-    """The two Google Fonts <link> tags, from theme.json fonts.*.css_url, as the JA recipe has them."""
-    urls = [(theme.get("fonts") or {}).get(k, {}).get("css_url") for k in ("sans", "mono")]
-    return "\n".join(f'<link rel="stylesheet" href="{html.escape(u, quote=True)}">' for u in urls if u)
+    """The Google Fonts <link> tags, from theme.json fonts.*.css_url, as the JA recipe has them: one per distinct URL.
+
+    Schema 4 names the fonts heading (optional), body and mono; schema 3 called the body font sans."""
+    fonts = theme.get("fonts") or {}
+    urls = []
+    for key in ("heading", "body", "sans", "mono"):
+        url = (fonts.get(key) or {}).get("css_url")
+        if url and url not in urls:
+            urls.append(url)
+    return "\n".join(f'<link rel="stylesheet" href="{html.escape(u, quote=True)}">' for u in urls)
 
 
 def logo_uri(rel, source):
