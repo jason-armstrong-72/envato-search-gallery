@@ -807,33 +807,46 @@ html {
   }
 }
 
-/* ---- theme switch, and the segmented control that shares its look (icons there, text buttons here) ---- */
-.ds-theme-switch, .ds-segmented { display: inline-flex; box-sizing: border-box; max-width: 100%; border: 1px solid var(--muted); border-radius: var(--sp-rbtn); }
+/* ---- theme switch, and the segmented control that shares its look (icons there, text buttons here) ----
+   Two styles (spec 3.19), picked by tokens.css (--switch-solid, --switch-hairline; one is 1, the other 0)
+   and blended here so no brand needs CSS of its own. Solid: a muted box, ink options, the pressed one
+   filled in btn-bg. Hairline: a box in border, muted options, the pressed one in ink on an ink fill at
+   --switch-fill (the theme's tint unless switch.fill_percent sets it).
+   Without the variables (an older tokens.css) the switch is solid. */
+.ds-theme-switch, .ds-segmented {
+  --ds-sw-solid: var(--switch-solid, 1);
+  --ds-sw-box: color-mix(in srgb, var(--muted) calc(100% * var(--ds-sw-solid)), var(--border));
+  --ds-sw-ink: color-mix(in srgb, var(--ink) calc(100% * var(--ds-sw-solid)), var(--muted));
+  --ds-sw-hover: color-mix(in srgb, var(--accent-text) calc(100% * var(--ds-sw-solid)), var(--ink));
+  --ds-sw-on-bg: color-mix(in srgb, var(--btn-bg) calc(100% * var(--ds-sw-solid)), color-mix(in srgb, var(--ink) var(--switch-fill, var(--tint)), transparent));
+  --ds-sw-on-ink: color-mix(in srgb, var(--btn-ink) calc(100% * var(--ds-sw-solid)), var(--ink));
+  display: inline-flex; box-sizing: border-box; max-width: 100%; border: 1px solid var(--ds-sw-box); border-radius: var(--sp-rbtn);
+}
 .ds-theme-switch button, .ds-segmented button {
   padding: 0 var(--sp-chipx);
   white-space: nowrap;
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: var(--ink);
+  color: var(--ds-sw-ink);
 }
 .ds-theme-switch button:first-child, .ds-segmented button:first-child { border-radius: calc(var(--sp-rbtn) - 1px) 0 0 calc(var(--sp-rbtn) - 1px); }
 .ds-theme-switch button:last-child, .ds-segmented button:last-child { border-radius: 0 calc(var(--sp-rbtn) - 1px) calc(var(--sp-rbtn) - 1px) 0; }
 .ds-theme-switch button:is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed),
-.ds-segmented button:is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed) { color: var(--accent-text); }
+.ds-segmented button:is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed) { color: var(--ds-sw-hover); }
 @media (hover: hover) {
-  .ds-theme-switch button:hover, .ds-segmented button:hover { color: var(--accent-text); }
+  .ds-theme-switch button:hover, .ds-segmented button:hover { color: var(--ds-sw-hover); }
 }
 .ds-theme-switch button[aria-pressed="true"], .ds-segmented button:is([aria-pressed="true"], .is-selected),
 .ds-theme-switch button[aria-pressed="true"]:is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed),
 .ds-segmented button:is([aria-pressed="true"], .is-selected):is(.is-hover, :focus-visible, .is-focus, :active, .is-pressed) {
-  background: var(--btn-bg);
-  color: var(--btn-ink);
+  background: var(--ds-sw-on-bg);
+  color: var(--ds-sw-on-ink);
 }
 @media (hover: hover) {
   .ds-theme-switch button[aria-pressed="true"]:hover, .ds-segmented button:is([aria-pressed="true"], .is-selected):hover {
-    background: var(--btn-bg);
-    color: var(--btn-ink);
+    background: var(--ds-sw-on-bg);
+    color: var(--ds-sw-on-ink);
   }
 }
 
