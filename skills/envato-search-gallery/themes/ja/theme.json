@@ -2,7 +2,7 @@
   "schema_version": 4,
   "name": "jason-armstrong",
   "display_name": "JA",
-  "version": "3.0.0",
+  "version": "3.1.1",
   "owner": "Jason Armstrong",
   "derived_from": "Started from measurements of https://www.archetypeai.io/ (off-white page, near-black ink, light headings, small uppercase mono labels, near-square corners), then changed: Forest green accent, a derived dark theme, house coral kept for error and warning only.",
   "fonts": {
@@ -232,6 +232,12 @@
       "light": "#1a1a1a",
       "dark": "#34d399",
       "usage": "Keyboard focus ring, 2px, 2px offset"
+    },
+    "merged": {
+      "light": "#7c3aed",
+      "dark": "#a78bfa",
+      "usage": "A merged pull request: the disc of its Merged badge. Purple, as on GitHub, because the accent green already means working.",
+      "kind": "mark"
     }
   },
   "tint_percent": {
@@ -482,5 +488,32 @@
         "how": "recipes/images.md"
       }
     }
-  }
+  },
+  "switch": {
+    "style": "hairline",
+    "fill_percent": {
+      "light": 8,
+      "dark": 8
+    }
+  },
+  "accepted": [
+    {
+      "check": "switch box on bg (hairline)",
+      "mode": "both",
+      "reason": "Jason chose the Hairline switch so the switches recede (session-board#128, 2026-10-13). The chosen option is told apart by its ink text against the muted ones.",
+      "date": "2026-10-13"
+    },
+    {
+      "check": "switch box on surface (hairline)",
+      "mode": "both",
+      "reason": "Jason chose the Hairline switch so the switches recede (session-board#128, 2026-10-13). The chosen option is told apart by its ink text against the muted ones.",
+      "date": "2026-10-13"
+    },
+    {
+      "check": "switch chosen fill on bg (hairline)",
+      "mode": "both",
+      "reason": "Jason chose the Hairline switch so the switches recede (session-board#128, 2026-10-13). The chosen option is told apart by its ink text against the muted ones.",
+      "date": "2026-10-13"
+    }
+  ]
 }
