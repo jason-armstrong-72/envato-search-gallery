@@ -14,7 +14,7 @@ request. After it merges, tag the merge commit and publish a GitHub Release with
 - The bundled copy of the JA design system in `themes/ja/` is updated from 3.0.0 to 3.1.1
   (design-system-creator 0.13.0). The light, dark and system switch now uses the Hairline style: a
   light box with a soft fill on the chosen option. The theme also adds a Merged
-  mark colour. The gallery uses this copy only when the JA skill isn't installed (#PR).
+  mark colour. The gallery uses this copy only when the JA skill isn't installed (#46).
 
 ## 0.9.4 (2026-10-04)
 
