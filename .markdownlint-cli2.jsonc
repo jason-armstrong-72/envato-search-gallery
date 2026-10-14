@@ -1,0 +1,11 @@
+{
+  // Glob + ignore config for markdownlint-cli2 (rules live in .markdownlint.jsonc)
+  "globs": ["**/*.md"],
+
+  // ⚠️ Every ignore that can nest is anchored with `**/`. An un-anchored
+  // "node_modules/**" matches ONLY the tree at the repo root, so the day a repo
+  // grows a second package (a workspace, a docs site, a sub-app) that package's
+  // dependencies start getting linted. The history is in this folder's README.
+  // This file is copied into repos, some public, so keep repo names out of it.
+  "ignores": ["**/node_modules/**", "**/.next/**", "**/dist/**", "**/build/**"]
+}
