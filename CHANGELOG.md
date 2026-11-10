@@ -7,6 +7,16 @@ on `main`.
 When a release changes the version in `.claude-plugin/plugin.json`, add its section in the same pull
 request. After it merges, tag the merge commit and publish a GitHub Release with the same notes.
 
+## 0.9.6 (2026-11-10)
+
+### Bundled theme
+
+- The bundled copy of the JA design system in `themes/ja/` is updated from 3.1.1 to 5.4.0
+  (design-system-creator 0.20.1). Labels and eyebrows are 12px on a laptop and 14px on a phone
+  (were 11px and 13px), and small type is heavier (400, was 300 or 200). The gallery uses this copy
+  only when the JA skill isn't installed; with the skill installed it already takes JA from the
+  skill, so a JA release needs no change here (#48).
+
 ## 0.9.5 (2026-10-14)
 
 ### Bundled theme

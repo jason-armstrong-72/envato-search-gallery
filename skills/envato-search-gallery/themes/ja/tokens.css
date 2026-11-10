@@ -40,19 +40,19 @@
   --t-body-f: var(--font-body);
   --t-body-tt: none;
   --t-caption-s: 13px;
-  --t-caption-w: 200;
+  --t-caption-w: 400;
   --t-caption-tr: 0em;
   --t-caption-lh: 1.4;
   --t-caption-f: var(--font-body);
   --t-caption-tt: none;
-  --t-eyebrow-s: 11px;
+  --t-eyebrow-s: 12px;
   --t-eyebrow-w: 400;
   --t-eyebrow-tr: 0.04em;
   --t-eyebrow-lh: 1.2;
   --t-eyebrow-f: var(--font-mono);
   --t-eyebrow-tt: uppercase;
-  --t-label-s: 11px;
-  --t-label-w: 300;
+  --t-label-s: 12px;
+  --t-label-w: 400;
   --t-label-tr: 0.04em;
   --t-label-lh: 1.4;
   --t-label-f: var(--font-mono);
@@ -88,11 +88,29 @@
   --t-panel-label-f: var(--font-body);
   --t-panel-label-tt: none;
   --t-panel-note-s: 12px;
-  --t-panel-note-w: 300;
+  --t-panel-note-w: 400;
   --t-panel-note-tr: 0em;
   --t-panel-note-lh: 1.4;
   --t-panel-note-f: var(--font-body);
   --t-panel-note-tt: none;
+  --t-stat-value-s: 36px;
+  --t-stat-value-w: 300;
+  --t-stat-value-tr: -0.02em;
+  --t-stat-value-lh: 1.1;
+  --t-stat-value-f: var(--font-body);
+  --t-stat-value-tt: none;
+  --t-chart-label-s: 12px;
+  --t-chart-label-w: 400;
+  --t-chart-label-tr: 0em;
+  --t-chart-label-lh: 1.3;
+  --t-chart-label-f: var(--font-body);
+  --t-chart-label-tt: none;
+  --t-section-title-s: 15px;
+  --t-section-title-w: 500;
+  --t-section-title-tr: -0.01em;
+  --t-section-title-lh: 1.3;
+  --t-section-title-f: var(--font-body);
+  --t-section-title-tt: none;
   --sp-pagex: 20px;
   --sp-pagetop: 32px;
   --sp-pagebot: 40px;
@@ -149,7 +167,9 @@
   --accent: #0d8a4b;
   --accent-text: #066f33;
   --error: #f4503b;
+  --error-text: #be4333;
   --warning: #b45309;
+  --warning-text: #95480c;
   --btn-bg: #1a1a1a;
   --btn-ink: #ffffff;
   --focus: #1a1a1a;
@@ -157,12 +177,10 @@
   --tint: 8%;
   --switch-fill: 8%;
   --disabled: 0.4;
-  --chart-1: #0d8a4b;
-  --chart-2: #2563eb;
+  --chart-1: #2563eb;
+  --chart-2: #be185d;
   --chart-3: #7c3aed;
-  --chart-4: #0e7490;
-  --chart-5: #a16207;
-  --chart-6: #be185d;
+  --chart-4: #0891b2;
   --chart-seq-1: #c3dccf;
   --chart-seq-2: #96c8ae;
   --chart-seq-3: #68b38d;
@@ -180,7 +198,9 @@
   --accent: #34d399;
   --accent-text: #34d399;
   --error: #ff5c48;
+  --error-text: #ff5c48;
   --warning: #fbbf24;
+  --warning-text: #fbbf24;
   --btn-bg: #f1f1f0;
   --btn-ink: #000000;
   --focus: #34d399;
@@ -188,12 +208,10 @@
   --tint: 16%;
   --switch-fill: 8%;
   --disabled: 0.4;
-  --chart-1: #34d399;
-  --chart-2: #60a5fa;
+  --chart-1: #60a5fa;
+  --chart-2: #f472b6;
   --chart-3: #a78bfa;
   --chart-4: #22d3ee;
-  --chart-5: #facc15;
-  --chart-6: #f472b6;
   --chart-seq-1: #0a2a1f;
   --chart-seq-2: #15543d;
   --chart-seq-3: #1f7f5c;
@@ -212,7 +230,9 @@
     --accent: #34d399;
     --accent-text: #34d399;
     --error: #ff5c48;
+    --error-text: #ff5c48;
     --warning: #fbbf24;
+    --warning-text: #fbbf24;
     --btn-bg: #f1f1f0;
     --btn-ink: #000000;
     --focus: #34d399;
@@ -220,12 +240,10 @@
     --tint: 16%;
     --switch-fill: 8%;
     --disabled: 0.4;
-    --chart-1: #34d399;
-    --chart-2: #60a5fa;
+    --chart-1: #60a5fa;
+    --chart-2: #f472b6;
     --chart-3: #a78bfa;
     --chart-4: #22d3ee;
-    --chart-5: #facc15;
-    --chart-6: #f472b6;
     --chart-seq-1: #0a2a1f;
     --chart-seq-2: #15543d;
     --chart-seq-3: #1f7f5c;
@@ -250,6 +268,9 @@
 .t-panel-title { font-family: var(--t-panel-title-f); font-size: var(--t-panel-title-s); font-weight: var(--t-panel-title-w); letter-spacing: var(--t-panel-title-tr); line-height: var(--t-panel-title-lh); text-transform: var(--t-panel-title-tt); }
 .t-panel-label { font-family: var(--t-panel-label-f); font-size: var(--t-panel-label-s); font-weight: var(--t-panel-label-w); letter-spacing: var(--t-panel-label-tr); line-height: var(--t-panel-label-lh); text-transform: var(--t-panel-label-tt); }
 .t-panel-note { font-family: var(--t-panel-note-f); font-size: var(--t-panel-note-s); font-weight: var(--t-panel-note-w); letter-spacing: var(--t-panel-note-tr); line-height: var(--t-panel-note-lh); text-transform: var(--t-panel-note-tt); }
+.t-stat-value { font-family: var(--t-stat-value-f); font-size: var(--t-stat-value-s); font-weight: var(--t-stat-value-w); letter-spacing: var(--t-stat-value-tr); line-height: var(--t-stat-value-lh); text-transform: var(--t-stat-value-tt); }
+.t-chart-label { font-family: var(--t-chart-label-f); font-size: var(--t-chart-label-s); font-weight: var(--t-chart-label-w); letter-spacing: var(--t-chart-label-tr); line-height: var(--t-chart-label-lh); text-transform: var(--t-chart-label-tt); }
+.t-section-title { font-family: var(--t-section-title-f); font-size: var(--t-section-title-s); font-weight: var(--t-section-title-w); letter-spacing: var(--t-section-title-tr); line-height: var(--t-section-title-lh); text-transform: var(--t-section-title-tt); }
 @media (max-width: 600px), (pointer: coarse) and (max-height: 600px) {
   :root {
     --t-display-s: 48px;
@@ -257,14 +278,17 @@
     --t-title-s: 17px;
     --t-body-s: 17px;
     --t-caption-s: 15px;
-    --t-eyebrow-s: 13px;
-    --t-label-s: 13px;
+    --t-eyebrow-s: 14px;
+    --t-label-s: 14px;
     --t-button-s: 14px;
     --t-code-s: 15px;
     --t-data-s: 17px;
     --t-panel-title-s: 17px;
     --t-panel-label-s: 15px;
     --t-panel-note-s: 14px;
+    --t-stat-value-s: 22px;
+    --t-chart-label-s: 14px;
+    --t-section-title-s: 17px;
   }
 }
 :root.ds-small {
@@ -273,12 +297,15 @@
   --t-title-s: 17px;
   --t-body-s: 17px;
   --t-caption-s: 15px;
-  --t-eyebrow-s: 13px;
-  --t-label-s: 13px;
+  --t-eyebrow-s: 14px;
+  --t-label-s: 14px;
   --t-button-s: 14px;
   --t-code-s: 15px;
   --t-data-s: 17px;
   --t-panel-title-s: 17px;
   --t-panel-label-s: 15px;
   --t-panel-note-s: 14px;
+  --t-stat-value-s: 22px;
+  --t-chart-label-s: 14px;
+  --t-section-title-s: 17px;
 }

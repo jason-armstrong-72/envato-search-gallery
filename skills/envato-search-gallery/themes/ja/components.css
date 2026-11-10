@@ -149,8 +149,9 @@ html {
 /* controls keep their own width in a stack; the stack's default stretch would make them full width.
    Fields, inputs, cards, tables, callouts, prose, progress and accordions still fill the stack. */
 .ds-stack > :is(.ds-btn, .ds-btn-ghost, .ds-chip, .ds-toggle, .ds-icon-btn, .ds-theme-switch, .ds-segmented, .ds-switch, .ds-status, .ds-check, .ds-radio, .ds-brand) { align-self: flex-start; }
-/* long text stops at the reading width, while the page itself can be as wide as maxw */
-:where(.ds-page) :where(p, ul, ol, blockquote):not(.ds-toast-text) { max-width: var(--measure); }
+/* long text stops at the reading width, while the page itself can be as wide as maxw. An app or
+   dashboard page (is-app) drops the cap, so text runs the width of its container; ds-prose keeps its own */
+:where(.ds-page:not(.is-app)) :where(p, ul, ol, blockquote):not(.ds-toast-text) { max-width: var(--measure); }
 
 /* ---- type: each component takes a whole role from the variables (zero specificity, so a
    .t-<role> class on plain text and a page's own rules still win) ---- */

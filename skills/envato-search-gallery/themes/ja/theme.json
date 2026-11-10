@@ -1,8 +1,8 @@
 {
-  "schema_version": 4,
+  "schema_version": 6,
   "name": "jason-armstrong",
   "display_name": "JA",
-  "version": "3.1.1",
+  "version": "5.4.0",
   "owner": "Jason Armstrong",
   "derived_from": "Started from measurements of https://www.archetypeai.io/ (off-white page, near-black ink, light headings, small uppercase mono labels, near-square corners), then changed: Forest green accent, a derived dark theme, house coral kept for error and warning only.",
   "fonts": {
@@ -94,7 +94,7 @@
       "family": "body",
       "case": "none",
       "size_px": 13,
-      "weight": 200,
+      "weight": 400,
       "tracking_em": 0,
       "line_height": 1.4,
       "usage": "Caption"
@@ -102,7 +102,7 @@
     "eyebrow": {
       "family": "mono",
       "case": "upper",
-      "size_px": 11,
+      "size_px": 12,
       "weight": 400,
       "tracking_em": 0.04,
       "line_height": 1.2,
@@ -111,8 +111,8 @@
     "label": {
       "family": "mono",
       "case": "upper",
-      "size_px": 11,
-      "weight": 300,
+      "size_px": 12,
+      "weight": 400,
       "tracking_em": 0.04,
       "line_height": 1.4,
       "usage": "Filter heading, chip, note, footer"
@@ -166,10 +166,37 @@
       "family": "body",
       "case": "none",
       "size_px": 12,
-      "weight": 300,
+      "weight": 400,
       "tracking_em": 0,
       "line_height": 1.4,
       "usage": "Panel note"
+    },
+    "stat-value": {
+      "family": "body",
+      "case": "none",
+      "size_px": 36,
+      "weight": 300,
+      "tracking_em": -0.02,
+      "line_height": 1.1,
+      "usage": "The big figure in a stat tile"
+    },
+    "chart-label": {
+      "family": "body",
+      "case": "none",
+      "size_px": 12,
+      "weight": 400,
+      "tracking_em": 0,
+      "line_height": 1.3,
+      "usage": "Chart axis ticks, bar values and legend keys"
+    },
+    "section-title": {
+      "family": "body",
+      "case": "none",
+      "size_px": 15,
+      "weight": 500,
+      "tracking_em": -0.01,
+      "line_height": 1.3,
+      "usage": "Heading of a section on a data page"
     }
   },
   "colour": {
@@ -213,10 +240,20 @@
       "dark": "#ff5c48",
       "usage": "Error shapes and bars"
     },
+    "error-text": {
+      "light": "#be4333",
+      "dark": "#ff5c48",
+      "usage": "Red text: a failed, blocked or error label written in red. The error colour made safe as text; error stays the shape colour."
+    },
     "warning": {
       "light": "#b45309",
       "dark": "#fbbf24",
       "usage": "Warning and caution: shapes and bars (deep amber, so it stands apart from the coral error)"
+    },
+    "warning-text": {
+      "light": "#95480c",
+      "dark": "#fbbf24",
+      "usage": "Amber text: a waiting or caution label written in amber, such as a Waiting label. The warning colour made safe as text; warning stays the shape colour. Components never write amber words."
     },
     "btn-bg": {
       "light": "#1a1a1a",
@@ -345,7 +382,11 @@
     "grow_below_px": 20,
     "grow_by_px": 2,
     "cap_px": 48,
-    "roles": {}
+    "roles": {
+      "stat-value": {
+        "size_px": 22
+      }
+    }
   },
   "status": {
     "style": "dot",
@@ -360,28 +401,20 @@
   "chart": {
     "categorical": [
       {
-        "light": "#0d8a4b",
-        "dark": "#34d399"
-      },
-      {
         "light": "#2563eb",
         "dark": "#60a5fa"
+      },
+      {
+        "light": "#be185d",
+        "dark": "#f472b6"
       },
       {
         "light": "#7c3aed",
         "dark": "#a78bfa"
       },
       {
-        "light": "#0e7490",
+        "light": "#0891b2",
         "dark": "#22d3ee"
-      },
-      {
-        "light": "#a16207",
-        "dark": "#facc15"
-      },
-      {
-        "light": "#be185d",
-        "dark": "#f472b6"
       }
     ],
     "sequential_steps": 5
@@ -398,7 +431,8 @@
   "states": {
     "colour_is_a_shape": "Colour marks a state with a shape (a square, a bar, an edge, an underline). The words stay in ink. Never set small text in the accent, error or warning colour.",
     "chips": "A chip is static unless it carries is-action. Only interactive chips take hover, pressed and selected states.",
-    "theme_switch": "Every page offers Light, Dark and System, starts on System, and remembers the choice."
+    "theme_switch": "Every page offers Light, Dark and System, starts on System, and remembers the choice.",
+    "type_floor": "Take every type style at its own size. Never scale one down with a multiplier or a smaller em or rem to fit a tight spot: use a smaller type style, or give the text more room. So no text is ever smaller than the smallest type style at that width, and on a phone the small-screen step reaches every line."
   },
   "components": {
     "no_text_on_error": "Never put text on the error colour. An error toast keeps its message in the button-text colour beside the error square.",
@@ -514,6 +548,12 @@
       "mode": "both",
       "reason": "Jason chose the Hairline switch so the switches recede (session-board#128, 2026-10-13). The chosen option is told apart by its ink text against the muted ones.",
       "date": "2026-10-13"
+    },
+    {
+      "check": "error-text on error tint",
+      "mode": "light",
+      "reason": "Jason chose #be4333, closer to the coral, over the darker #a53d2f (2026-10-19). It is 4.6:1 on bg, 5.0:1 on surface and 4.56:1 on the session board's Blocked row (8% red into surface); it misses only the stronger 16% status tint, at 3.81:1. The darker value came from a mismeasured 4.0:1 (design-system-creator#182, corrected).",
+      "date": "2026-10-19"
     }
   ]
 }
