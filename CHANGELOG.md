@@ -7,6 +7,14 @@ on `main`.
 When a release changes the version in `.claude-plugin/plugin.json`, add its section in the same pull
 request. After it merges, tag the merge commit and publish a GitHub Release with the same notes.
 
+## 0.9.7 (2026-11-11)
+
+### Bundled theme
+
+- The bundled copy of the JA design system in `themes/ja/` is updated from 5.4.0 to 5.6.0. The accent
+  is mint green: `#13be77` in light (was Forest `#0d8a4b`) and `#30cf8c` in dark (was `#34d399`), with
+  the logo mark to match. The gallery uses this copy only when the JA skill isn't installed.
+
 ## 0.9.6 (2026-11-10)
 
 ### Bundled theme

@@ -2,9 +2,9 @@
   "schema_version": 6,
   "name": "jason-armstrong",
   "display_name": "JA",
-  "version": "5.4.0",
+  "version": "5.6.0",
   "owner": "Jason Armstrong",
-  "derived_from": "Started from measurements of https://www.archetypeai.io/ (off-white page, near-black ink, light headings, small uppercase mono labels, near-square corners), then changed: Forest green accent, a derived dark theme, house coral kept for error and warning only.",
+  "derived_from": "Started from measurements of https://www.archetypeai.io/ (off-white page, near-black ink, light headings, small uppercase mono labels, near-square corners), then changed: Mint green accent (#13be77 light, #30cf8c dark; Forest #0d8a4b until 2026-11-11), a derived dark theme, house coral kept for error and warning only.",
   "fonts": {
     "body": {
       "family": "Hanken Grotesk",
@@ -226,14 +226,14 @@
       "usage": "Muted text"
     },
     "accent": {
-      "light": "#0d8a4b",
-      "dark": "#34d399",
-      "usage": "Accent for shapes, bars and borders (Forest green)"
+      "light": "#13be77",
+      "dark": "#30cf8c",
+      "usage": "Accent for shapes, bars and borders (Mint green: #13be77 in light, tuned by Jason in the JA tuner on 2026-11-11; #30cf8c in dark; Forest #0d8a4b / #34d399 before). Light is 2.15:1 on the page, accepted."
     },
     "accent-text": {
-      "light": "#066f33",
-      "dark": "#34d399",
-      "usage": "Accent for small text (deeper in light: 5.6:1 on the page, 5.1:1 on the hover tint, 4.6:1 on the pressed tint)"
+      "light": "#0ca163",
+      "dark": "#30cf8c",
+      "usage": "Accent for small text. Light #0ca163 is 2.95:1 on the page, 3.22:1 on surface, 2.76:1 on the hover tint and 2.59:1 on the pressed tint, all under 4.5:1 and accepted by Jason (2026-11-11); dark #30cf8c is 10.4:1."
     },
     "error": {
       "light": "#f4503b",
@@ -267,7 +267,7 @@
     },
     "focus": {
       "light": "#1a1a1a",
-      "dark": "#34d399",
+      "dark": "#30cf8c",
       "usage": "Keyboard focus ring, 2px, 2px offset"
     },
     "merged": {
@@ -554,6 +554,48 @@
       "mode": "light",
       "reason": "Jason chose #be4333, closer to the coral, over the darker #a53d2f (2026-10-19). It is 4.6:1 on bg, 5.0:1 on surface and 4.56:1 on the session board's Blocked row (8% red into surface); it misses only the stronger 16% status tint, at 3.81:1. The darker value came from a mismeasured 4.0:1 (design-system-creator#182, corrected).",
       "date": "2026-10-19"
+    },
+    {
+      "check": "accent on bg",
+      "mode": "light",
+      "reason": "Jason tuned the light accent to #13be77 in the JA tuner on 2026-11-11 (after choosing #30cf8c for the site and the session board, and being offered #259e6b at 3.0:1). It is 2.15:1 on bg, so light-mode accent shapes are paler than Forest was.",
+      "date": "2026-11-11"
+    },
+    {
+      "check": "status positive on bg",
+      "mode": "light",
+      "reason": "The positive status tone is the accent, so it follows #13be77 (see accent on bg). It is 2.15:1 on bg; the dot sits beside an ink label that carries the meaning.",
+      "date": "2026-11-11"
+    },
+    {
+      "check": "status positive on surface",
+      "mode": "light",
+      "reason": "The positive status tone is the accent, so it follows #13be77 (see accent on bg). It is 2.34:1 on surface; the dot sits beside an ink label that carries the meaning.",
+      "date": "2026-11-11"
+    },
+    {
+      "check": "accent-text on bg",
+      "mode": "light",
+      "reason": "Jason tuned accent-text to #0ca163 in the JA tuner on 2026-11-11 and accepted it after being told it measures 2.95:1 here against 4.5:1, and offered #097447 at his hue, which passes (5.16:1 on bg, 4.53:1 on the pressed tint). Green small text in light mode is hard to read.",
+      "date": "2026-11-11"
+    },
+    {
+      "check": "accent-text on surface",
+      "mode": "light",
+      "reason": "Jason tuned accent-text to #0ca163 in the JA tuner on 2026-11-11 and accepted it after being told it measures 3.22:1 here against 4.5:1, and offered #097447 at his hue, which passes (5.16:1 on bg, 4.53:1 on the pressed tint). Green small text in light mode is hard to read.",
+      "date": "2026-11-11"
+    },
+    {
+      "check": "accent-text on hover tint",
+      "mode": "light",
+      "reason": "Jason tuned accent-text to #0ca163 in the JA tuner on 2026-11-11 and accepted it after being told it measures 2.76:1 here against 4.5:1, and offered #097447 at his hue, which passes (5.16:1 on bg, 4.53:1 on the pressed tint). Green small text in light mode is hard to read.",
+      "date": "2026-11-11"
+    },
+    {
+      "check": "accent-text on pressed tint",
+      "mode": "light",
+      "reason": "Jason tuned accent-text to #0ca163 in the JA tuner on 2026-11-11 and accepted it after being told it measures 2.59:1 here against 4.5:1, and offered #097447 at his hue, which passes (5.16:1 on bg, 4.53:1 on the pressed tint). Green small text in light mode is hard to read.",
+      "date": "2026-11-11"
     }
   ]
 }
